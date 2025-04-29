@@ -1,4 +1,4 @@
-package VinylClub.VinylClub;
+package com.VinylClub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
