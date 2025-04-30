@@ -1,17 +1,20 @@
 package com.vinylclub.catalog.entity;
 
 
-import java.sql.Blob;
 import java.sql.Timestamp;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "products")
@@ -65,13 +68,11 @@ public class Product {
     private Integer releaseYear;
 
     
-    /**
+   /**
      * Images of the product
-     * One product can have multiple images
      */
-    @OneToMany
-    @JoinColumn(name = "image_id", nullable = true)
-    private List<Image> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Images> images = new ArrayList<>();
 
     /**
      * Created at date of the product  
@@ -185,26 +186,19 @@ public void setReleaseYear(Integer releaseYear) {
 
 /**
  * Get the ID of the primary image associated with this product
- * 
- * @return The image ID
  */
-public Long getImageId() {
-    return imageId;
-}
+  public List<Images> getImages() {
+        return images;
+    }
+    
+    public void setImages(List<Images> images) {
+        this.images = images;
+    }
 
 /**
- * Set the ID of the primary image associated with this product
+ * Get the creation date of the product.
  * 
- * @param imageId The image ID to set
- */
-public void setImageId(Long imageId) {
-    this.imageId = imageId;
-}
-
-/**
- * Get the creation date of the product
- * 
- * @return The creation timestamp
+ * @return The creation timestamp.
  */
 public Timestamp getCreatedAt() {
     return createdAt;
@@ -220,13 +214,14 @@ public void setCreatedAt(Timestamp createdAt) {
 }
 
 /**
- * Get the last update date of the product
+ * Get the last update date of the product.
  * 
- * @return The update timestamp
+ * @return The update timestamp.
  */
 public Timestamp getUpdatedAt() {
     return updatedAt;
 }
+
 
 /**
  * Set the last update date of the product
@@ -238,13 +233,14 @@ public void setUpdatedAt(Timestamp updatedAt) {
 }
 
 /**
- * Get the status of the product
+ * Get the status of the product.
  * 
- * @return The product status
+ * @return The product status.
  */
 public Enum getStatus() {
     return status;
 }
+
 
 /**
  * Set the status of the product
