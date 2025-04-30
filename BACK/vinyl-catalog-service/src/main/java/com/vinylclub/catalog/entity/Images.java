@@ -1,11 +1,15 @@
 package com.vinylclub.catalog.entity;
 
+import java.sql.Blob;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Column;
 
 @Entity
 @Table(name = "images")
@@ -20,8 +24,12 @@ public class Images {
     /**
      * Image blob
      */
-    @Column(nullable = false, columnDefinition = "BLOB")
+        @Column(nullable = false, columnDefinition = "BLOB")
     private Blob image;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
 
     // Getters and Setters
