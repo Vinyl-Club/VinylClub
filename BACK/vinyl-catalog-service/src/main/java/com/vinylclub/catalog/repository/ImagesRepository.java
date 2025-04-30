@@ -1,27 +1,26 @@
 package com.vinylclub.catalog.repository;
 
-import java.sql.Blob;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.vinylclub.catalog.entity.Images;
+import java.util.List;
 
 @Repository
 public interface ImagesRepository extends JpaRepository<Images, Long> {
     /**
-     * Find an image by its content
+     * Find all images for a specific product
      * 
-     * @param image The Blob content of the image to find
-     * @return The image with the given content, or null if not found
+     * @param productId The ID of the product
+     * @return List of images for the product
      */
-    Images findByImage(Blob image);
+    List<Images> findByProductId(Long productId);
     
     /**
-     * Check if an image with the given content exists
+     * Check if any images exist for a product
      * 
-     * @param image The Blob content to check
-     * @return true if the image exists, false otherwise
+     * @param productId The ID of the product
+     * @return true if images exist, false otherwise
      */
-    boolean existsByImage(Blob image);
+    boolean existsByProductId(Long productId);
 }

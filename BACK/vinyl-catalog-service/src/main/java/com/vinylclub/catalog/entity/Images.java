@@ -1,7 +1,7 @@
 package com.vinylclub.catalog.entity;
 
 import java.sql.Blob;
-
+import jakarta.persistence.Lob;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,22 +14,23 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "images")
 public class Images {
-    /**
-     * Primary key with auto-increment strategy
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Image blob
-     */
-        @Column(nullable = false, columnDefinition = "BLOB")
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Lob  // Important pour les BLOBs
+    @Column(nullable = false)
     private Blob image;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    
+    public Images(Product product, Blob image) {
+        this.product = product;
+        this.image = image;
+    }
 
 
     // Getters and Setters
@@ -47,5 +48,13 @@ public class Images {
 
     public void setImage(Blob image) {
         this.image = image;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }
