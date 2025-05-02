@@ -9,6 +9,9 @@
 # Se connecter en tant que postgres (utilisateur par défaut)
 # psql -U postgres        # Sur Windows/macOS
 
+# Une fois connecté, créer le schéma
+CREATE SCHEMA catalog;
+
 # Créez un utilisateur dédié (bonne pratique)
 
 # CREATE USER vinyl_user WITH PASSWORD 'votre_mot_de_passe';
@@ -24,4 +27,4 @@
 
 # Connectez-vous à la base de données
 
-# sql\c vinyl_ecommerce
+# sql\c vinylclub
