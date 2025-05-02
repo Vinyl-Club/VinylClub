@@ -1,13 +1,22 @@
 package com.vinylclub.catalog.controller;
 
-import com.vinylclub.catalog.entity.Artist;
-import com.vinylclub.catalog.service.ArtistService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.vinylclub.catalog.entity.Artist;
+import com.vinylclub.catalog.service.ArtistService;
 
 @RestController
 @RequestMapping("/api/artists")
@@ -28,8 +37,8 @@ public class ArtistController {
     }
 
     @PostMapping
-    public Artist createArtist(@RequestBody Artist artist) {
-        return artistService.createArtist(artist);
+    public List<Artist> createArtists(@RequestBody ArrayList<Artist> artists) {
+        return artistService.createArtists(artists);
     }
 
     @PutMapping("/{id}")

@@ -1,12 +1,15 @@
 package com.vinylclub.catalog.service;
 
-import com.vinylclub.catalog.entity.Artist;
-import com.vinylclub.catalog.repository.ArtistRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.vinylclub.catalog.entity.Artist;
+import com.vinylclub.catalog.repository.ArtistRepository;
 
 @Service
 public class ArtistService {
@@ -24,8 +27,10 @@ public class ArtistService {
     }
 
     
-    public Artist createArtist(Artist artist) {
-        return artistRepository.save(artist);
+    public List<Artist> createArtists(ArrayList<Artist> artists) {
+        return artists.stream()
+                .map(artistRepository::save)
+                .collect(Collectors.toList());
     }
 
    
