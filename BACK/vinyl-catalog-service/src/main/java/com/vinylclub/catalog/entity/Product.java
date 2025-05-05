@@ -55,7 +55,7 @@ public class Product {
      */
     @ManyToOne
     @JoinColumn(name = "album_id", nullable = false)
-    private Category album;
+    private Album album;
 
     @Column(nullable = true, length = 500)
     private String description;
@@ -162,11 +162,11 @@ public class Product {
         this.artist = artist;
     }
 
-    public Category getAlbum() {
+    public Album getAlbum() {
         return album;
     }
 
-    public void setAlbum(Category album) {
+    public void setAlbum(Album album) {
         this.album = album;
     }
 
