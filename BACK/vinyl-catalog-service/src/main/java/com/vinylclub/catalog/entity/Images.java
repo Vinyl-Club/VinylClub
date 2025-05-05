@@ -22,16 +22,18 @@ public class Images {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @Lob  // Important pour les BLOBs
+    @Lob  // Important for BLOBs
     @Column(nullable = false)
     private Blob image;
 
-    
+    // Default constructor
+    public Images() {
+    }
+
     public Images(Product product, Blob image) {
         this.product = product;
         this.image = image;
     }
-
 
     // Getters and Setters
     public Long getId() {
@@ -56,5 +58,9 @@ public class Images {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public Long getProductId() {
+        return product != null ? product.getId() : null;
     }
 }
