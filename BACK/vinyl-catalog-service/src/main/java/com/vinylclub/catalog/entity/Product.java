@@ -47,6 +47,14 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    /**
+     * Relation with the album
+     * Many products can belong to one album
+     */
+    @ManyToOne
+    @JoinColumn(name = "album_id", nullable = false)
+    private Category album;
+
     @Column(nullable = true, length = 500)
     private String description;
 
@@ -88,6 +96,12 @@ public class Product {
      */
     @Column(name = "status", nullable = true)
     private Enum status;
+
+    /**
+     * State of the product
+     */
+    @Column(name = "state", nullable = true)
+    private Enum state;
 
     // Getters and Setters
     public Long getId() {
@@ -192,5 +206,13 @@ public class Product {
 
     public void setStatus(Enum status) {
         this.status = status;
+    }
+
+    public Enum getState() {
+        return state;
+    }
+
+    public void setState(Enum state) {
+        this.state = state;
     }
 }
