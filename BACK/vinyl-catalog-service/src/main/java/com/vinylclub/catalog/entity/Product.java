@@ -3,6 +3,7 @@ package com.vinylclub.catalog.entity;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
 
 @Entity
 @Table(name = "products")
@@ -158,6 +160,14 @@ public class Product {
 
     public void setArtist(Artist artist) {
         this.artist = artist;
+    }
+
+    public Category getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(Category album) {
+        this.album = album;
     }
 
     public Integer getQuantity() {
