@@ -9,8 +9,8 @@
 # Se connecter en tant que postgres (utilisateur par défaut)
 # psql -U postgres        # Sur Windows/macOS
 
-# Une fois connecté, créer le schéma
-CREATE SCHEMA catalog;
+# Une fois connecté, créer le schémasql/
+# CREATE SCHEMA catalog;
 
 # Créez un utilisateur dédié (bonne pratique)
 
