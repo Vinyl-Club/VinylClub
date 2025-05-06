@@ -105,6 +105,12 @@ public class Product {
     @Column(name = "state", nullable = true)
     private Enum state;
 
+    /**
+     * State of the product
+     */
+    @Column(name = "state", nullable = true)
+    private Enum state;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -216,6 +222,14 @@ public class Product {
 
     public void setStatus(Enum status) {
         this.status = status;
+    }
+
+    public Enum getState() {
+        return state;
+    }
+
+    public void setState(Enum state) {
+        this.state = state;
     }
 
     public Enum getState() {
