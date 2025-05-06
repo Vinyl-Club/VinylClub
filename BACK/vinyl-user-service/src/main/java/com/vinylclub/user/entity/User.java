@@ -17,4 +17,8 @@ public class User {
     // autres champs et méthodes
     
     // getters et setters
+    public Long getId() {
+        return id;
+    }
+    
 }

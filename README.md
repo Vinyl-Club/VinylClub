@@ -11,6 +11,7 @@
 
 # Une fois connecté, créer le schémasql/
 # CREATE SCHEMA catalog;
+# CREATE SCHEMA user;
 
 # Créez un utilisateur dédié (bonne pratique)
 
@@ -27,4 +28,5 @@
 
 # Connectez-vous à la base de données
 
-# sql\c vinylclub
+# sql\c catalogdb
+# sql\c userdb
