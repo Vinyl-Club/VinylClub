@@ -15,4 +15,9 @@ public class User {
     private Long id;
     
     
+    // getters et setters
+    public Long getId() {
+        return id;
+    }
+    
 }
