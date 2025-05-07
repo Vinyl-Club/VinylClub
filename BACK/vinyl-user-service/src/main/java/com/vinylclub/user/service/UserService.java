@@ -2,12 +2,14 @@ package com.vinylclub.user.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.List;
 import com.vinylclub.user.entity.User;
 import com.vinylclub.user.repository.UserRepository;
 import com.vinylclub.user.dto.UserDTO;
 import java.sql.Timestamp;
 
+@Service
 public class UserService {
 
     @Autowired

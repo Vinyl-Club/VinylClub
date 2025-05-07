@@ -2,6 +2,7 @@ package com.vinylclub.user.controller;
 
 
 import com.vinylclub.user.dto.UserDTO;
+import com.vinylclub.user.entity.User;
 import com.vinylclub.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping
-    public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user);
     }
 
     @PutMapping("/{id}")
