@@ -22,21 +22,41 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Set up JDK 17
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '21'
         distribution: 'temurin'
         cache: maven
 
-    - name: Build vinyl-catalog-service
+    - name: List files in vinyl-catalog-service
+      run: ls -la vinyl-catalog-service
+
+    - name: Verify pom.xml exists in vinyl-catalog-service
+      run: |
+        if [ ! -f vinyl-catalog-service/pom.xml ]; then
+          echo "pom.xml not found in vinyl-catalog-service!"
+          exit 1
+        fi
+
+    - name: Build vinyl-catalog-service with Maven
       run: |
         cd vinyl-catalog-service
         mvn -B package --file pom.xml
 
-    - name: Build vinyl-user-service
+    - name: List files in vinyl-user-service
+      run: ls -la vinyl-user-service
+
+    - name: Verify pom.xml exists in vinyl-user-service
       run: |
-        cd ../vinyl-user-service
+        if [ ! -f vinyl-user-service/pom.xml ]; then
+          echo "pom.xml not found in vinyl-user-service!"
+          exit 1
+        fi
+
+    - name: Build vinyl-user-service with Maven
+      run: |
+        cd vinyl-user-service
         mvn -B package --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
