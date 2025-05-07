@@ -21,31 +21,31 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: List files in back
-      run: ls -la back
+    - name: List files in BACK
+      run: ls -la BACK
 
     - name: Verify pom.xml exists in vinyl-catalog-service
       run: |
-        if [ ! -f back/vinyl-catalog-service/pom.xml ]; then
+        if [ ! -f BACK/vinyl-catalog-service/pom.xml ]; then
           echo "pom.xml not found in vinyl-catalog-service!"
           exit 1
         fi
 
     - name: Build vinyl-catalog-service with Maven
       run: |
-        cd back/vinyl-catalog-service
+        cd BACK/vinyl-catalog-service
         mvn -B package --file pom.xml
 
     - name: Verify pom.xml exists in vinyl-user-service
       run: |
-        if [ ! -f back/vinyl-user-service/pom.xml ]; then
+        if [ ! -f BACK/vinyl-user-service/pom.xml ]; then
           echo "pom.xml not found in vinyl-user-service!"
           exit 1
         fi
 
     - name: Build vinyl-user-service with Maven
       run: |
-        cd back/vinyl-user-service
+        cd BACK/vinyl-user-service
         mvn -B package --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
