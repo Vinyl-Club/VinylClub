@@ -14,7 +14,5 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    // autres champs et méthodes
     
-    // getters et setters
 }
