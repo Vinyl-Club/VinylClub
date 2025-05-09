@@ -6,35 +6,44 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
-
-
-
 @Entity
 @Table(name = "addresses", schema = "users")
 public class Address {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(name= "street")
     private String street;
-
     @Column(name = "city")
     private String city;
-
     @Column(name = "zip_code")
     private String zipCode;
-
     @Column(name = "country")
     private String country;
-
     @OneToOne(mappedBy = "address")
     private User user;
+    
+    // AJOUTEZ CE CONSTRUCTEUR PAR DÉFAUT
+    public Address() {
+    }
+    
+    // Constructor to match the required arguments
+    public Address(String city, String zipCode, String country, String street) {
+        this.city = city;
+        this.zipCode = zipCode;
+        this.country = country;
+        this.street = street;
+    }
+    
+    // Getters and Setters... (le reste de votre code)
+    public User getUser() {
+        return user;
+    }  
 
-
-    // Getters and Setters
-
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
     public Long getId() {
         return id;
     }
@@ -75,12 +84,15 @@ public class Address {
     public void setCountry(String country) {
         this.country = country;
     }
-    
-    public User getUser() {
-        return user;
-    }
-    
-    public void setUser(User user) {
-        this.user = user;
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                ", country='" + country + '\'' +
+                '}';
     }
 }

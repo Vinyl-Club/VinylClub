@@ -60,15 +60,28 @@ public class UserService {
 
 
     public UserDTO updateUser(Long id, UserDTO userDTO) {
-        // Implement the logic to update an existing user
+        // Récupérer l'utilisateur existant
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // Mettre à jour les propriétés
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
         user.setPhone(userDTO.getPhone());
-        user.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Set the updated timestamp
-        // For example:
-        return new UserDTO(); // Replace with actual implementation
+        user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+        
+        // Sauvegarder l'utilisateur mis à jour
+        User updatedUser = userRepository.save(user);
+        
+        // Convertir en DTO et renvoyer
+        UserDTO updatedDTO = new UserDTO();
+        updatedDTO.setId(updatedUser.getId());
+        updatedDTO.setFirstName(updatedUser.getFirstName());
+        updatedDTO.setLastName(updatedUser.getLastName());
+        updatedDTO.setEmail(updatedUser.getEmail());
+        updatedDTO.setPhone(updatedUser.getPhone());
+        
+        return updatedDTO;
     }
 
     public void deleteUser(Long id) {
