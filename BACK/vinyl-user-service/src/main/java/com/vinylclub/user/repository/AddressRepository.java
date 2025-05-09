@@ -13,7 +13,7 @@ public interface AddressRepository extends org.springframework.data.jpa.reposito
     Optional<Address> findByCity(@Param("city") String city);
 
     @Query("SELECT a FROM Address a WHERE a.zipCode = :zipCode")
-    Optional<Address> addressRepository(@Param("zipCode") String zipCode);
+    Optional<Address> findByZipCode(@Param("zipCode") String zipCode);
 
     @Query("SELECT a FROM Address a WHERE a.country = :country")
     Optional<Address> findByCountry(@Param("country") String country);

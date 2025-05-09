@@ -24,6 +24,7 @@ public class AddressDTO {
         this.id = id;
     }
 
+
     public String getCity() {
         return city;
     }
