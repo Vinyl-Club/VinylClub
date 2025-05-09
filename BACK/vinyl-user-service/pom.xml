@@ -19,7 +19,8 @@
     <description>User Service for VinylClub e-Commerce</description>
     
     <properties>
-        <java.version>11</java.version>
+        <java.version>21</java.version>
+
         <spring-cloud.version>2021.0.5</spring-cloud.version>
     </properties>
     
@@ -37,6 +38,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+    <dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <scope>provided</scope>
+</dependency>
         
         <!-- Database -->
         <dependency>
@@ -75,13 +81,6 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>1.6.15</version>
-        </dependency>
-        
-        <!-- Utilitaires -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
         
         <!-- Monitoring -->
