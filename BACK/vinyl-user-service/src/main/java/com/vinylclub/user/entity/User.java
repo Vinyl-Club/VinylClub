@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+
 @Entity
 @Table(name = "users", schema = "users")
 public class User {
@@ -40,13 +41,23 @@ public class User {
     @Column(name = "created_at", nullable = true)
     private Timestamp createdAt;
 
-@Column(name = "updated_at", nullable = true)
+    @Column(name = "updated_at", nullable = true)
     private Timestamp updatedAt;
  
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
     
+    public User() {}
+
+    public User(String email, String firstName, String lastName, String phone, String password) {
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.password = password;
+    }
+
     // getters et setters
     public Long getId() {
         return id;
@@ -127,4 +138,6 @@ public class User {
     public void setAddress(Address address) {
         this.address = address;
     }
+
+    
 }
