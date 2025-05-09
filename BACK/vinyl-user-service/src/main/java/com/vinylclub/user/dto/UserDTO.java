@@ -10,6 +10,18 @@ public class UserDTO {
     private String createdAt;
     private String updatedAt;
 
+    public UserDTO() {
+    }
+
+    public UserDTO(Long id, String email, String firstName, String lastName, String phone, String createdAt, String updatedAt) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
     // Getters and Setters
 
     public Long getId() {
@@ -68,16 +80,16 @@ public class UserDTO {
         this.updatedAt = updatedAt;
     }
     
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", createdAt='" + createdAt + '\'' +
-                ", updatedAt='" + updatedAt + '\'' +
-                '}';
-    }
+    // @Override
+    // public String toString() {
+    //     return "UserDTO{" +
+    //             "id=" + id +
+    //             ", email='" + email + '\'' +
+    //             ", firstName='" + firstName + '\'' +
+    //             ", lastName='" + lastName + '\'' +
+    //             ", phone='" + phone + '\'' +
+    //             ", createdAt='" + createdAt + '\'' +
+    //             ", updatedAt='" + updatedAt + '\'' +
+    //             '}';
+    // }
 }

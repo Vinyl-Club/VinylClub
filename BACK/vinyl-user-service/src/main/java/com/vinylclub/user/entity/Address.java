@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
+
 @Entity
 @Table(name = "addresses", schema = "users")
 public class Address {

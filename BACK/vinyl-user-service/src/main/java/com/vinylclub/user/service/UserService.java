@@ -57,31 +57,17 @@ public class UserService {
 
     }
 
-
-
-    public UserDTO updateUser(Long id, UserDTO userDTO) {
-        // Récupérer l'utilisateur existant
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        
-        // Mettre à jour les propriétés
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
-        user.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-        
-        // Sauvegarder l'utilisateur mis à jour
-        User updatedUser = userRepository.save(user);
-        
-        // Convertir en DTO et renvoyer
-        UserDTO updatedDTO = new UserDTO();
-        updatedDTO.setId(updatedUser.getId());
-        updatedDTO.setFirstName(updatedUser.getFirstName());
-        updatedDTO.setLastName(updatedUser.getLastName());
-        updatedDTO.setEmail(updatedUser.getEmail());
-        updatedDTO.setPhone(updatedUser.getPhone());
-        
-        return updatedDTO;
+    public User updateUser(Long id, User userDetails) {
+        User existingUser = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+    
+        existingUser.setFirstName(userDetails.getFirstName());
+        existingUser.setLastName(userDetails.getLastName());
+        existingUser.setEmail(userDetails.getEmail());
+        existingUser.setPhone(userDetails.getPhone());
+        existingUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+    
+        return userRepository.save(existingUser);
     }
 
     public void deleteUser(Long id) {
