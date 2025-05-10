@@ -1,13 +1,13 @@
 package com.vinylclub.user.service;
 
 
+import java.util.List;
+import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 import com.vinylclub.user.entity.User;
 import com.vinylclub.user.repository.UserRepository;
 import com.vinylclub.user.dto.UserDTO;
-import java.sql.Timestamp;
 
 @Service
 public class UserService {
@@ -18,13 +18,14 @@ public class UserService {
     public List<UserDTO> getAllUsers() {
         // Implementation for retrieving all users
         return userRepository.findAll().stream().map(user -> {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            userDTO.setFirstName(user.getFirstName());
-            userDTO.setLastName(user.getLastName());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setPhone(user.getPhone());
-            return userDTO;
+            return new UserDTO(
+            user.getId(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getEmail(),
+            user.getPhone(),
+            user.getUpdatedAt()
+            );
         }).toList(); // Convert List<User> to List<UserDTO>
     }
     
