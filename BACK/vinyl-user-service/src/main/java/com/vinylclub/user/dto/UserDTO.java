@@ -1,5 +1,6 @@
 package com.vinylclub.user.dto;
 
+import java.sql.Timestamp;
 public class UserDTO {
 
     private Long id;
@@ -7,19 +8,17 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String phone;
-    private String createdAt;
-    private String updatedAt;
+    private Timestamp updatedAt;
 
     public UserDTO() {
     }
 
-    public UserDTO(Long id, String email, String firstName, String lastName, String phone, String createdAt, String updatedAt) {
+    public UserDTO(Long id, String email, String firstName, String lastName, String phone, Timestamp updatedAt) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
     // Getters and Setters
@@ -64,19 +63,11 @@ public class UserDTO {
         this.phone = phone;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
+    public Timestamp getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
     }
     

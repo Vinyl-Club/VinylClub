@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name = "addresses", schema = "users")
@@ -21,7 +22,8 @@ public class Address {
     private String zipCode;
     @Column(name = "country")
     private String country;
-    @OneToOne(mappedBy = "address")
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     
     // AJOUTEZ CE CONSTRUCTEUR PAR DÉFAUT
@@ -34,6 +36,7 @@ public class Address {
         this.zipCode = zipCode;
         this.country = country;
         this.street = street;
+        this.user = user;
     }
     
     // Getters and Setters... (le reste de votre code)
@@ -86,14 +89,14 @@ public class Address {
         this.country = country;
     }
 
-    @Override
-    public String toString() {
-        return "Address{" +
-                "id=" + id +
-                ", street='" + street + '\'' +
-                ", city='" + city + '\'' +
-                ", zipCode='" + zipCode + '\'' +
-                ", country='" + country + '\'' +
-                '}';
-    }
+    // @Override
+    // public String toString() {
+    //     return "Address{" +
+    //             "id=" + id +
+    //             ", street='" + street + '\'' +
+    //             ", city='" + city + '\'' +
+    //             ", zipCode='" + zipCode + '\'' +
+    //             ", country='" + country + '\'' +
+    //             '}';
+    // }
 }

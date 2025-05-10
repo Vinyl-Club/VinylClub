@@ -9,8 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;import javax.persistence.OneToOne;
 
 @Entity
 @Table(name = "users", schema = "users")
@@ -44,8 +43,7 @@ public class User {
     @Column(name = "updated_at", nullable = true)
     private Timestamp updatedAt;
  
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Address address;
     
     public User() {}

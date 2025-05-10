@@ -9,22 +9,22 @@
 # Se connecter en tant que postgres (utilisateur par défaut)
 # psql -U postgres        # Sur Windows/macOS
 
-# Une fois connecté, créer le schémasql/
-# CREATE SCHEMA catalog;
-# CREATE SCHEMA user;
+# Une fois connecté, créer le schémasql
+# CREATE SCHEMA catalog
+# CREATE SCHEMA user
 
 # Créez un utilisateur dédié (bonne pratique)
 
-# CREATE USER vinyl_user WITH PASSWORD 'votre_mot_de_passe';
+# CREATE USER vinyl_user WITH PASSWORD 'votre_mot_de_passe'
 
 # Créez la base de données
 
-# CREATE DATABASE vinyl_ecommerce;
+# CREATE DATABASE vinyl_ecommerce
 
 # Accordez les privilèges à l'utilisateur
 
-# GRANT ALL PRIVILEGES ON DATABASE vinyl_ecommerce TO vinyl_user;
-# ALTER USER vinyl_user WITH SUPERUSER;
+# GRANT ALL PRIVILEGES ON DATABASE vinyl_ecommerce TO vinyl_user
+# ALTER USER vinyl_user WITH SUPERUSER
 
 # Connectez-vous à la base de données
 
