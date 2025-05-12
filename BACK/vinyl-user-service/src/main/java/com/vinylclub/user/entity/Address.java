@@ -1,12 +1,13 @@
 package com.vinylclub.user.entity;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.OneToOne;
-import javax.persistence.JoinColumn;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "addresses", schema = "users")
@@ -31,7 +32,7 @@ public class Address {
     }
     
     // Constructor to match the required arguments
-    public Address(String city, String zipCode, String country, String street) {
+    public Address(String city, String zipCode, String country, String street, User user) {
         this.city = city;
         this.zipCode = zipCode;
         this.country = country;
