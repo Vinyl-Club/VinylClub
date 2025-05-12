@@ -70,7 +70,7 @@ public class UserDTO {
     
     @Override
     public String toString() {
-        return "UserDTO{" +
+        return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
