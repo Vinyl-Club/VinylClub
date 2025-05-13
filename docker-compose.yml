@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Service de découverte (Eureka)
+  discovery-service:
+    build: ./BACK/vinyl-discovery-service
+    container_name: discovery-service
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - vinyl-network
+
+  # Service utilisateur
+  user-service:
+    build: ./BACK/vinyl-user-service
+    container_name: user-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - discovery-service
+      - postgres-db
+    networks:
+      - vinyl-network
+
+  # Service catalogue
+  catalog-service:
+    build: ./BACK/vinyl-catalog-service
+    container_name: catalog-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - discovery-service
+      - postgres-db
+    networks:
+      - vinyl-network
+
+  # Base de données PostgreSQL
+  postgres-db:
+    image: postgres:17
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_MULTIPLE_DATABASES=userdb,catalogdb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker-postgresql-multiple-databases.sh:/docker-entrypoint-initdb.d/docker-postgresql-multiple-databases.sh
+    networks:
+      - vinyl-network
+
+networks:
+  vinyl-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
