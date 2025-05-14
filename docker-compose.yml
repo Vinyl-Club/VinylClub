@@ -27,6 +27,22 @@ services:
     networks:
       - vinyl-network
 
+# Ajoutez cette section à votre docker-compose.yml existant
+gateway-service:
+  build: ./BACK/vinyl-gateway-service
+  container_name: gateway-service
+  ports:
+    - "8080:8080"  # Port principal pour accéder à votre API
+  environment:
+    - SPRING_PROFILES_ACTIVE=docker
+    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+  depends_on:
+    - discovery-service
+    - user-service
+    - catalog-service
+  networks:
+    - vinyl-network
+
   # Service catalogue
   catalog-service:
     build: ./BACK/vinyl-catalog-service
