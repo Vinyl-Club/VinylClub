@@ -1,18 +1,37 @@
 package com.vinylclub.gateway.config;
 
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
 public class RouteConfig {
-    // Define your routes here
-    // For example:
-    public static final String VINYL_SERVICE_URL = "http://vinyl-service";
+    // Constants
+    public static final String VINYL_SERVICE_URL = "lb://vinyl-service";
     public static final String VINYL_SERVICE_ROUTE = "/vinyl/**";
     public static final String VINYL_SERVICE_PATH = "/vinyl";
+   
+    public static final String USER_SERVICE_URL = "lb://vinyl-user-service";
+    public static final String USER_SERVICE_ROUTE = "/api/users/**";
+    public static final String USER_SERVICE_PATH = "/api/users";
     
-    public static final String USER_SERVICE_URL = "http://user-service";
-    public static final String USER_SERVICE_ROUTE = "/user/**";
-    public static final String USER_SERVICE_PATH = "/user";
+    public static final String CATALOG_SERVICE_URL = "lb://vinyl-catalog-service";
+    public static final String CATALOG_SERVICE_ROUTE = "/api/catalog/**";
+    public static final String CATALOG_SERVICE_PATH = "/api/catalog";
 
-
-    public static final String CATALOG_SERVICE_URL = "http://catalog-service";
-    public static final String CATALOG_SERVICE_ROUTE = "/catalog/**";
-    public static final String CATALOG_SERVICE_PATH = "/catalog";
+    @Bean
+    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+        return builder.routes()
+            .route("catalog-service", r -> r
+                .path(CATALOG_SERVICE_ROUTE)
+                .uri(CATALOG_SERVICE_URL))
+            .route("user-service", r -> r
+                .path(USER_SERVICE_ROUTE)
+                .uri(USER_SERVICE_URL))
+            .route("vinyl-service", r -> r
+                .path(VINYL_SERVICE_ROUTE)
+                .uri(VINYL_SERVICE_URL))
+            .build();
+    }
 }
