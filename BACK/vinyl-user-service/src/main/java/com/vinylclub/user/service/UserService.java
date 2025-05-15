@@ -5,12 +5,16 @@ import java.util.List;
 import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import com.vinylclub.user.entity.User;
 import com.vinylclub.user.repository.UserRepository;
 import com.vinylclub.user.dto.UserDTO;
 
 @Service
 public class UserService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository userRepository;
@@ -44,12 +48,14 @@ public class UserService {
 
     public User createUser(User user) {
         // Implement the logic to create a new user
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+
         user.setFirstName(user.getFirstName()); // Set the first name
         user.setLastName(user.getLastName()); // Set the last name
         user.setEmail(user.getEmail()); // Set the email
         user.setPhone(user.getPhone()); // Set the phone number
         user.setAuthId(user.getAuthId()); // Set the auth ID
-        user.setPassword(user.getPassword()); // Set the password
         user.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Set the created timestamp
         user.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Set the updated timestamp
 
