@@ -1,7 +1,7 @@
 package com.vinylclub.user.controller;
 
-
 import com.vinylclub.user.dto.UserDTO;
+import com.vinylclub.user.dto.LoginRequest;
 import com.vinylclub.user.entity.User;
 import com.vinylclub.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,18 +33,24 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
-
+    
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
-
+    
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+
+    @PostMapping("/login")
+    public UserDTO login(@RequestBody LoginRequest loginRequest) {
+        return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
 }

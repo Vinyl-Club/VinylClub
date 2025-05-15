@@ -46,11 +46,12 @@ public class UserService {
         return userDTO;
     }
 
+    
     public User createUser(User user) {
         // Implement the logic to create a new user
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-
+        
         user.setFirstName(user.getFirstName()); // Set the first name
         user.setLastName(user.getLastName()); // Set the last name
         user.setEmail(user.getEmail()); // Set the email
@@ -58,29 +59,47 @@ public class UserService {
         user.setAuthId(user.getAuthId()); // Set the auth ID
         user.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Set the created timestamp
         user.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Set the updated timestamp
-
+        
         userRepository.save(user); // Save the user to the database
         return user; // Return the created user
-
+        
     }
-
+    
     public User updateUser(Long id, User userDetails) {
         User existingUser = userRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("User not found"));
-    
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        
         existingUser.setFirstName(userDetails.getFirstName());
         existingUser.setLastName(userDetails.getLastName());
         existingUser.setEmail(userDetails.getEmail());
         existingUser.setPhone(userDetails.getPhone());
         existingUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-    
+        
         return userRepository.save(existingUser);
     }
+    
+    public UserDTO login(String email, String rawPassword) {
+    User user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
 
+    if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+        throw new RuntimeException("incorrect password");
+    }
+
+        return new UserDTO(
+            user.getId(),
+            user.getEmail(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getPhone(),
+            user.getUpdatedAt()
+        );  
+    }
+    
     public void deleteUser(Long id) {
         // Implement the logic to delete a user by ID
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user); // Delete the user from the database
         System.out.println("User deleted successfully"); // Log a success message
-}
+    }
 }
