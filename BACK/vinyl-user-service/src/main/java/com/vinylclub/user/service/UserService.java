@@ -58,6 +58,7 @@ public class UserService {
 
     }
 
+    // Update user details
     public User updateUser(Long id, User userDetails) {
         User existingUser = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("User not found"));

@@ -6,9 +6,9 @@ public class AddressDTO {
     private String zipCode;
     private String country;
     private String street;
-    private UserDTO user;  // Ajout de l'utilisateur
+    private UserDTO user;  // Add user field
 
-    // Constructeurs
+    // Constructors
     public AddressDTO() {}
 
     public AddressDTO(Long id, String city, String zipCode, String country, String street, UserDTO user) {
