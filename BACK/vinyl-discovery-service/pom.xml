@@ -11,7 +11,7 @@
 <artifactId>vinyl-discovery-service</artifactId>
 <version>0.0.1-SNAPSHOT</version>
 <name>vinyl-discovery-service</name>
-<description>Eureka server</description>
+<description>vinyl-discovery-service</description>
 <url/>
 <licenses>
 <license/>

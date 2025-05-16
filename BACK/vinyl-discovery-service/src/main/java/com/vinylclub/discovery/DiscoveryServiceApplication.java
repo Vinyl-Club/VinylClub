@@ -9,6 +9,7 @@ import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 @EnableEurekaServer
 public class DiscoveryServiceApplication {
     public static void main(String[] args) {
+        System.setProperty("server.port", "8761");
         SpringApplication.run(DiscoveryServiceApplication.class, args);
     }
 }

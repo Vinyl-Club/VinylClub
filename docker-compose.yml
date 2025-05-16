@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # Service de découverte (Eureka)
-  discovery-service:
+  vinyl-discovery-service:
     build: ./BACK/vinyl-discovery-service
     container_name: discovery-service
     ports:
@@ -13,22 +13,22 @@ services:
       - vinyl-network
 
   # Service utilisateur
-  user-service:
+  vinyl-user-service:
     build: ./BACK/vinyl-user-service
-    container_name: user-service
+    container_name: vinyl-user-service
     ports:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
     depends_on:
-      - discovery-service
+      - vinyl-discovery-service
       - postgres-db
     networks:
       - vinyl-network
 
   # Service catalogue
-  catalog-service:
+  vinyl-catalog-service:
     build: ./BACK/vinyl-catalog-service
     container_name: catalog-service
     ports:
@@ -37,8 +37,24 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
     depends_on:
-      - discovery-service
+      - vinyl-discovery-service
       - postgres-db
+    networks:
+      - vinyl-network
+      
+  # Ajoutez le service gateway ici, sous la section services
+  vinyl-gateway-service:
+    build: ./BACK/vinyl-gateway-service
+    container_name: gateway-service
+    ports:
+      - "8090:8090"  # Changé le port hôte pour éviter le conflit avec catalog-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - vinyl-discovery-service
+      - vinyl-user-service
+      - vinyl-catalog-service
     networks:
       - vinyl-network
 
@@ -46,6 +62,7 @@ services:
   postgres-db:
     image: postgres:17
     container_name: postgres-db
+    # Expose PostgreSQL port for local development and service communication
     ports:
       - "5432:5432"
     environment:
