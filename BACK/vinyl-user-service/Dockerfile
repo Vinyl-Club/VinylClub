@@ -10,3 +10,5 @@ EXPOSE 8082
 
 # Commande pour démarrer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+ENV SPRING_PROFILES_ACTIVE=docker

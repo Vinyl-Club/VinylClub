@@ -14,9 +14,29 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
-    public List<AddressDTO> getAllAddress() {
-        return addressRepository.findAll().stream().map(this::convertToDTO).toList();
+  public List<AddressDTO> getAllAddress() {
+    try {
+        List<Address> addresses = addressRepository.findAll();
+        System.out.println("Found " + addresses.size() + " addresses");
+        
+        List<AddressDTO> dtos = new java.util.ArrayList<>();
+        for (Address address : addresses) {
+            try {
+                AddressDTO dto = convertToDTO(address);
+                dtos.add(dto);
+            } catch (Exception e) {
+                System.err.println("Error converting address id " + address.getId() + ": " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        
+        return dtos;
+    } catch (Exception e) {
+        System.err.println("Error in getAllAddress: " + e.getMessage());
+        e.printStackTrace();
+        return java.util.Collections.emptyList(); // Return empty list instead of throwing
     }
+}
 
     public AddressDTO getAddressById(Long id) {
         Address address = addressRepository.findById(id)
@@ -47,7 +67,9 @@ public class AddressService {
 
     // Méthode de conversion en DTO
     private AddressDTO convertToDTO(Address address) {
-        UserDTO userDTO = new UserDTO(
+    UserDTO userDTO = null;
+    if (address.getUser() != null) {
+        userDTO = new UserDTO(
             address.getUser().getId(),
             address.getUser().getEmail(),
             address.getUser().getFirstName(),
@@ -55,14 +77,14 @@ public class AddressService {
             address.getUser().getPhone(),
             address.getUser().getUpdatedAt()
         );
-
-        return new AddressDTO(
-            address.getId(),
-            address.getCity(),
-            address.getZipCode(),
-            address.getCountry(),
-            address.getStreet(),
-            userDTO
-        );
     }
+    return new AddressDTO(
+        address.getId(),
+        address.getCity(),
+        address.getZipCode(),
+        address.getCountry(),
+        address.getStreet(),
+        userDTO
+    );
+}
 }

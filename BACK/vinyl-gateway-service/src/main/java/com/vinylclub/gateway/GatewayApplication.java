@@ -8,7 +8,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 public class GatewayApplication {
 	public static void main(String[] args) {
-		System.setProperty("server.port", "8090");
+		System.setProperty("server.port", "8090"); //force port to 8090
 		SpringApplication.run(GatewayApplication.class, args);
 	}
 

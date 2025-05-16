@@ -45,19 +45,23 @@
 # mvn clean package -DskipTests
 # cd ..
 
-Démarrez les conteneurs :
+# Démarrez les conteneurs :
 
-docker-compose up -d
+# docker-compose up -d
 
-Vérifiez que les conteneurs sont en cours d'exécution :
-docker-compose ps
+# Étape 2 : Construire et déployer
 
-Consultez les journaux en cas de problème :
+# docker-compose up -d --build
 
-docker-compose logs -f
+# Vérifiez que les conteneurs sont en cours d'exécution :
+# docker-compose ps
 
-Test de votre application
+# Consultez les journaux en cas de problème :
 
-Accédez au tableau de bord Eureka : http://localhost:8761
-Testez l'API User Service : http://localhost:8082/api/users
-Testez l'API Catalog Service : http://localhost:8080/api/products
+# docker-compose logs -f
+
+# Test de votre application
+
+# Accédez au tableau de bord Eureka : http://localhost:8761
+# Testez l'API User Service : http://localhost:8082/api/users
+# Testez l'API Catalog Service : http://localhost:8080/api/products
