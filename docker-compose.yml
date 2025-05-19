@@ -1,8 +1,7 @@
 version: '3.8'
-
 services:
-  # Service de découverte (Eureka)
-  discovery-service:
+  # Discovery service (Eureka)
+  vinyl-discovery-service:
     build: ./BACK/vinyl-discovery-service
     container_name: discovery-service
     ports:
@@ -12,56 +11,57 @@ services:
     networks:
       - vinyl-network
 
-  # Service utilisateur
-  user-service:
+  # User service
+  vinyl-user-service:
     build: ./BACK/vinyl-user-service
-    container_name: user-service
+    container_name: vinyl-user-service
     ports:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
     depends_on:
-      - discovery-service
+      - vinyl-discovery-service
       - postgres-db
     networks:
       - vinyl-network
 
-# Ajoutez cette section à votre docker-compose.yml existant
-gateway-service:
-  build: ./BACK/vinyl-gateway-service
-  container_name: gateway-service
-  ports:
-    - "8080:8080"  # Port principal pour accéder à votre API
-  environment:
-    - SPRING_PROFILES_ACTIVE=docker
-    - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
-  depends_on:
-    - discovery-service
-    - user-service
-    - catalog-service
-  networks:
-    - vinyl-network
-
-  # Service catalogue
-  catalog-service:
+  # Catalog service
+  vinyl-catalog-service:
     build: ./BACK/vinyl-catalog-service
-    container_name: catalog-service
+    container_name: vinyl-catalog-service
     ports:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
     depends_on:
-      - discovery-service
+      - vinyl-discovery-service
       - postgres-db
     networks:
       - vinyl-network
+  
+  # Gateway service
+  vinyl-gateway-service:
+    build: ./BACK/vinyl-gateway-service
+    container_name: gateway-service
+    ports:
+      - "8090:8090"  # Changed host port to avoid conflict with catalog-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - vinyl-discovery-service
+      - vinyl-user-service
+      - vinyl-catalog-service
+    networks:
+      - vinyl-network
 
-  # Base de données PostgreSQL
+  # PostgreSQL database
   postgres-db:
     image: postgres:17
     container_name: postgres-db
+    # Expose PostgreSQL port for local development and service communication
     ports:
       - "5432:5432"
     environment:
@@ -74,9 +74,26 @@ gateway-service:
     networks:
       - vinyl-network
 
+  # PGAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - vinyl-network
+    depends_on:
+      - postgres-db
+
 networks:
   vinyl-network:
     driver: bridge
 
 volumes:
   postgres-data:
+  pgadmin-data:  # New volume for PGAdmin

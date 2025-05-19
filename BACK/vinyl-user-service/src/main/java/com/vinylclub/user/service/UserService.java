@@ -64,7 +64,10 @@ public class UserService {
         return user; // Return the created user
         
     }
-    
+
+
+    // Update user details
+
     public User updateUser(Long id, User userDetails) {
         User existingUser = userRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("User not found"));
