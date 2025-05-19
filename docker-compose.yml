@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  # Service de découverte (Eureka)
+  # Discovery service (Eureka)
   vinyl-discovery-service:
     build: ./BACK/vinyl-discovery-service
     container_name: discovery-service
@@ -11,7 +11,7 @@ services:
     networks:
       - vinyl-network
 
-  # Service utilisateur
+  # User service
   vinyl-user-service:
     build: ./BACK/vinyl-user-service
     container_name: vinyl-user-service
@@ -26,7 +26,7 @@ services:
     networks:
       - vinyl-network
 
-  # Service catalogue
+  # Catalog service
   vinyl-catalog-service:
     build: ./BACK/vinyl-catalog-service
     container_name: catalog-service
@@ -41,12 +41,12 @@ services:
     networks:
       - vinyl-network
      
-  # Service gateway
+  # Gateway service
   vinyl-gateway-service:
     build: ./BACK/vinyl-gateway-service
     container_name: gateway-service
     ports:
-      - "8090:8090"  # Changé le port hôte pour éviter le conflit avec catalog-service
+      - "8090:8090"  # Changed host port to avoid conflict with catalog-service
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -57,7 +57,7 @@ services:
     networks:
       - vinyl-network
 
-  # Base de données PostgreSQL
+  # PostgreSQL database
   postgres-db:
     image: postgres:17
     container_name: postgres-db
@@ -74,7 +74,7 @@ services:
     networks:
       - vinyl-network
 
-  # PGAdmin pour la gestion de base de données
+  # PGAdmin for database management
   pgadmin:
     image: dpage/pgadmin4
     container_name: pgadmin
@@ -96,4 +96,4 @@ networks:
 
 volumes:
   postgres-data:
-  pgadmin-data:  # Nouveau volume pour PGAdmin
+  pgadmin-data:  # New volume for PGAdmin
