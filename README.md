@@ -63,6 +63,11 @@ cd ..
 
 # docker-compose logs -f
 
+# arrêter et nettoyer tous les services en cours : 
+
+# docker-compose down -v
+# docker system prune -a
+
 # Test de votre application
 
 # Accédez au tableau de bord Eureka : http://localhost:8761

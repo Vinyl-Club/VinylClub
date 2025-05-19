@@ -29,7 +29,7 @@ services:
   # Catalog service
   vinyl-catalog-service:
     build: ./BACK/vinyl-catalog-service
-    container_name: catalog-service
+    container_name: vinyl-catalog-service
     ports:
       - "8081:8081"
     environment:
