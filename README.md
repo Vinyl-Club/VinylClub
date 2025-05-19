@@ -68,3 +68,4 @@ cd ..
 # Accédez au tableau de bord Eureka : http://localhost:8761
 # Testez l'API User Service : http://localhost:8082/api/users
 # Testez l'API Catalog Service : http://localhost:8080/api/products
+
