@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   # Service de découverte (Eureka)
   vinyl-discovery-service:
@@ -41,8 +40,8 @@ services:
       - postgres-db
     networks:
       - vinyl-network
-      
-  # Ajoutez le service gateway ici, sous la section services
+     
+  # Service gateway
   vinyl-gateway-service:
     build: ./BACK/vinyl-gateway-service
     container_name: gateway-service
@@ -75,9 +74,26 @@ services:
     networks:
       - vinyl-network
 
+  # PGAdmin pour la gestion de base de données
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - vinyl-network
+    depends_on:
+      - postgres-db
+
 networks:
   vinyl-network:
     driver: bridge
 
 volumes:
   postgres-data:
+  pgadmin-data:  # Nouveau volume pour PGAdmin

@@ -37,13 +37,16 @@
 # DOCKER
 # Compilez chaque service :
 
-# cd vinyl-discovery-service
-# mvn clean package -DskipTests
-# cd ../vinyl-user-service
-# mvn clean package -DskipTests
-# cd ../vinyl-catalog-service
-# mvn clean package -DskipTests
-# cd ..
+cd back
+cd vinyl-discovery-service
+mvn clean package -DskipTests
+cd ../vinyl-user-service
+mvn clean package -DskipTests
+cd ../vinyl-catalog-service
+mvn clean package -DskipTests
+cd ../vinyl-gateway-service
+mvn clean package -DskipTests
+cd ..
 
 # Démarrez les conteneurs :
 
