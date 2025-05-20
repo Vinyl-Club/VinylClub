@@ -1,7 +1,10 @@
 package com.vinylclub.catalog.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,20 +30,38 @@ public class ImagesController {
     private ImagesService imagesService;
 
     /**
-     * Get all images
+     * Get all images (returning metadata only)
      */
     @GetMapping
-    public List<Images> getAllImages() {
-        return imagesService.getAllImages();
+    public List<Map<String, Object>> getAllImages() {
+        List<Images> images = imagesService.getAllImages();
+        return images.stream().map(this::convertToMetadata).collect(Collectors.toList());
     }
 
     /**
-     * Get an image by its ID
+     * Convert Images entity to metadata map without binary data
+     */
+    private Map<String, Object> convertToMetadata(Images image) {
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("id", image.getId());
+        metadata.put("productId", image.getProduct() != null ? image.getProduct().getId() : null);
+        
+        // Add other metadata if needed
+        return metadata;
+    }
+
+    /**
+     * Get an image by its ID (metadata only)
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Images> getImageById(@PathVariable Long id) {
-        Optional<Images> image = imagesService.getImageById(id);
-        return image.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Map<String, Object>> getImageById(@PathVariable Long id) {
+        Optional<Images> imageOpt = imagesService.getImageById(id);
+        if (imageOpt.isPresent()) {
+            Map<String, Object> metadata = convertToMetadata(imageOpt.get());
+            return ResponseEntity.ok(metadata);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     /**
@@ -76,7 +97,16 @@ public class ImagesController {
         
         try {
             Images uploadedImage = imagesService.storeImage(file, productId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(uploadedImage);
+            
+            // Créer un objet de réponse simplifié sans les données binaires
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Image uploaded successfully");
+            response.put("productId", productId);
+            response.put("fileName", file.getOriginalFilename());
+            response.put("fileSize", file.getSize());
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -93,7 +123,19 @@ public class ImagesController {
             @RequestParam("productId") Long productId) {
         try {
             List<Images> uploadedImages = imagesService.storeMultipleImages(files, productId);
-            return ResponseEntity.status(HttpStatus.CREATED).body(uploadedImages);
+            
+            // Convert to metadata list
+            List<Map<String, Object>> metadataList = uploadedImages.stream()
+                    .map(this::convertToMetadata)
+                    .collect(Collectors.toList());
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Images uploaded successfully");
+            response.put("count", metadataList.size());
+            response.put("images", metadataList);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -111,11 +153,12 @@ public class ImagesController {
     }
 
     /**
-     * Find all images for a specific product
+     * Find all images for a specific product (metadata only)
      */
     @GetMapping("/product/{productId}")
-    public List<Images> getImagesByProductId(@PathVariable Long productId) {
-        return imagesService.findByProductId(productId);
+    public List<Map<String, Object>> getImagesByProductId(@PathVariable Long productId) {
+        List<Images> images = imagesService.findByProductId(productId);
+        return images.stream().map(this::convertToMetadata).collect(Collectors.toList());
     }
 
     /**

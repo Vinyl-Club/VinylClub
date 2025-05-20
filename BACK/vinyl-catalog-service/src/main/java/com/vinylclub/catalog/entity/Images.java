@@ -1,5 +1,7 @@
 package com.vinylclub.catalog.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
 @Entity
-@Table(name = "images")
+@Table(name = "images", schema = "catalog")
 public class Images {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +26,7 @@ public class Images {
     
     @Lob
     @Column(nullable = false, columnDefinition = "bytea")
+    @JsonIgnore
     private byte[] image;
     
     // Default constructor

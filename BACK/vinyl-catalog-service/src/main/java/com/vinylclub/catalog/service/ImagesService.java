@@ -75,20 +75,40 @@ public class ImagesService {
         return imagesRepository.existsByProduct_Id(productId);
     }
 
-    public Images storeImage(MultipartFile file, Long productId) throws IOException {
+@Transactional
+public Images storeImage(MultipartFile file, Long productId) throws IOException {
+    try {
+        System.out.println("Démarrage de l'upload d'image pour le produit ID: " + productId);
+        
+        // Vérifiez que le produit existe
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
-    
-        // Récupérer directement les bytes
+        
+        // Obtenez les données binaires du fichier
         byte[] imageData = file.getBytes();
-    
-        // Créer une nouvelle image
+        System.out.println("Image convertie en bytes: " + imageData.length + " octets");
+        
+        // Utilisez la méthode d'insertion directe
+        System.out.println("Tentative d'insertion directe...");
+        imagesRepository.insertImageDirectly(imageData, productId);
+        System.out.println("Insertion réussie");
+        
+        // Créez un objet retour SANS les données binaires
         Images image = new Images();
         image.setProduct(product);
-        image.setImage(imageData);  // Utiliser les bytes directement
-    
-        return imagesRepository.save(image);
+        // Ne pas définir l'image binaire pour éviter les problèmes de sérialisation
+        // image.setImage(imageData);
+        
+        return image;
+    } catch (Exception e) {
+        System.err.println("Erreur dans storeImage: " + e.getMessage());
+        if (e.getCause() != null) {
+            System.err.println("Cause: " + e.getCause().getMessage());
+        }
+        e.printStackTrace();
+        throw e;
     }
+}
 
     @Transactional
     public List<Images> storeMultipleImages(MultipartFile[] files, Long productId) throws IOException, SQLException {
