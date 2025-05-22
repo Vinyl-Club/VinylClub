@@ -37,32 +37,6 @@
 # DOCKER
 # Compilez chaque service :
 
-<<<<<<< HEAD
-# cd vinyl-discovery-service
-# mvn clean package -DskipTests
-# cd ../vinyl-user-service
-# mvn clean package -DskipTests
-# cd ../vinyl-catalog-service
-# mvn clean package -DskipTests
-# cd ..
-
-Démarrez les conteneurs :
-
-docker-compose up -d
-
-Vérifiez que les conteneurs sont en cours d'exécution :
-docker-compose ps
-
-Consultez les journaux en cas de problème :
-
-docker-compose logs -f
-
-Test de votre application
-
-Accédez au tableau de bord Eureka : http://localhost:8761
-Testez l'API User Service : http://localhost:8082/api/users
-Testez l'API Catalog Service : http://localhost:8080/api/products
-=======
 cd back
 cd vinyl-discovery-service
 mvn clean package -DskipTests
@@ -100,4 +74,3 @@ cd ..
 # Testez l'API User Service : http://localhost:8082/api/users
 # Testez l'API Catalog Service : http://localhost:8081/api/products
 
->>>>>>> 67eada0d405eb291a2683635c2d8ca49da40f53a
