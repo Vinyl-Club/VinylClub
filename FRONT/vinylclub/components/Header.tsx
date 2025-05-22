@@ -1,0 +1,44 @@
+import React from 'react';
+import { View, Image, StyleSheet } from 'react-native';
+import SearchBar from './SearchBar';
+
+interface Props {
+  onSearch: (text: string) => void;
+}
+
+export default function Header({ onSearch }: Props) {
+  return (
+    <View style={styles.container}>
+      {/* Logo displayed on the left side  */}
+      <Image
+        source={require('@/assets/images/logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+      {/* Search bar displayed next to the logo */}
+      <SearchBar
+        placeholder="Rechercher..."
+        onSearch={onSearch} // Function to handle search
+      />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    // Arrange logo and search bar horizontally
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 12,
+    backgroundColor: '#8AA39F',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    height: 90, // Header height
+  },
+  logo: {
+    width: 90,
+    height: 90,
+    marginRight: 20, // Space between logo and search bar
+  },
+});
