@@ -31,9 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 12,
-    backgroundColor: '#8AA39F',
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    backgroundColor: '#8AA39F', 
     height: 90, // Header height
   },
   logo: {

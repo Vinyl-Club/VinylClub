@@ -40,23 +40,24 @@ export default function SearchBar({ placeholder = 'Rechercher...', onSearch }: P
 }
 
 const styles = StyleSheet.create({
-searchContainer: {
-    // Layout styling for the search bar
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f2f2f2',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    height: 35,
-    flex: 1, // Expand to available horizontal space
-},
-input: {
-    // Input text styling
-    flex: 1,
-    fontSize: 16,
-},
-icon: {
-    // Search icon spacing
-    marginLeft: 8,
-},
+    searchContainer: {
+        // Layout styling for the search bar
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f2f2f2',
+        borderRadius: 20,
+        paddingHorizontal: 12,
+        height: 35,
+        flex: 1, // Expand to available horizontal space
+    },
+    input: {
+        // Input text styling
+        flex: 1,
+        fontSize: 16,
+        paddingVertical: 6,
+    },
+    icon: {
+        // Search icon spacing
+        marginLeft: 8,
+    },
 });

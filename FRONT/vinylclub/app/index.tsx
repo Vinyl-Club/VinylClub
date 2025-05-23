@@ -1,14 +1,10 @@
-import { View } from "react-native";
+// This file is used to render the home screen of the app
+import React from 'react';
+import HomeScreen from '@/screens/HomeScreen';
 
-
-import Header from '@/components/Header';
 
 export default function index() {
   return (
-    <View style={{ flex: 1 }}>
-      <Header onSearch={(text: string) => { /* handle search here */ }} />
-
-      {/* Reste du contenu */}
-    </View>
+    <HomeScreen></HomeScreen>
   );
 }
