@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "albums")
+@Table(name = "albums", schema = "catalog")
 public class Album {
     /**
      * Primary key with auto-increment strategy
