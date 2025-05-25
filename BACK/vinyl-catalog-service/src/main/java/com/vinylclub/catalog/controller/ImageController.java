@@ -1,18 +1,26 @@
 package com.vinylclub.catalog.controller;
 
-import com.vinylclub.catalog.dto.ImageUploadResponse;
-import com.vinylclub.catalog.entity.Images;
-import com.vinylclub.catalog.service.ImageService;
+import java.io.IOException;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
+import com.vinylclub.catalog.dto.ImageUploadResponse;
+import com.vinylclub.catalog.entity.Images;
+import com.vinylclub.catalog.service.ImageService;
 
 @RestController
 @RequestMapping("/api/images")
@@ -75,27 +83,38 @@ public class ImageController {
      * GET IMAGE - Récupérer une image par son ID
      * GET /api/images/1
      */
-    @GetMapping("/{imageId}")
-    public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
-        try {
-            Images image = imageService.getImageById(imageId);
-            
-            // Déterminer le type MIME
-            String contentType = determineContentType(image.getImage());
-            
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(contentType));
-            headers.setContentLength(image.getImage().length);
-            
-            // Cache headers pour optimiser les performances
-            headers.setCacheControl("public, max-age=31536000"); // 1 an
-            
-            return new ResponseEntity<>(image.getImage(), headers, HttpStatus.OK);
-            
-        } catch (RuntimeException e) {
+@GetMapping("/{imageId}")
+public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
+    try {
+        // Log pour debug
+        System.out.println("Récupération image ID: " + imageId);
+        
+        Images image = imageService.getImageById(imageId);
+        
+        if (image == null || image.getImage() == null) {
+            System.out.println("Image ou bytes null pour ID: " + imageId);
             return ResponseEntity.notFound().build();
         }
+        
+        // Log pour debug
+        System.out.println("Image trouvée, taille: " + image.getImage().length + " bytes");
+        
+        // Déterminer le type MIME (simplifié)
+        String contentType = "image/jpeg"; // Par défaut
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(contentType));
+        headers.setContentLength(image.getImage().length);
+        headers.setCacheControl("public, max-age=31536000");
+        
+        return new ResponseEntity<>(image.getImage(), headers, HttpStatus.OK);
+        
+    } catch (Exception e) {
+        System.err.println("Erreur lors de la récupération de l'image " + imageId + ": " + e.getMessage());
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     /**
      * GET IMAGES BY PRODUCT - Récupérer toutes les images d'un produit
