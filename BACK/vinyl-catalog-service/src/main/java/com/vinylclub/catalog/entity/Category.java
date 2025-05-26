@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 
 
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", schema = "catalog")
 
 public class Category {
     
