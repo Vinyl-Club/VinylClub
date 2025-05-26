@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useCategories } from '../hooks/useCategories';
 import { Categories } from '@/types/index';
+import colors from '@/constants/colors';
 
 export function NavBar() {
     // Custom hook to fetch categories data
@@ -60,7 +61,7 @@ export function NavBar() {
 // Styles for the components
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#D48541',
+        backgroundColor: colors.orange,
         paddingVertical: 12,
         paddingHorizontal: 12,
     },

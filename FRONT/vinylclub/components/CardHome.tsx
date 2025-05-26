@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import colors from '@/constants/colors';
 
 export default function CardHome() {
     return (
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   price: {
-    color: '#9C581E',
+    color: colors.brownText,
     fontWeight: 'bold',
     marginEnd: 10,
   },
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   button: {
-    backgroundColor: '#8AA39F',
+    backgroundColor: colors.green,
     paddingVertical: 4,
     paddingHorizontal: 10,
     borderRadius: 10,

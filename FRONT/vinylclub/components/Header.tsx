@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, StyleSheet } from 'react-native';
 import SearchBar from './SearchBar';
+import colors from '@/constants/colors';
 
 interface Props {
   onSearch: (text: string) => void;
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 12,
-    backgroundColor: '#8AA39F', 
+    backgroundColor: colors.green,
     height: 90, // Header height
   },
   logo: {
