@@ -6,7 +6,7 @@
 2. [Artists (Catalog-Service)](#artists)
 3. [Categories (Catalog-Service)](#categories)
 4. [Albums (Catalog-Service)](#albums)
-5. [Images (Catalog-Service)](#images) ✨ **NOUVEAU**
+5. [Images (Catalog-Service)](#images) 
 6. [Users (User-Service)](#users)
 7. [Addresses (User-Service)](#addresses)
 8. [Health Checks](#health-checks)

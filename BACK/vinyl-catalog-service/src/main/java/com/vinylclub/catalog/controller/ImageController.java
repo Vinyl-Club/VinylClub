@@ -86,31 +86,34 @@ public class ImageController {
 @GetMapping("/{imageId}")
 public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
     try {
-        // Log pour debug
-        System.out.println("Récupération image ID: " + imageId);
+        System.out.println("=== DEBUG: Récupération image ID: " + imageId + " ===");
         
         Images image = imageService.getImageById(imageId);
         
-        if (image == null || image.getImage() == null) {
-            System.out.println("Image ou bytes null pour ID: " + imageId);
+        if (image == null) {
+            System.out.println("DEBUG: Image null");
             return ResponseEntity.notFound().build();
         }
         
-        // Log pour debug
-        System.out.println("Image trouvée, taille: " + image.getImage().length + " bytes");
+        byte[] imageBytes = image.getImage();
+        if (imageBytes == null) {
+            System.out.println("DEBUG: Image bytes null");
+            return ResponseEntity.notFound().build();
+        }
         
-        // Déterminer le type MIME (simplifié)
-        String contentType = "image/jpeg"; // Par défaut
+        System.out.println("DEBUG: Image trouvée, taille: " + imageBytes.length + " bytes");
         
+        // Version simplifiée des headers
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(contentType));
-        headers.setContentLength(image.getImage().length);
-        headers.setCacheControl("public, max-age=31536000");
+        headers.setContentType(MediaType.IMAGE_JPEG); // Par défaut JPEG
+        headers.setContentLength(imageBytes.length);
         
-        return new ResponseEntity<>(image.getImage(), headers, HttpStatus.OK);
+        System.out.println("DEBUG: Headers configurés, retour de l'image");
+        
+        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
         
     } catch (Exception e) {
-        System.err.println("Erreur lors de la récupération de l'image " + imageId + ": " + e.getMessage());
+        System.err.println("=== ERREUR dans getImage: " + e.getMessage() + " ===");
         e.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
