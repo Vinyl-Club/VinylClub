@@ -21,12 +21,12 @@ export default function DetailsCard() {
             <Text>Nom du vendeur</Text>
             <Text>Localisation</Text>
         </View>
-        <Text>Date de l’annonce</Text>
-        <Text style={styles.price}>Prix : €</Text>
 
-        <Text style={styles.label}>Description</Text>
-        <View style={styles.descriptionBox}>
-            <Text>Contenu de la description...</Text>
+        <Text>Date de l’annonce</Text>
+        
+        <View style={styles.infoDescription}>
+          <Text style={styles.label}>Description</Text>
+          <Text style={styles.price}>Prix : €</Text>
         </View>
 
         <Text>Nom de l’album \ Nom de l’artiste</Text>
@@ -70,6 +70,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginVertical: 8,
   },
+  infoDescription: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 8,
+  },
   price: {
     color: colors.brownText,
     fontWeight: 'bold',
@@ -79,17 +84,6 @@ const styles = StyleSheet.create({
   label: {
     marginTop: 12,
     fontWeight: 'bold',
-  },
-  descriptionBox: {
-    backgroundColor: 'white',
-    borderRadius: 6,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 1 },
-    shadowRadius: 3,
-    elevation: 2,
-    marginBottom: 12,
   },
   button: {
     backgroundColor: colors.green,

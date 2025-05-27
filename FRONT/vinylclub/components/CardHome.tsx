@@ -1,46 +1,57 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import colors from '@/constants/colors';
 import { useRouter } from 'expo-router';
+import { Product } from '@/types/index';
+import useProducts from '@/hooks/useProducts';
 
 export default function CardHome() {
   const router = useRouter();
+  const { products, loading } = useProducts();
 
-    return (
-        <View style={styles.card}>
-        {/* Image à gauche */}
-            <Image
-                source={require('@/assets/images/demo.png')} // remplace par ton image vinyle+cover
-                style={styles.image}
-            />
+  if (loading) {
+    return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
+  }
 
-        {/* Contenu à droite */}
-            <View style={styles.infoContainer}>
-                <View style={styles.textContainer}>
-                    <Text style={styles.title}>Titre de l’annonce</Text>
-                    <View style={styles.artistPriceRow}>
-                        <Text style={styles.subText}>Nom de l’artiste</Text>
-                        <Text style={styles.price}>Prix €</Text>
-                    </View>
-                    <Text style={styles.subText}>Style de musique</Text>
-                    <Text style={styles.subText}>Localisation</Text>
-                </View>
+  return (
+    <ScrollView>
+      {products.map((product: Product, index: number) => (
+        <View key={product.id || index} style={styles.card}>
+          {/* Image à gauche */}
+          <Image
+            source={require('@/assets/images/demo.png')}
+            style={styles.image}
+          />
 
-                <View style={styles.bottomRow}>
-                    
-                    <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => router.push('../details')}
-                    >
-                        <Text style={styles.buttonText}>Voir le détail</Text>
-                    </TouchableOpacity>
-                </View>
+          {/* Contenu à droite */}
+          <View style={styles.infoContainer}>
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>{product.title}</Text>
+              <View style={styles.artistPriceRow}>
+                <Text style={styles.subText}>{product.artist.name}</Text>
+                <Text style={styles.price}>{product.price} €</Text>
+              </View>
+              <Text style={styles.subText}>{product.category.name}</Text>
+              <Text style={styles.subText}>Localisation</Text>
             </View>
+
+            <View style={styles.bottomRow}>
+              <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => router.push('../details')}
+              >
+                <Text style={styles.buttonText}>Voir le détail</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-    );
+      ))}
+    </ScrollView>
+  );
 }
+
 
 const styles = StyleSheet.create({
   card: {
@@ -106,6 +117,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-},
-
+  },
 });

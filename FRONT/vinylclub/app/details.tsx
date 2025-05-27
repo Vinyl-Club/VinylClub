@@ -5,7 +5,7 @@ import colors from '@/constants/colors';
 
 export default function details() {
     return (
-        <View style={{ flex: 1, backgroundColor: colors.beige }}> {/* Fond beige */}
+        <View style={{ flex: 1, backgroundColor: colors.beige }}>
             <DetailsScreen />
         </View>
     );
