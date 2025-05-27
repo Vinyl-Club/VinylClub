@@ -2,6 +2,7 @@
 import AddScreen from '@/screens/AddScreen';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import colors from '@/constants/colors';
 
 export default function add() {
   return (
@@ -14,6 +15,6 @@ export default function add() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6EBDD',
+    backgroundColor: colors.beige, // ← fond beige de ta page
   }
 });

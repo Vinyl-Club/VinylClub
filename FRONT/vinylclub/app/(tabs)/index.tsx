@@ -2,6 +2,7 @@
 import HomeScreen from '@/screens/HomeScreen';
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import colors from '@/constants/colors';
 
 
 
@@ -17,6 +18,6 @@ export default function index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F6EBDD',
+    backgroundColor: colors.beige, 
   }
 });

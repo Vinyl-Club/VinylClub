@@ -2,8 +2,11 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import colors from '@/constants/colors';
+import { useRouter } from 'expo-router';
 
 export default function CardHome() {
+  const router = useRouter();
+
     return (
         <View style={styles.card}>
         {/* Image à gauche */}
@@ -27,7 +30,10 @@ export default function CardHome() {
                 <View style={styles.bottomRow}>
                     
                     <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
-                    <TouchableOpacity style={styles.button}>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => router.push('../details')}
+                    >
                         <Text style={styles.buttonText}>Voir le détail</Text>
                     </TouchableOpacity>
                 </View>

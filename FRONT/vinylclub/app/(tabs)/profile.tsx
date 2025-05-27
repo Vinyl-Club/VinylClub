@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import colors from '@/constants/colors';
 
 export default function Profile() {
     return (
@@ -13,6 +14,6 @@ export default function Profile() {
     const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F6EBDD',
+        backgroundColor: colors.beige, // ← fond beige de ta page
     }
 });
