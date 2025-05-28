@@ -1,64 +1,54 @@
 import { Tabs } from 'expo-router';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import colors from '@/constants/colors';
-
+import React from 'react';
+import { TabBarIcon } from '@/components/navigation/TabBarIcon';
+import { Colors } from '@/constants/Colors';
+import { useColorScheme } from 'react-native';
 
 export default function TabLayout() {
+  const colorScheme = useColorScheme();
+
   return (
     <Tabs
       screenOptions={{
-      tabBarActiveTintColor: 'white',
-      tabBarInactiveTintColor: 'black',
-    headerStyle: {
-      backgroundColor: colors.green,
-    },
-    headerShadowVisible: false,
-    headerTintColor: '#fff',
-    tabBarStyle: {
-    backgroundColor: colors.orange,
-    },
-        }}>
-
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        headerShown: false,
+      }}>
       <Tabs.Screen
         name="index"
         options={{
           title: 'Accueil',
-          tabBarLabel: 'Accueil',
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home" size={30} color={color} />
-          )
-        }} />
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
-        name="add"
+        name="catalog"
         options={{
-          title: 'Ajouter',
-          tabBarLabel: 'Ajouter',
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="add" size={30} color={color} />
-          )
-        }} />
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: 'Profil'
-          , tabBarLabel: 'Profil',
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person" size={30} color={color} />
-          )
-        }} />
+          title: 'Catalogue',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'library' : 'library-outline'} color={color} />
+          ),
+        }}
+      />
       <Tabs.Screen
         name="cart"
         options={{
-          title: 'Panier'
-          , tabBarLabel: 'Panier',
-          headerShown: false,
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="cart" size={30} color={color} />
-          )
-          }} />
+          title: 'Panier',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'basket' : 'basket-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profil',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'person' : 'person-outline'} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
