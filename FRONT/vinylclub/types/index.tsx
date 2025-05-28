@@ -31,7 +31,7 @@ export interface Artist {
 
 export interface Album {
     id: number;
-    title: string;
+    name: string;
 }
 
 // Interface pour la réponse de l'API (si votre API wrappe les données)

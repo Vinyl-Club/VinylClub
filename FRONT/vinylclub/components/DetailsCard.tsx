@@ -1,11 +1,24 @@
-// DetailsCard.tsx
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import colors from '@/constants/colors';
+import useProductDetails from '@/hooks/useProductDetails';
+import { useLocalSearchParams } from 'expo-router';
+
 
 export default function DetailsCard() {
+  const { id } = useLocalSearchParams(); // récupère l'id depuis l'URL / navigation
+  console.log(id); // pour vérifier que l'id est correct
+  const productId = parseInt(id as string, 10);
+  console.log(productId); // pour vérifier que l'id est correct
+  const { product, loading } = useProductDetails(productId);
+
+  if (loading) {
+    return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
+  }
+
     return (
         <View>
-        <Text style={styles.title}>Titre de l’annonce</Text>
+        <Text style={styles.title}>{product.title}</Text>
         
         {/* Image principale */}
         <Image source={require('@/assets/images/demo.png')} style={styles.mainImage} />
@@ -22,17 +35,17 @@ export default function DetailsCard() {
             <Text>Localisation</Text>
         </View>
 
-        <Text>Date de l’annonce</Text>
+        <Text>Posté le : {new Date(product.createdAt).toLocaleDateString()}</Text>
         
         <View style={styles.infoDescription}>
-          <Text style={styles.label}>Description</Text>
-          <Text style={styles.price}>Prix : €</Text>
+          <Text style={styles.label}>{product.description}</Text>
+          <Text style={styles.price}>{product.price}</Text>
         </View>
 
-        <Text>Nom de l’album \ Nom de l’artiste</Text>
-        <Text>État</Text>
-        <Text>Année de sortie</Text>
-        <Text>Style de musique</Text>
+        <Text>{product.album.name} \ {product.artist.name}</Text>
+        <Text>{product.state}</Text>
+        <Text>{product.releaseYear}</Text>
+        <Text>{product.category.name}</Text>
 
         <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Ajouter aux favoris</Text>

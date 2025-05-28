@@ -13,8 +13,9 @@ export default function RootLayout() {
 
       {/* Contenu principal avec fond beige */}
       <View style={styles.container}>
-          <Stack screenOptions={{ headerShown: false }}>
-          </Stack>
+        <Stack>
+          <Stack.Screen name="id" options={{ headerShown: false }} />
+        </Stack>
       </View>
 
     </SafeAreaProvider>

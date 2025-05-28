@@ -40,7 +40,7 @@ export default function CardHome() {
               <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push('../details')}
+                onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
               >
                 <Text style={styles.buttonText}>Voir le détail</Text>
               </TouchableOpacity>
