@@ -1,5 +1,6 @@
 package com.vinylclub.user.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,4 +120,15 @@ public class AddressService {
             userDTO
         );
     }
+
+public List<AddressDTO> getAddressesByUserId(Long userId) {
+    Optional<Address> addressOpt = addressRepository.findByUserId(userId);
+    
+    return addressOpt
+        .map(address -> List.of(address))  // Convertir en liste si présent
+        .orElse(Collections.emptyList())   // Liste vide si absent
+        .stream()
+        .map(this::convertToDTO)
+        .toList();
+}
 }

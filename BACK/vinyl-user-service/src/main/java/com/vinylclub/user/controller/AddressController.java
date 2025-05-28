@@ -43,4 +43,10 @@ public class AddressController {
         addressService.deleteAddress(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<List<AddressDTO>> getAddressesByUserId(@PathVariable Long userId) {
+        List<AddressDTO> addresses = addressService.getAddressesByUserId(userId);
+        return ResponseEntity.ok(addresses);
+    }
 }
