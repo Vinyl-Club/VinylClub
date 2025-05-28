@@ -335,8 +335,18 @@ fetch('/api/images/product/1')
   <button onclick="uploadImage(productId, file)">Upload</button>
 </form>
 ```
+Usage côté frontend :
+Maintenant, votre frontend peut :
 
----
+## Récupérer la liste des produits : GET /api/products/1
+## Afficher les métadonnées : titre, prix, description...
+## Charger les images à la demande : GET /api/images/1 pour chaque image
+
+🚀 Ce qui fonctionne maintenant :
+✅ Upload d'images : POST /api/images/upload
+✅ Liste des produits optimisée : GET /api/products/1
+✅ Récupération d'images individuelles : GET /api/images/1
+✅ Structure propre avec ImageSummaryDTO
 
 ## 📊 RÉSUMÉ PAR FONCTIONNALITÉ MÉTIER {#resume}
 

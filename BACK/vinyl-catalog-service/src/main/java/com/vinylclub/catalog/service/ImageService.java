@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.vinylclub.catalog.dto.ImageDTO;
 import com.vinylclub.catalog.entity.Images;
 import com.vinylclub.catalog.entity.Product;
 import com.vinylclub.catalog.repository.ImageRepository;
@@ -41,6 +42,8 @@ public class ImageService {
         return imageRepository.save(image);
     }
 
+
+
     /**
      * Récupérer une image par son ID
      */
@@ -67,14 +70,25 @@ public class ImageService {
     /**
      * Récupérer toutes les images d'un produit (avec bytes)
      */
-    public List<Images> getImagesByProductId(Long productId) {
-        // Vérifier que le produit existe
-        if (!productRepository.existsById(productId)) {
-            throw new RuntimeException("Product not found with id: " + productId);
-        }
+public List<ImageDTO> getImageDTOsByProductId(Long productId) {
+    // Supposons que vous avez une méthode dans votre repository pour récupérer par productId
+    List<Images> images = imageRepository.findByProductId(productId);
+    
+    return images.stream()
+        .map(this::convertToDTO)
+        .collect(Collectors.toList());
+}
 
-        return imageRepository.findByProductId(productId);
-    }
+/**
+ * Conversion Images Entity → ImageDTO
+ */
+private ImageDTO convertToDTO(Images imageEntity) {
+    ImageDTO imageDTO = new ImageDTO();
+    imageDTO.setId(imageEntity.getId());
+    imageDTO.setImage(imageEntity.getImage());
+    imageDTO.setProductId(imageEntity.getProduct().getId());
+    return imageDTO;
+}
 
     /**
      * Supprimer une image
