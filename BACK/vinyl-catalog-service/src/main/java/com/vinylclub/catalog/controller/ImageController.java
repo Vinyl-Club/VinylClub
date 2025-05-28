@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.vinylclub.catalog.dto.ImageUploadResponse;
 import com.vinylclub.catalog.entity.Images;
 import com.vinylclub.catalog.service.ImageService;
+import com.vinylclub.catalog.dto.ImageDTO;
+
 
 @RestController
 @RequestMapping("/api/images")
@@ -124,14 +126,10 @@ public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
      * GET /api/images/product/1
      */
     @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Long>> getImagesByProduct(@PathVariable Long productId) {
-        try {
-            List<Long> imageIds = imageService.getImageIdsByProductId(productId);
-            return ResponseEntity.ok(imageIds);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long productId) {
+ List<ImageDTO> images = imageService.getImageDTOsByProductId(productId);
+        return ResponseEntity.ok(images);
+}
 
     /**
      * DELETE IMAGE - Supprimer une image
