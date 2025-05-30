@@ -5,10 +5,13 @@ import colors from '@/constants/colors';
 import { useRouter } from 'expo-router';
 import { Product } from '@/types/index';
 import useProducts from '@/hooks/useProducts';
+import { useAddresses } from '@/hooks/useAddresses';
+
 
 export default function CardHome() {
   const router = useRouter();
   const { products, loading } = useProducts();
+  const { addresses } = useAddresses(); 
 
   if (loading) {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
@@ -16,38 +19,39 @@ export default function CardHome() {
 
   return (
     <ScrollView>
-      {products.map((product: Product, index: number) => (
-        <View key={product.id || index} style={styles.card}>
-          {/* Image à gauche */}
-          <Image
-            source={require('@/assets/images/demo.png')}
-            style={styles.image}
-          />
+      {products.map((product: Product, index: number) => {
+        const address = addresses.find(a => a.user.id === product.userId);
 
-          {/* Contenu à droite */}
-          <View style={styles.infoContainer}>
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>{product.title}</Text>
-              <View style={styles.artistPriceRow}>
-                <Text style={styles.subText}>{product.artist.name}</Text>
-                <Text style={styles.price}>{product.price} €</Text>
+        return (
+          <View key={product.id || index} style={styles.card}>
+            <Image source={require('@/assets/images/demo.png')} style={styles.image} />
+
+            <View style={styles.infoContainer}>
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>{product.title}</Text>
+                <View style={styles.artistPriceRow}>
+                  <Text style={styles.subText}>{product.artist.name}</Text>
+                  <Text style={styles.price}>{product.price} €</Text>
+                </View>
+                <Text style={styles.subText}>{product.category.name}</Text>
+                <Text style={styles.subText}>
+                  {address ? `${address.city}` : 'Adresse inconnue'}
+                </Text>
               </View>
-              <Text style={styles.subText}>{product.category.name}</Text>
-              <Text style={styles.subText}>Localisation</Text>
-            </View>
 
-            <View style={styles.bottomRow}>
-              <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
-              >
-                <Text style={styles.buttonText}>Voir le détail</Text>
-              </TouchableOpacity>
+              <View style={styles.bottomRow}>
+                <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
+                >
+                  <Text style={styles.buttonText}>Voir le détail</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
-      ))}
+        );
+      })}
     </ScrollView>
   );
 }

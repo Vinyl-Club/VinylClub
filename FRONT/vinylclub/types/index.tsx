@@ -34,7 +34,32 @@ export interface Album {
     name: string;
 }
 
-// Interface pour la réponse de l'API (si votre API wrappe les données)
+export interface User {
+    id: number;
+    email: string;
+    firstName: string;
+    lastName: string;
+    phone: string;
+    updatedAt: string;
+    }
+
+export type Address = {
+    id: number;
+    city: string;
+    zipCode: string;
+    country: string;
+    street: string;
+    user: {
+        id: number;
+        email: string;
+        firstName: string;
+        lastName: string;
+        phone: string;
+        updatedAt: string;
+    };
+};
+
+// API response interface (if your API wraps the data)
 export interface ApiResponse<T> {
     data: T;
     success?: boolean;
@@ -42,7 +67,7 @@ export interface ApiResponse<T> {
     error?: string;
 }
 
-// Type pour les erreurs d'API
+// Type for API errors
 export interface ApiError {
     message: string;
     status?: number;

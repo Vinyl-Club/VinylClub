@@ -42,8 +42,8 @@ export function useCategories() {
             console.error('Error loading categories:', e);
             setError(errorMessage);
             
-            // En cas d'erreur, vous pouvez garder les données de fallback
-            // ou laisser un tableau vide selon vos besoins
+            // In the event of an error, you can keep Fallback data
+            // or leave an empty table according to your needs
             setCategories([]);
         } finally {
             setLoading(false);
@@ -54,7 +54,7 @@ export function useCategories() {
         fetchCategories();
     }, [fetchCategories]);
 
-    // Fonction pour rafraîchir manuellement les données
+    // Function to manually refresh the data
     const refetch = useCallback(() => {
         return fetchCategories();
     }, [fetchCategories]);

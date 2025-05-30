@@ -6,10 +6,11 @@ import { useLocalSearchParams } from 'expo-router';
 
 
 export default function DetailsCard() {
-  const { id } = useLocalSearchParams(); // récupère l'id depuis l'URL / navigation
-  console.log(id); // pour vérifier que l'id est correct
+  const { id } = useLocalSearchParams(); // Recover the ID from URL /Navigation
+  console.log(id); // To verify that the ID is correct
   const productId = parseInt(id as string, 10);
-  console.log(productId); // pour vérifier que l'id est correct
+  // Use the custom hook to fetch product details
+  // and handle loading state
   const { product, loading } = useProductDetails(productId);
 
   if (loading) {
@@ -38,8 +39,8 @@ export default function DetailsCard() {
         <Text>Posté le : {new Date(product.createdAt).toLocaleDateString()}</Text>
         
         <View style={styles.infoDescription}>
+          <Text style={styles.price}>{product.price} €</Text>
           <Text style={styles.label}>{product.description}</Text>
-          <Text style={styles.price}>{product.price}</Text>
         </View>
 
         <Text>{product.album.name} \ {product.artist.name}</Text>
@@ -84,8 +85,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   infoDescription: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginVertical: 8,
   },
   price: {
@@ -95,7 +94,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   label: {
-    marginTop: 12,
+    marginTop: 8,
     fontWeight: 'bold',
   },
   button: {
