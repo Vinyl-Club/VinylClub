@@ -6,7 +6,7 @@ import colors from '@/constants/colors';
 
 export default function add() {
   return (
-    // <HomeScreen></HomeScreen>
+  
     <View style={styles.container}>
       <AddScreen></AddScreen>
     </View>

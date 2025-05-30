@@ -1,3 +1,4 @@
+// Import necessary components and hooks from React Native and local files
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -7,40 +8,54 @@ import { Product } from '@/types/index';
 import useProducts from '@/hooks/useProducts';
 import { useAddresses } from '@/hooks/useAddresses';
 
-
 export default function CardHome() {
+  // Initialize the router for navigation
   const router = useRouter();
+  // Fetch products and loading state using the custom hook
   const { products, loading } = useProducts();
-  const { addresses } = useAddresses(); 
+  // Fetch addresses using the custom hook
+  const { addresses } = useAddresses();
 
+  // Display a loading indicator while the data is being fetched
   if (loading) {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
   }
 
   return (
+    // Use ScrollView to enable scrolling through the list of products
     <ScrollView>
       {products.map((product: Product, index: number) => {
+        // Find the address associated with the product's user ID
         const address = addresses.find(a => a.user.id === product.userId);
 
         return (
+          // Card container for each product
           <View key={product.id || index} style={styles.card}>
+            {/* Product image */}
             <Image source={require('@/assets/images/demo.png')} style={styles.image} />
 
+            {/* Container for product information */}
             <View style={styles.infoContainer}>
               <View style={styles.textContainer}>
+                {/* Product title */}
                 <Text style={styles.title}>{product.title}</Text>
+                {/* Row for artist name and product price */}
                 <View style={styles.artistPriceRow}>
                   <Text style={styles.subText}>{product.artist.name}</Text>
                   <Text style={styles.price}>{product.price} €</Text>
                 </View>
+                {/* Product category */}
                 <Text style={styles.subText}>{product.category.name}</Text>
+                {/* Product address or unknown if not available */}
                 <Text style={styles.subText}>
                   {address ? `${address.city}` : 'Adresse inconnue'}
                 </Text>
               </View>
 
+              {/* Bottom row with favorite icon and detail button */}
               <View style={styles.bottomRow}>
                 <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
+                {/* Button to navigate to the product detail page */}
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
@@ -56,7 +71,7 @@ export default function CardHome() {
   );
 }
 
-
+// Define styles for the component using StyleSheet
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',

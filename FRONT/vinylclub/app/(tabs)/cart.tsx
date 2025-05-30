@@ -4,7 +4,7 @@ import colors from '@/constants/colors';
 
 export default function cart() {
     return (
-        // <HomeScreen></HomeScreen>
+        
         <View style={styles.container}>
 
         
