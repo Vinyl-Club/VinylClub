@@ -11,6 +11,8 @@ export default function DetailsCard() {
   const { product, loading } = useProductDetails(productId);
   const userId = product?.userId ?? null;
   const { address } = useAddressesByUser(userId);
+  console.log('Product:', product);
+  console.log('Address:', address);
 
   if (loading || !product) {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
@@ -32,8 +34,8 @@ export default function DetailsCard() {
 
       {/* Vendeur et Localisation */}
       <View style={styles.infoRow}>
-        <Text>{product.user?.firstName} {product.user?.lastName}</Text>
-        <Text>{address?.city}</Text>
+        <Text>{address?.user?.firstName} {address?.user?.lastName}</Text>
+        <Text>{address ? address.city : 'Ville inconnue'}</Text>
       </View>
 
       {/* Date de création */}
