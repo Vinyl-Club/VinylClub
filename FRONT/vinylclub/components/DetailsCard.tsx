@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
 import colors from '@/constants/colors';
 import useProductDetails from '@/hooks/useProductDetails';
 import { useAddressesByUser } from '@/hooks/useAddressesByUser';
 import { useLocalSearchParams } from 'expo-router';
-import { API_URL } from '@/constants/config';
 
 export default function DetailsCard() {
   const { id } = useLocalSearchParams();
@@ -12,17 +12,25 @@ export default function DetailsCard() {
   const userId = product?.userId ?? null;
   const { address } = useAddressesByUser(userId);
 
+  // State pour gérer l'index de l'image principale affichée
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
   // Helper function to get image URL by index
   const getImageUrl = (product: any, index: number): string | null => {
     if (product?.images && product.images.length > index) {
-      return `${API_URL}/api/images/${product.images[index].id}`;
+      return `http://localhost:8090/api/images/${product.images[index].id}`;
     }
     return null;
   };
 
-  // Helper function to get main image URL
+  // Helper function to get main image URL based on selected index
   const getMainImageUrl = (product: any): string => {
-    return getImageUrl(product, 0) || 'https://via.placeholder.com/300x160?text=Vinyl';
+    return getImageUrl(product, selectedImageIndex) || 'https://via.placeholder.com/300x160?text=Vinyl';
+  };
+
+  // Function to handle thumbnail click
+  const handleThumbnailClick = (index: number) => {
+    setSelectedImageIndex(index);
   };
 
   if (loading || !product) {
@@ -35,30 +43,36 @@ export default function DetailsCard() {
       <Text style={styles.title}>{product.title}</Text>
       
       {/* Image principale */}
-      <Image 
-        source={{ uri: getMainImageUrl(product) }} 
-        style={styles.mainImage}
-        onError={() => console.log('Erreur de chargement image principale:', product.id)}
-      />
+      <TouchableOpacity onPress={() => handleThumbnailClick(0)}>
+        <Image 
+          source={{ uri: getMainImageUrl(product) }} 
+          style={styles.mainImage}
+          onError={() => console.log('Erreur de chargement image principale:', product.id)}
+        />
+      </TouchableOpacity>
       
       {/* Miniatures */}
       {product.images && product.images.length > 1 && (
         <View style={styles.thumbnailRow}>
-          {product.images.slice(1, 3).map((imageData, index) => (
-            <Image 
+          {product.images.map((imageData: any, index: number) => (
+            <TouchableOpacity 
               key={index}
-              source={{ uri: `${API_URL}/api/images/${imageData.id}` }} 
-              style={styles.thumbnail}
-              onError={() => console.log('Erreur de chargement miniature:', imageData.id)}
-            />
+              onPress={() => handleThumbnailClick(index)}
+              style={[
+                styles.thumbnailContainer,
+                selectedImageIndex === index && styles.selectedThumbnail
+              ]}
+            >
+              <Image 
+                source={{ uri: `http://localhost:8090/api/images/${imageData.id}` }} 
+                style={[
+                  styles.thumbnail,
+                  selectedImageIndex === index && styles.selectedThumbnailImage
+                ]}
+                onError={() => console.log('Erreur de chargement miniature:', imageData.id)}
+              />
+            </TouchableOpacity>
           ))}
-          
-          {/* Image placeholder si une seule image supplémentaire */}
-          {product.images.length === 2 && (
-            <View style={[styles.thumbnail, styles.placeholderThumbnail]}>
-              <Text style={styles.placeholderText}>+</Text>
-            </View>
-          )}
         </View>
       )}
       
@@ -100,8 +114,8 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   mainImage: {
-    width: '80%',
-    height: 160,
+    width: '70%',
+    height: 180,
     borderRadius: 8,
     resizeMode: 'cover',
     marginLeft: 30,
@@ -112,23 +126,26 @@ const styles = StyleSheet.create({
     gap: 8,
     paddingHorizontal: 30,
   },
+  thumbnailContainer: {
+    borderRadius: 4,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  selectedThumbnail: {
+    borderColor: colors.green,
+    shadowColor: colors.green,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   thumbnail: {
     width: 80,
     height: 80,
     borderRadius: 4,
   },
-  placeholderThumbnail: {
-    backgroundColor: '#f0f0f0',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderStyle: 'dashed',
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  placeholderText: {
-    fontSize: 24,
-    color: '#999',
-    fontWeight: 'bold',
+  selectedThumbnailImage: {
+    opacity: 0.8,
   },
   infoRow: {
     flexDirection: 'row',
