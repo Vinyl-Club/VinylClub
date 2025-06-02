@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Product } from '@/types/index';
 
+
+
 export default function useProducts() {
     // State to store the list of products
     const [products, setProducts] = useState<Product[]>([]);
