@@ -7,6 +7,7 @@ import { useRouter } from 'expo-router';
 import { Product } from '@/types/index';
 import useProducts from '@/hooks/useProducts';
 import { useAddresses } from '@/hooks/useAddresses';
+import { API_URL } from '@/constants/config';
 
 export default function CardHome() {
   // Initialize the router for navigation
@@ -15,6 +16,16 @@ export default function CardHome() {
   const { products, loading } = useProducts();
   // Fetch addresses using the custom hook
   const { addresses } = useAddresses();
+
+  // Helper function to get the first image URL
+  const getFirstImageUrl = (product: Product) => {
+    if (product.images && product.images.length > 0) {
+      console.log('api url:', API_URL); // Log the image URL for debugging
+      console.log('Image URL:', product.images[1].imageUrl); // Log the image URL for debugging
+      return `${API_URL}${product.images[0].imageUrl}`; // Assuming imageUrl is the property containing the URL
+    }
+    return null; // ou une image par défaut
+  };
 
   // Display a loading indicator while the data is being fetched
   if (loading) {
@@ -31,8 +42,14 @@ export default function CardHome() {
         return (
           // Card container for each product
           <View key={product.id || index} style={styles.card}>
-            {/* Product image */}
-            <Image source={require('@/assets/images/demo.png')} style={styles.image} />
+            {/* Product image with helper function */}
+            <Image 
+              source={{ 
+                uri: getFirstImageUrl(product) || 'https://via.placeholder.com/80x80?text=Vinyl'
+              }} 
+              style={styles.image}
+              onError={() => console.log('Erreur de chargement image pour le produit:', product.id)}
+            />
 
             {/* Container for product information */}
             <View style={styles.infoContainer}>

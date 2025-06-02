@@ -14,6 +14,12 @@ export interface Product {
     status: string;
     state: string;
     userId: number;
+    images: {
+        id: number;
+        productId: number; // ID of the product this image belongs to
+        imageUrl: string; // URL of the image
+    }[]; // Array of images associated with the product
+  
 
     artist: Artist;
     category: Categories;

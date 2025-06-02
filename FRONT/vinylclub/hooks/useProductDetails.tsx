@@ -9,6 +9,8 @@ export default function useProductDetails(productId: number) {
     const [loading, setLoading] = useState(true);
     // State to store any error that occurs during fetching
     const [error, setError] = useState<Error | null>(null);
+    // State pour gérer l'index de l'image principale affichée
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
     useEffect(() => {
         // Define an asynchronous function to fetch product details
