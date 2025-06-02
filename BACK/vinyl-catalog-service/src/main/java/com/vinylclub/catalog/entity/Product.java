@@ -1,3 +1,4 @@
+
 package com.vinylclub.catalog.entity;
 
 import java.math.BigDecimal;

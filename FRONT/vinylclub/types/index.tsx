@@ -23,6 +23,9 @@ export interface Product {
 
     createdAt: string;  // ISO string si tu les envoies en JSON (Timestamp → string)
     updatedAt: string;
+
+    user?: User;       // <--- ajouté
+    address?: Address;
 }
 export interface Artist {
     id: number;

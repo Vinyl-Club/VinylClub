@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.vinylclub.catalog.dto.AlbumDTO;
 import com.vinylclub.catalog.dto.ArtistDTO;
 import com.vinylclub.catalog.dto.CategoryDTO;
+import com.vinylclub.catalog.dto.ImageDTO;
+import com.vinylclub.catalog.dto.ImageSummaryDTO;
 import com.vinylclub.catalog.dto.ProductDTO;
 import com.vinylclub.catalog.entity.Album;
 import com.vinylclub.catalog.entity.Artist;
@@ -73,53 +75,54 @@ public class ProductService {
         return products.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
-    // CRÉER PRODUIT (pour admin)
-   /**
- * CRÉER PRODUIT (pour admin)
- */
-public ProductDTO createProduct(ProductDTO productDTO) {
-    Product product = new Product();
-    
-    // Champs de base
-    product.setTitle(productDTO.getTitle());
-    product.setDescription(productDTO.getDescription());
-    product.setPrice(productDTO.getPrice());
-    product.setQuantity(productDTO.getQuantity() != null ? productDTO.getQuantity() : 0);
-    product.setReleaseYear(productDTO.getReleaseYear());
-    product.setUserId(productDTO.getUserId());
-    
-    // Gestion des enums
-    if (productDTO.getStatus() != null) {
-        product.setStatus(ProductStatus.valueOf(productDTO.getStatus()));
-    } else {
-        product.setStatus(ProductStatus.AVAILABLE);
+    /**
+     * CRÉER PRODUIT (pour admin)
+     */
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        Product product = new Product();
+        
+        // Champs de base
+        product.setTitle(productDTO.getTitle());
+        product.setDescription(productDTO.getDescription());
+        product.setPrice(productDTO.getPrice());
+        product.setQuantity(productDTO.getQuantity() != null ? productDTO.getQuantity() : 0);
+        product.setReleaseYear(productDTO.getReleaseYear());
+        product.setUserId(productDTO.getUserId());
+        
+        // Gestion des enums
+        if (productDTO.getStatus() != null) {
+            product.setStatus(ProductStatus.valueOf(productDTO.getStatus()));
+        } else {
+            product.setStatus(ProductStatus.AVAILABLE);
+        }
+        
+        if (productDTO.getState() != null) {
+            product.setState(ProductState.valueOf(productDTO.getState()));
+        }
+        
+        // Relations - Récupération depuis les repositories
+        if (productDTO.getArtist() != null && productDTO.getArtist().getId() != null) {
+            Artist artist = artistRepository.findById(productDTO.getArtist().getId())
+                .orElseThrow(() -> new RuntimeException("Artist not found with id: " + productDTO.getArtist().getId()));
+            product.setArtist(artist);
+        }
+        
+        if (productDTO.getCategory() != null && productDTO.getCategory().getId() != null) {
+            Category category = categoryRepository.findById(productDTO.getCategory().getId())
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + productDTO.getCategory().getId()));
+            product.setCategory(category);
+        }
+        
+        if (productDTO.getAlbum() != null && productDTO.getAlbum().getId() != null) {
+            Album album = albumRepository.findById(productDTO.getAlbum().getId())
+                .orElseThrow(() -> new RuntimeException("Album not found with id: " + productDTO.getAlbum().getId()));
+            product.setAlbum(album);
+        }
+        
+        Product savedProduct = productRepository.save(product);
+        return convertToDTO(savedProduct);
     }
-    
-    if (productDTO.getState() != null) {
-        product.setState(ProductState.valueOf(productDTO.getState()));
-    }
-    // Relations - Récupération depuis les repositories
-    if (productDTO.getArtist() != null && productDTO.getArtist().getId() != null) {
-        Artist artist = artistRepository.findById(productDTO.getArtist().getId())
-            .orElseThrow(() -> new RuntimeException("Artist not found with id: " + productDTO.getArtist().getId()));
-        product.setArtist(artist);
-    }
-    
-    if (productDTO.getCategory() != null && productDTO.getCategory().getId() != null) {
-        Category category = categoryRepository.findById(productDTO.getCategory().getId())
-            .orElseThrow(() -> new RuntimeException("Category not found with id: " + productDTO.getCategory().getId()));
-        product.setCategory(category);
-    }
-    
-    if (productDTO.getAlbum() != null && productDTO.getAlbum().getId() != null) {
-        Album album = albumRepository.findById(productDTO.getAlbum().getId())
-            .orElseThrow(() -> new RuntimeException("Album not found with id: " + productDTO.getAlbum().getId()));
-        product.setAlbum(album);
-    }
-    
-    Product savedProduct = productRepository.save(product);
-    return convertToDTO(savedProduct);
-}
+
     // METTRE À JOUR PRODUIT
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
@@ -141,7 +144,7 @@ public ProductDTO createProduct(ProductDTO productDTO) {
         productRepository.deleteById(id);
     }
 
-    // CONVERSION ENTITY → DTO
+    // CONVERSION ENTITY → DTO (VERSION OPTIMISÉE)
     public ProductDTO convertToDTO(Product product) {
         ProductDTO dto = new ProductDTO();
         dto.setId(product.getId());
@@ -179,15 +182,32 @@ public ProductDTO createProduct(ProductDTO productDTO) {
             ));
         }
 
-        // Images (URLs seulement)
+        // Images (VERSION OPTIMISÉE - sans les bytes, juste les métadonnées + URLs)
         if (product.getImages() != null && !product.getImages().isEmpty()) {
-            List<String> imageUrls = product.getImages().stream()
-                .map(img -> "/api/images/" + img.getId()) // URL vers votre endpoint d'images
+            List<ImageSummaryDTO> imageSummaries = product.getImages().stream()
+                .map(this::convertImageToSummaryDTO)
                 .collect(Collectors.toList());
-            dto.setImageUrls(imageUrls);
+            dto.setImages(imageSummaries);
         }
 
         return dto;
+    }
+
+    // CONVERSION Images Entity → ImageDTO (pour usage spécifique avec bytes complets)
+    private ImageDTO convertImageToDTO(com.vinylclub.catalog.entity.Images imageEntity) {
+        ImageDTO imageDTO = new ImageDTO();
+        imageDTO.setId(imageEntity.getId());
+        imageDTO.setImage(imageEntity.getImage()); // Les données binaires complètes
+        imageDTO.setProductId(imageEntity.getProduct().getId());
+        return imageDTO;
+    }
+
+    // NOUVELLE MÉTHODE : Conversion Images Entity → ImageSummaryDTO (pour ProductDTO optimisé)
+    private ImageSummaryDTO convertImageToSummaryDTO(com.vinylclub.catalog.entity.Images imageEntity) {
+        ImageSummaryDTO summaryDTO = new ImageSummaryDTO();
+        summaryDTO.setId(imageEntity.getId());
+        summaryDTO.setProductId(imageEntity.getProduct().getId());
+        return summaryDTO;
     }
 
     // CONVERSION DTO → ENTITY (pour création/mise à jour)

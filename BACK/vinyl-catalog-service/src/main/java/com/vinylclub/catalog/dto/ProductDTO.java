@@ -18,8 +18,8 @@ public class ProductDTO {
     // Relations incluses
     private ArtistDTO artist;
     private CategoryDTO category;
-    private AlbumDTO album;  // Peut être null
-    private List<String> imageUrls;  // URLs des images
+    private AlbumDTO album; 
+    private List<ImageSummaryDTO> images;
     
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -75,8 +75,8 @@ public class ProductDTO {
     public AlbumDTO getAlbum() { return album; }
     public void setAlbum(AlbumDTO album) { this.album = album; }
     
-    public List<String> getImageUrls() { return imageUrls; }
-    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
+    public List<ImageSummaryDTO> getImages() { return images; }
+    public void setImages(List<ImageSummaryDTO> images) { this.images = images; }
     
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }

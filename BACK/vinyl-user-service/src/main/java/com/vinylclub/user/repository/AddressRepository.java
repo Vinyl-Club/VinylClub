@@ -20,5 +20,8 @@ public interface AddressRepository extends org.springframework.data.jpa.reposito
 
     @Query("SELECT a FROM Address a WHERE a.street = :street")
     Optional<Address> findByStreet(@Param("street") String street);
+
+    @Query("SELECT a FROM Address a WHERE a.user.id = :userId")
+    Optional<Address> findByUserId(@Param("userId") Long userId);
     
 }

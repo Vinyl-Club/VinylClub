@@ -1,3 +1,4 @@
+
 package com.vinylclub.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;

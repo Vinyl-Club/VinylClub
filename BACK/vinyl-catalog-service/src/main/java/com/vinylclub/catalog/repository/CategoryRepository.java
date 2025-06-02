@@ -1,3 +1,4 @@
+
 package com.vinylclub.catalog.repository;
 
 import java.util.Optional;

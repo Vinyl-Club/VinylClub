@@ -1,61 +1,57 @@
-// Import necessary components and hooks from React Native and local files
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import colors from '@/constants/colors';
 import useProductDetails from '@/hooks/useProductDetails';
+import { useAddressesByUser } from '@/hooks/useAddressesByUser';
 import { useLocalSearchParams } from 'expo-router';
 
 export default function DetailsCard() {
-  // Extract the ID from the URL or navigation parameters
   const { id } = useLocalSearchParams();
-  console.log(id); // Log the ID to verify it is correct
-
-  // Convert the ID to an integer
   const productId = parseInt(id as string, 10);
 
-  // Use the custom hook to fetch product details and handle loading state
   const { product, loading } = useProductDetails(productId);
+  const userId = product?.userId ?? null;
+  const { address } = useAddressesByUser(userId);
 
-  // Display a loading indicator while the data is being fetched
-  if (loading) {
+  if (loading || !product) {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
   }
 
   return (
     <View>
-      {/* Display the product title */}
+      {/* Titre */}
       <Text style={styles.title}>{product.title}</Text>
 
-      {/* Main product image */}
+      {/* Image principale */}
       <Image source={require('@/assets/images/demo.png')} style={styles.mainImage} />
 
-      {/* Thumbnail images */}
+      {/* Miniatures */}
       <View style={styles.thumbnailRow}>
         <Image source={require('@/assets/images/demo.png')} style={styles.thumbnail} />
         <Image source={require('@/assets/images/demo.png')} style={styles.thumbnail} />
       </View>
 
-      {/* Seller information */}
+      {/* Vendeur et Localisation */}
       <View style={styles.infoRow}>
-        <Text>Nom du vendeur</Text>
-        <Text>Localisation</Text>
+        <Text>{product.user?.firstName} {product.user?.lastName}</Text>
+        <Text>{address?.city}</Text>
       </View>
 
-      {/* Display the product creation date */}
+      {/* Date de création */}
       <Text>Posté le : {new Date(product.createdAt).toLocaleDateString()}</Text>
 
-      {/* Product price and description */}
+      {/* Prix et description */}
       <View style={styles.infoDescription}>
         <Text style={styles.price}>{product.price} €</Text>
         <Text style={styles.label}>{product.description}</Text>
       </View>
 
-      {/* Additional product details */}
+      {/* Détails supplémentaires */}
       <Text>{product.album.name} \ {product.artist.name}</Text>
       <Text>{product.state}</Text>
       <Text>{product.releaseYear}</Text>
       <Text>{product.category.name}</Text>
 
-      {/* Button to add the product to favorites */}
+      {/* Bouton favoris */}
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Ajouter aux favoris</Text>
       </TouchableOpacity>
@@ -63,7 +59,6 @@ export default function DetailsCard() {
   );
 }
 
-// Define styles for the component using StyleSheet
 const styles = StyleSheet.create({
   title: {
     fontSize: 22,
@@ -73,15 +68,17 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   mainImage: {
-    width: '100%',
-    height: 180,
+    width: '80%',
+    height: 160,
     borderRadius: 8,
     resizeMode: 'cover',
+    marginLeft: 30,
   },
   thumbnailRow: {
     flexDirection: 'row',
     marginVertical: 8,
     gap: 8,
+    paddingHorizontal: 30,
   },
   thumbnail: {
     width: 80,
@@ -92,9 +89,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 8,
+    paddingHorizontal: 30,
   },
   infoDescription: {
     marginVertical: 8,
+    paddingHorizontal: 30,
   },
   price: {
     color: colors.brownText,
