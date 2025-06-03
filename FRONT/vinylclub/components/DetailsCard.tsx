@@ -153,22 +153,22 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     marginVertical: 8,
-    paddingHorizontal: 30,
+    gap: '20%',
+    paddingHorizontal: 10,
   },
   infoDescription: {
-    marginVertical: 8,
-    paddingHorizontal: 30,
+    marginVertical: 10,
+    paddingHorizontal: 10,
   },
   price: {
     color: colors.brownText,
     fontWeight: 'bold',
     textAlign: 'right',
-    marginVertical: 8,
   },
   label: {
-    marginTop: 8,
+    marginTop: 2,
     fontWeight: 'bold',
   },
   button: {
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
     marginTop: 16,
   },
   buttonText: {
