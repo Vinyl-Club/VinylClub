@@ -1,5 +1,5 @@
 // Import necessary components and hooks from React Native and local files
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import colors from '@/constants/colors';
@@ -9,7 +9,8 @@ import useProducts from '@/hooks/useProducts';
 import { useAddresses } from '@/hooks/useAddresses';
 import { API_URL } from '@/constants/config';
 
-export default function CardHome() {
+
+export default function CardHome({ searchQuery }: { searchQuery: string }) {
   // Initialize the router for navigation
   const router = useRouter();
   // Fetch products and loading state using the custom hook
@@ -17,11 +18,26 @@ export default function CardHome() {
   // Fetch addresses using the custom hook
   const { addresses } = useAddresses();
 
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      setFilteredProducts(products); // afficher tous les produits si rien n'est saisi
+    } else {
+      const filtered = products.filter(product => {
+        const query = searchQuery.toLowerCase();
+        const artistMatch = product.artist?.name.toLowerCase().includes(query);
+        const titleMatch = product.title.toLowerCase().includes(query);
+        return artistMatch || titleMatch;
+      });
+      setFilteredProducts(filtered);
+    }
+  }, [searchQuery, products]);
+
   // Helper function to get the first image URL
   const getFirstImageUrl = (product: Product) => {
     if (product.images && product.images.length > 0) {
-      console.log('api url:', API_URL); // Log the image URL for debugging
-      console.log('Image URL:', product.images[1].imageUrl); // Log the image URL for debugging
+      
       return `${API_URL}${product.images[0].imageUrl}`; // Assuming imageUrl is the property containing the URL
     }
     return null; // ou une image par défaut
@@ -33,58 +49,47 @@ export default function CardHome() {
   }
 
   return (
-    // Use ScrollView to enable scrolling through the list of products
-    <ScrollView>
-      {products.map((product: Product, index: number) => {
-        // Find the address associated with the product's user ID
-        const address = addresses.find(a => a.user.id === product.userId);
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        {filteredProducts.length === 0 ? (
+          <Text style={{ textAlign: 'center', marginTop: 20 }}>Aucun résultat trouvé.</Text>
+        ) : (
+          filteredProducts.map((product, index) => {
+            const address = addresses.find(a => a.user.id === product.userId);
 
-        return (
-          // Card container for each product
-          <View key={product.id || index} style={styles.card}>
-            {/* Product image with helper function */}
-            <Image 
-              source={{ 
-                uri: getFirstImageUrl(product) || 'https://via.placeholder.com/80x80?text=Vinyl'
-              }} 
-              style={styles.image}
-              onError={() => console.log('Erreur de chargement image pour le produit:', product.id)}
-            />
+            return (
+              <View key={product.id || index} style={styles.card}>
+                <Image
+                  source={{ uri: getFirstImageUrl(product) || 'https://via.placeholder.com/80x80?text=Vinyl' }}
+                  style={styles.image}
+                />
+                <View style={styles.infoContainer}>
+                  <View style={styles.textContainer}>
+                    <Text style={styles.title}>{product.title}</Text>
+                    <View style={styles.artistPriceRow}>
+                      <Text style={styles.subText}>{product.artist.name}</Text>
+                      <Text style={styles.price}>{product.price} €</Text>
+                    </View>
+                    <Text style={styles.subText}>{product.category.name}</Text>
+                    <Text style={styles.subText}>{address ? `${address.city}` : 'Adresse inconnue'}</Text>
+                  </View>
 
-            {/* Container for product information */}
-            <View style={styles.infoContainer}>
-              <View style={styles.textContainer}>
-                {/* Product title */}
-                <Text style={styles.title}>{product.title}</Text>
-                {/* Row for artist name and product price */}
-                <View style={styles.artistPriceRow}>
-                  <Text style={styles.subText}>{product.artist.name}</Text>
-                  <Text style={styles.price}>{product.price} €</Text>
+                  <View style={styles.bottomRow}>
+                    <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
+                    >
+                      <Text style={styles.buttonText}>Voir le détail</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-                {/* Product category */}
-                <Text style={styles.subText}>{product.category.name}</Text>
-                {/* Product address or unknown if not available */}
-                <Text style={styles.subText}>
-                  {address ? `${address.city}` : 'Adresse inconnue'}
-                </Text>
               </View>
-
-              {/* Bottom row with favorite icon and detail button */}
-              <View style={styles.bottomRow}>
-                <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
-                {/* Button to navigate to the product detail page */}
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
-                >
-                  <Text style={styles.buttonText}>Voir le détail</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        );
-      })}
-    </ScrollView>
+            );
+          })
+        )}
+      </ScrollView>
+    </View>
   );
 }
 
