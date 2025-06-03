@@ -1,0 +1,135 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
+import colors from '@/constants/colors';
+
+export default function RegisterScreen() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [firstName, setFirstName] = useState('');
+
+    const router = useRouter();
+
+    const handleRegister = () => {
+        // Ajoute ici la logique pour gérer l'inscription
+        console.log('Email:', email);
+        console.log('Password:', password);
+        console.log('Confirm Password:', confirmPassword);
+        console.log('Last Name:', lastName);
+        console.log('First Name:', firstName);
+
+        // Redirige vers une autre page après l'inscription
+        router.replace('/login'); // Redirige vers la page de connexion après l'inscription
+    };
+
+    return (
+        <View style={styles.container}>
+        <Text style={styles.title}>Inscription</Text>
+
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            />
+        </View>
+
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Mot de passe</Text>
+            <TextInput
+            style={styles.input}
+            placeholder="Mot de passe"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            />
+        </View>
+
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Confirmation du mot de passe</Text>
+            <TextInput
+            style={styles.input}
+            placeholder="Confirmation du mot de passe"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+            />
+        </View>
+
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Nom</Text>
+            <TextInput
+            style={styles.input}
+            placeholder="Nom"
+            value={lastName}
+            onChangeText={setLastName}
+            />
+        </View>
+
+        <View style={styles.inputContainer}>
+            <Text style={styles.label}>Prénom</Text>
+            <TextInput
+            style={styles.input}
+            placeholder="Prénom"
+            value={firstName}
+            onChangeText={setFirstName}
+            />
+        </View>
+
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Valider</Text>
+        </TouchableOpacity>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 16,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: colors.brownText, // Couleur marron pour le titre
+        textAlign: 'center',
+        marginVertical: 16,
+    },
+    inputContainer: {
+        marginBottom: 12,
+    },
+    label: {
+        marginBottom: 8,
+        fontSize: 16,
+    },
+    input: {
+        height: 40,
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        backgroundColor: 'white',
+    },
+    button: {
+        backgroundColor: colors.green, // Couleur verte pour le bouton
+        paddingHorizontal: 30,
+        paddingVertical: 10,
+        borderRadius: 20,
+        alignItems: 'center',
+        marginTop: 20,
+        alignSelf: 'flex-end',
+        marginRight: 16,
+    },
+    buttonText: {
+        color: 'black',
+        fontWeight: '600',
+    },
+});
