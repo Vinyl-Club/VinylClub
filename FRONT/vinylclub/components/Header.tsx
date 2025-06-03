@@ -3,11 +3,11 @@ import { View, Image, StyleSheet } from 'react-native';
 import SearchBar from './SearchBar';
 import colors from '@/constants/colors';
 
-interface Props {
-  onSearch: (text: string) => void;
-}
+// interface Props {
+//   onSearch: (text: string) => void;
+// }
 
-export default function Header({ onSearch }: Props) {
+export default function Header({ onSearch }: { onSearch: (value: string) => void }) {
   return (
     <View style={styles.container}>
       {/* Logo displayed on the left side  */}

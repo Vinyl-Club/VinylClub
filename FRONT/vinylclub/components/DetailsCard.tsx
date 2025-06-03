@@ -12,6 +12,8 @@ export default function DetailsCard() {
   const { product, loading } = useProductDetails(productId);
   const userId = product?.userId ?? null;
   const { address } = useAddressesByUser(userId);
+  console.log('Product:', product);
+  console.log('Address:', address);
 
   // State pour gérer l'index de l'image principale affichée
   // State to manage the index of the displayed main image
@@ -80,8 +82,8 @@ export default function DetailsCard() {
       
       {/* Vendeur et Localisation */}
       <View style={styles.infoRow}>
-        <Text>{product.user?.firstName} {product.user?.lastName}</Text>
-        <Text>{address?.city}</Text>
+        <Text>{address?.user?.firstName} {address?.user?.lastName}</Text>
+        <Text>{address ? address.city : 'Ville inconnue'}</Text>
       </View>
       
       {/* Date de création */}
