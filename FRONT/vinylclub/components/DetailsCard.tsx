@@ -4,6 +4,7 @@ import colors from '@/constants/colors';
 import useProductDetails from '@/hooks/useProductDetails';
 import { useAddressesByUser } from '@/hooks/useAddressesByUser';
 import { useLocalSearchParams } from 'expo-router';
+import { API_URL_IMG } from '@/constants/config';
 
 export default function DetailsCard() {
   const { id } = useLocalSearchParams();
@@ -14,13 +15,14 @@ export default function DetailsCard() {
   console.log('Product:', product);
   console.log('Address:', address);
 
-  // State to manage the main image index displayed
+  // State pour gérer l'index de l'image principale affichée
+  // State to manage the index of the displayed main image
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   // Helper function to get image URL by index
   const getImageUrl = (product: any, index: number): string | null => {
     if (product?.images && product.images.length > index) {
-      return `http://localhost:8090/api/images/${product.images[index].id}`;
+      return `${API_URL_IMG}${product.images[index].id}`;
     }
     return null;
   };
@@ -66,7 +68,7 @@ export default function DetailsCard() {
               ]}
             >
               <Image 
-                source={{ uri: `http://localhost:8090/api/images/${imageData.id}` }} 
+                source={{ uri: `${API_URL_IMG}${imageData.id}` }} 
                 style={[
                   styles.thumbnail,
                   selectedImageIndex === index && styles.selectedThumbnailImage
@@ -180,6 +182,5 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'black',
     fontWeight: 'bold',
-  },
-
+  }
 });
