@@ -1,9 +1,10 @@
 // Import necessary components and modules
-import { Stack } from "expo-router";
+import { Stack, Redirect } from "expo-router";
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import colors from '@/constants/colors';
+
 
 // Define the RootLayout component
 export default function RootLayout() {
@@ -17,6 +18,8 @@ export default function RootLayout() {
       <View style={styles.container}>
         {/* Stack navigator for handling screen navigation */}
         <Stack>
+          <Redirect href="/login" />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
           {/* Define a screen named "id" with hidden header */}
           <Stack.Screen name="id" options={{ headerShown: false }} />
         </Stack>
