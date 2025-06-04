@@ -29,7 +29,7 @@ export default function RegisterScreen() {
         <Text style={styles.title}>Inscription</Text>
 
         <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
+            <Text style={styles.label}>Email *</Text>
             <TextInput
             style={styles.input}
             placeholder="Email"
@@ -41,7 +41,7 @@ export default function RegisterScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mot de passe</Text>
+            <Text style={styles.label}>Mot de passe *</Text>
             <TextInput
             style={styles.input}
             placeholder="Mot de passe"
@@ -52,7 +52,7 @@ export default function RegisterScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-            <Text style={styles.label}>Confirmation du mot de passe</Text>
+            <Text style={styles.label}>Confirmation du mot de passe *</Text>
             <TextInput
             style={styles.input}
             placeholder="Confirmation du mot de passe"
@@ -63,7 +63,7 @@ export default function RegisterScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nom</Text>
+            <Text style={styles.label}>Nom *</Text>
             <TextInput
             style={styles.input}
             placeholder="Nom"
@@ -73,7 +73,7 @@ export default function RegisterScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-            <Text style={styles.label}>Prénom</Text>
+            <Text style={styles.label}>Prénom *</Text>
             <TextInput
             style={styles.input}
             placeholder="Prénom"
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: colors.brownText, // Couleur marron pour le titre
+        color: colors.brownText, 
         textAlign: 'center',
         marginVertical: 16,
     },
@@ -107,16 +107,20 @@ const styles = StyleSheet.create({
     label: {
         marginBottom: 8,
         fontSize: 16,
+        color: '#666',
+        fontWeight: '500',
     },
     input: {
         height: 40,
         borderRadius: 8,
         paddingHorizontal: 8,
         shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 7,
+        elevation: 4,
         backgroundColor: 'white',
+        color: '#666',
     },
     button: {
         backgroundColor: colors.green, // Couleur verte pour le bouton
