@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
 import CardItem from '@/components/CardItem'; // adapte le chemin si nécessaire
 import useProducts from '@/hooks/useProducts';
@@ -9,6 +10,7 @@ export default function ProfileScreen ()  {
     const { products } = useProducts();
     const { addresses } = useAddresses();
     const currentUserId = 1; // ← Remplace par un vrai user ID (auth)
+    const router = useRouter();
 
     const userProducts = products.filter(p => p.userId === currentUserId);
 
@@ -77,10 +79,17 @@ export default function ProfileScreen ()  {
 
         {/* Boutons */}
         <View style={styles.buttonContainer}>
-            <TouchableOpacity style={[styles.button, styles.supprimerButton]}>
+            <TouchableOpacity 
+            style={[styles.button, styles.supprimerButton]}
+            onPress={() => router.push({ pathname: "/login" })}
+            >
             <Text style={styles.buttonText}>Supprimer</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.validerButton]}>
+            <TouchableOpacity 
+            style={[styles.button, styles.validerButton]}
+            onPress={() => router.push({ pathname: "/profile", params: { id: String(currentUserId) } })}
+            onPress={() => router.push({ pathname: "/profile", params: { id: String(user.id) } })}
+            >
             <Text style={styles.buttonText}>Valider</Text>
             </TouchableOpacity>
         </View>

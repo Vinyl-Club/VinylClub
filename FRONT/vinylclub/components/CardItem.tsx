@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
 import { Product } from '@/types/index';
@@ -32,12 +31,11 @@ export default function CardItem({ product, city }: CardItemProps) {
             <Text style={styles.subText}>{city || 'Ville inconnue'}</Text>
             </View>
             <View style={styles.bottomRow}>
-            <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
             <TouchableOpacity
                 style={styles.button}
-                onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
+                onPress={() => router.push({ pathname: "/profile", params: { id: String(product.id) } })}
             >
-                <Text style={styles.buttonText}>Voir le détail</Text>
+                <Text style={styles.buttonText}>Supprimer</Text>
             </TouchableOpacity>
             </View>
         </View>
@@ -57,6 +55,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 7,
         elevation: 4,
+        width: '80%',
     },
     image: {
         width: 80,
@@ -81,10 +80,9 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     bottomRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        
+        alignItems: 'flex-end',
         gap: 8,
-        justifyContent: 'space-between',
     },
     price: {
         color: colors.brownText,
@@ -96,9 +94,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     button: {
-        backgroundColor: colors.green,
+        backgroundColor: colors.orange,
         paddingVertical: 4,
-        paddingHorizontal: 10,
+        paddingHorizontal: 5,
         borderRadius: 10,
     },
     buttonText: {
