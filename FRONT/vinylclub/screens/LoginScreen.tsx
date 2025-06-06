@@ -2,17 +2,23 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
+    const {login} = useAuth();
 
-    const handleLogin = () => {
-        console.log('Connexion:', { email, password });
-        // Simule une redirection après connexion réussie
+    const handleLogin = async () => {
+    const success = await login(email, password);
+
+        if (success) {
         router.push('/(tabs)');
-    };
+        } else {
+        alert("Échec de la connexion. Vérifie tes identifiants.");
+        }
+    };    
 
     const handleSignup = () => {
         router.push('/register'); // Change selon ta route d’inscription

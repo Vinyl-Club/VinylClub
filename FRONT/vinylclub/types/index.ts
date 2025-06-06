@@ -82,3 +82,23 @@ export interface ApiError {
     status?: number;
     code?: string;
 }
+
+// Type for login responseinterface 
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  tokenType: string;
+  expiresIn: number;
+  user: User;
+}
+
+export interface AuthState {
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+}
+
+export interface LoginRequest {
+  email: string;
+    password: string;
+}
