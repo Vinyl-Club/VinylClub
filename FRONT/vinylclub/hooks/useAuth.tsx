@@ -225,6 +225,7 @@ export const useAuth = () => {
     try {
       console.log('🚀 Starting login process...');
       console.log('📧 Email:', email);
+      console.log('🔑 Password:', password);
       console.log('📡 API URL:', `${API_URL_AUTH}/login`);
       
       setAuthState(prev => ({ ...prev, isLoading: true }));
@@ -237,13 +238,14 @@ export const useAuth = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
+      console.log(`📤 Request body: ${JSON.stringify({ email, password })}`);
       console.log('📥 Login response status:', response.status);
     
 
       if (response.ok) {
         console.log('✅ Login response OK, parsing JSON...');
         const data: LoginResponse = await response.json();
+        console.log('data : ',data);
         console.log('📦 Login data received:', {
           hasAccessToken: !!data.accessToken,
           hasRefreshToken: !!data.refreshToken,
