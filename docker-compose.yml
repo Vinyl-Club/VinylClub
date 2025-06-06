@@ -1,4 +1,4 @@
-version: '3.8'
+
 services:
   # Discovery service (Eureka)
   vinyl-discovery-service:
@@ -8,6 +8,21 @@ services:
       - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - vinyl-network
+
+# Auth service
+  vinyl-auth-service:
+    build: ./BACK/vinyl-auth-service
+    container_name: vinyl-auth-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - vinyl-discovery-service
+      - postgres-db
     networks:
       - vinyl-network
 
@@ -54,6 +69,7 @@ services:
       - vinyl-discovery-service
       - vinyl-user-service
       - vinyl-catalog-service
+      - vinyl-auth-service
     networks:
       - vinyl-network
 

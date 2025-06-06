@@ -1,9 +1,9 @@
-package com.vinylclub.auth.dto;
+package com.vinylclub.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginRequest {
+public class ValidatePasswordRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Email should be valid")
     private String email;
@@ -11,14 +11,13 @@ public class LoginRequest {
     @NotBlank(message = "Password is required")
     private String password;
     
-    public LoginRequest() {}
+    public ValidatePasswordRequest() {}
     
-    public LoginRequest(String email, String password) {
+    public ValidatePasswordRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }
     
-    // Getters and setters
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
     public String getPassword() { return password; }

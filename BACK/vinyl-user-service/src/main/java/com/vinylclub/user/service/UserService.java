@@ -35,16 +35,12 @@ public class UserService {
     
    
     public UserDTO getUserById(Long id) {
-        // Implement the logic to retrieve a user by ID
-        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPhone(user.getPhone());
-        return userDTO;
-    }
+            User user = userRepository.findById(id).orElse(null);
+            if (user != null) {
+                return convertToDTO(user);
+            }
+            return null;
+        }
 
     
     public User createUser(User user) {
@@ -98,6 +94,21 @@ public class UserService {
             user.getUpdatedAt()
         );  
     }
+
+    //find user by email
+    public UserDTO getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        return new UserDTO(
+            user.getId(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getEmail(),
+            user.getPhone(),
+            user.getUpdatedAt()
+        );
+    }
     
     public void deleteUser(Long id) {
         // Implement the logic to delete a user by ID
@@ -105,4 +116,24 @@ public class UserService {
         userRepository.delete(user); // Delete the user from the database
         System.out.println("User deleted successfully"); // Log a success message
     }
+
+
+     public boolean validatePassword(String email, String rawPassword) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            return passwordEncoder.matches(rawPassword, user.getPassword());
+        }
+        return false;
+    }
+private UserDTO convertToDTO(User user) {
+        return new UserDTO(
+            user.getId(),
+            user.getEmail(),
+            user.getFirstName(),
+            user.getLastName(),
+            user.getPhone(),
+            user.getCreatedAt()
+        );
+    }
+ 
 }

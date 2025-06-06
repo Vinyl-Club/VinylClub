@@ -20,6 +20,10 @@ public class RouteConfig {
     public static final String CATALOG_SERVICE_ROUTE = "/api/catalog/**";
     public static final String CATALOG_SERVICE_PATH = "/api/catalog";
 
+    public static final String AUTH_SERVICE_URL = "lb://vinyl-auth-service";
+    public static final String AUTH_SERVICE_PATH = "/auth";
+    public static final String AUTH_SERVICE_ROUTE = "/auth/**";
+
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
@@ -32,7 +36,10 @@ public class RouteConfig {
             .route("vinyl-service", r -> r
                 .path(VINYL_SERVICE_ROUTE)
                 .uri(VINYL_SERVICE_URL))
+            .route("auth-service", r -> r
+                .path(AUTH_SERVICE_ROUTE)
+                .uri(AUTH_SERVICE_URL))
+
             .build();
     }
 }
-

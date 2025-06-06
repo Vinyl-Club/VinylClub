@@ -11,7 +11,7 @@ import com.vinylclub.catalog.service.UserIntegrationService;
 
 @RestController
 @RequestMapping("/api/integration")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+// @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class IntegrationController {
     
     private final UserIntegrationService userIntegrationService;
