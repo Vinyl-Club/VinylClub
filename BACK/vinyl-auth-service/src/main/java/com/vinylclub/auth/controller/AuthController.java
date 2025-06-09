@@ -2,7 +2,6 @@ package com.vinylclub.auth.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,15 +33,24 @@ public class AuthController {
      * LOGIN - Authentification utilisateur
      * POST /auth/login
      */
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-        try {
-            LoginResponse response = authService.login(loginRequest);
-            return ResponseEntity.ok(response);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
-        }
+   @PostMapping("/login")
+public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+    System.out.println("========================================");
+    System.out.println("🚀 LOGIN REQUEST RECEIVED!");
+    System.out.println("📧 Email: " + (loginRequest != null ? loginRequest.getEmail() : "NULL REQUEST"));
+    System.out.println("🔑 Password: " + (loginRequest != null && loginRequest.getPassword() != null ? "***PROVIDED***" : "NULL"));
+    System.out.println("========================================");
+    
+    try {
+        LoginResponse response = authService.login(loginRequest);
+        System.out.println("✅ Login successful for: " + loginRequest.getEmail());
+        return ResponseEntity.ok(response);
+    } catch (RuntimeException e) {
+        System.out.println("❌ Login failed: " + e.getMessage());
+        e.printStackTrace();
+        return ResponseEntity.badRequest().build();
     }
+}
 
     /**
      * REFRESH TOKEN - Renouvellement du token

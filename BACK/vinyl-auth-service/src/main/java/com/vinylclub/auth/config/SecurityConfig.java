@@ -24,14 +24,24 @@ public class SecurityConfig {
         return new RestTemplate();
     }
 
-    @Bean
+   @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        System.out.println("🔧 SECURITY CONFIG LOADED!"); // ← Log de debug
+        System.out.println("🔒 Configuring security filter chain...");
+        System.out.println("🔐 Password Encoder: " + passwordEncoder().getClass().getSimpleName());
+        System.out.println("🌐 RestTemplate bean created: " + restTemplate().getClass().getSimpleName());
+        System.out.println("🚀 Security filter chain configured successfully!");
+
+        // Configuration de la sécurité HTTP
         http
             .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/login", "/refresh","/register").permitAll()
+                .requestMatchers("/login", "/register", "/refresh", "/validate", "/logout", "/me", "/health").permitAll()
                 .anyRequest().authenticated()
+            )
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             );
         
         return http.build();
