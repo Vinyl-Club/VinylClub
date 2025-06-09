@@ -47,7 +47,9 @@ mvn clean package -DskipTests
 cd ../vinyl-gateway-service
 mvn clean package -DskipTests
 cd ../vinyl-auth-service
-mvn clean package -DskipTests
+mvn clean package -DskipTestscd..
+cd..
+
 cd ..
 
 # Démarrez les conteneurs :

@@ -22,6 +22,7 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
     depends_on:
       - vinyl-discovery-service
+      - vinyl-user-service
       - postgres-db
     networks:
       - vinyl-network
