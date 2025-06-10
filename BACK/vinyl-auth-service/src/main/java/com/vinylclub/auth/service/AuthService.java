@@ -28,8 +28,7 @@ public class AuthService {
     @Autowired
     private RestTemplate restTemplate;
 
-    @Value("${user.service.url:http://localhost:8090/api/users}")
-    private String userServiceUrl;
+    private final String userServiceBaseUrl = "http://VINYL-USER-SERVICE/api/users";
 
     /**
      * Authentification utilisateur
@@ -107,24 +106,28 @@ public class AuthService {
      * Récupérer utilisateur par email depuis user-service
      */
     private UserDTO getUserByEmail(String email) {
-        try {
-            String url = userServiceUrl + "/email/" + email;
-            ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
-            return response.getBody();
-        } catch (Exception e) {
-            return null;
-        }
+    try {
+        String url = userServiceBaseUrl + "/email/" + email;
+        System.out.println("Calling URL: " + url); // Log pour vérifier l'URL appelée
+        ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
+        System.out.println("Response: " + response.getBody()); // Log pour vérifier la réponse reçue
+        return response.getBody();
+    } catch (Exception e) {
+        System.out.println("Error fetching user: " + e.getMessage()); // Log pour vérifier les erreurs
+        return null;
     }
+}
 
     /**
      * Récupérer utilisateur par ID depuis user-service
      */
     private UserDTO getUserById(Long userId) {
         try {
-            String url = userServiceUrl + "/" + userId;
+            String url = userServiceBaseUrl + "/" + userId;
             ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
             return response.getBody();
         } catch (Exception e) {
+            System.out.println("❌ Error fetching user by ID: " + e.getMessage());
             return null;
         }
     }
@@ -137,7 +140,7 @@ public class AuthService {
             // Créer la requête de validation
             ValidatePasswordRequest request = new ValidatePasswordRequest(email, password);
             
-            String url = userServiceUrl + "/validate-password";
+            String url = userServiceBaseUrl + "/validate-password";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
             
@@ -151,6 +154,7 @@ public class AuthService {
             
             return Boolean.TRUE.equals(response.getBody());
         } catch (Exception e) {
+            System.out.println("❌ Error validating password: " + e.getMessage());
             return false;
         }
     }

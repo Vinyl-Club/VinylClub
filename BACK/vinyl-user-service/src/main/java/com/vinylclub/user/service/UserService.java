@@ -24,9 +24,9 @@ public class UserService {
         return userRepository.findAll().stream().map(user -> {
             return new UserDTO(
             user.getId(),
+            user.getEmail(),
             user.getFirstName(),
             user.getLastName(),
-            user.getEmail(),
             user.getPhone(),
             user.getUpdatedAt()
             );
@@ -102,9 +102,9 @@ public class UserService {
         
         return new UserDTO(
             user.getId(),
+            user.getEmail(),
             user.getFirstName(),
             user.getLastName(),
-            user.getEmail(),
             user.getPhone(),
             user.getUpdatedAt()
         );
