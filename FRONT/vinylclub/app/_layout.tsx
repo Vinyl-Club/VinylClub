@@ -4,10 +4,12 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import colors from '@/constants/colors';
+import { useAuth } from '@/hooks/useAuth';
 
 
 // Define the RootLayout component
 export default function RootLayout() {
+  const { isAuthenticated } = useAuth();
   return (
     // SafeAreaProvider to handle safe area insets for the app
     <SafeAreaProvider>
@@ -18,8 +20,11 @@ export default function RootLayout() {
       <View style={styles.container}>
         {/* Stack navigator for handling screen navigation */}
         <Stack>
+          {!isAuthenticated ? (
           <Redirect href="/login" />
+        ) : null}
           <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           {/* Define a screen named "id" with hidden header */}
           <Stack.Screen name="id" options={{ headerShown: false }} />
         </Stack>

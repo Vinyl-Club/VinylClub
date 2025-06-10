@@ -18,7 +18,7 @@ export default function LoginScreen() {
         } else {
         alert("Échec de la connexion. Vérifie tes identifiants.");
         }
-    };    
+    };
 
     const handleSignup = () => {
         router.push('/register'); // Change selon ta route d’inscription
