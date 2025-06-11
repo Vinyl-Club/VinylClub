@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
     const [email, setEmail] = useState('');
@@ -12,17 +13,43 @@ export default function RegisterScreen() {
 
     const router = useRouter();
 
-    const handleRegister = () => {
-        // Ajoute ici la logique pour gérer l'inscription
-        console.log('Email:', email);
-        console.log('Password:', password);
-        console.log('Confirm Password:', confirmPassword);
-        console.log('Last Name:', lastName);
-        console.log('First Name:', firstName);
+    const handleRegister = async () => {
+    if (!email || !password || !confirmPassword || !firstName || !lastName) {
+        alert("Tous les champs sont obligatoires.");
+        return;
+    }
 
-        // Redirige vers une autre page après l'inscription
-        router.replace('/login'); // Redirige vers la page de connexion après l'inscription
-    };
+    if (password !== confirmPassword) {
+        alert("Les mots de passe ne correspondent pas.");
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:8090/api/users', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password,
+                firstName,
+                lastName,
+            }),
+        });
+
+        if (response.ok) {
+            alert("Compte créé avec succès !");
+            router.replace('/login');
+        } else {
+            const error = await response.json();
+            alert("Erreur lors de l'inscription : " + (error.message || "inconnue"));
+        }
+    } catch (err) {
+        console.error(err);
+        alert("Erreur réseau ou serveur.");
+    }
+};
 
     return (
         <View style={styles.container}>

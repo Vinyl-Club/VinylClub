@@ -38,7 +38,8 @@
 # Compilez chaque service :
 
 cd back
-cd vinyl-discovery-service
+cd vinyl-discovery-servicecd ..
+
 mvn clean package -DskipTests
 cd ../vinyl-user-service
 mvn clean package -DskipTests
