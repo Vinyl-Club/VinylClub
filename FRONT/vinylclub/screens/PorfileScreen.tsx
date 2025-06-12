@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  KeyboardTypeOptions,
+    View,
+    Text,
+    TextInput,
+    StyleSheet,
+    ScrollView,
+    TouchableOpacity,
+    KeyboardTypeOptions,
+    Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
@@ -18,10 +19,10 @@ import { useUser } from '@/hooks/useUser';
 export default function ProfileScreen() {
     const { products } = useProducts();
     const { addresses, addAddress, updateAddress } = useAddresses();
-    const { user, loading, error, updateUser, loadUser } = useUser();  // ← ajout de loadUser
+    const { user, loading, error, updateUser, loadUser, deleteUser } = useUser();  // ← ajout de loadUser
     const router = useRouter();
 
-    // états du formulaire
+    // form states
     const [firstName, setFirstName] = useState('');
     const [lastName,  setLastName]  = useState('');
     const [email,     setEmail]     = useState('');
@@ -33,13 +34,13 @@ export default function ProfileScreen() {
 
     const isInitialized = useRef(false);
 
-    // ← Charger l'utilisateur au montage
+    // ← Load the user with assembly
     useEffect(() => {
         loadUser();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // ← Hydrater le formulaire une seule fois
+    // ← Hydrate the form only once
     useEffect(() => {
         if (user && addresses.length > 0 && !isInitialized.current) {
         setFirstName(user.firstName);
@@ -63,11 +64,11 @@ export default function ProfileScreen() {
 
     const handleSave = async () => {
         try {
-        // 1) update user (sans email)
+        // 1) User update (without email)
         await updateUser({ firstName, lastName, phone });
         alert('Vos informations ont été mises à jour');
 
-        // 2) update/add address si modifiée
+        // 2) update/add address if modified
         const ua = addresses.find(a => a.user.id === user!.id);
         const changed =
             (!ua && (street || zipCode || city || country)) ||
@@ -104,17 +105,32 @@ export default function ProfileScreen() {
         }
     };
 
+    const handleDelete = async () => {
+        const ok = window.confirm(
+            'Es-tu sûr·e de vouloir supprimer ton compte ? Cette action est irréversible.'
+        );
+        if (!ok) return;
+
+        try {
+            await deleteUser();
+            window.alert('Compte supprimé !');  // feedback simple
+            router.replace('/login');
+        } catch {
+            window.alert("Erreur : impossible de supprimer le compte.");
+        }
+    };
+
     if (loading) return <Text>Chargement…</Text>;
     if (error)   return <Text>Erreur : {error.message}</Text>;
 
-    // définition typée des champs
-    const fields: Array<{
+    // Definition typed fields
+    const fields: {
         label: string;
         value: string;
         setter: (t: string) => void;
         keyboardType?: KeyboardTypeOptions;
         editable?: boolean;
-    }> = [
+    }[] = [
         { label: 'Nom',       value: firstName, setter: setFirstName },
         { label: 'Prénom',    value: lastName,  setter: setLastName  },
         {
@@ -171,8 +187,7 @@ export default function ProfileScreen() {
 
         <View style={styles.buttonContainer}>
             <TouchableOpacity
-            style={[styles.button, styles.supprimerButton]}
-            onPress={() => router.push('/login')}
+            style={[styles.button, styles.supprimerButton]} onPress={handleDelete}
             >
             <Text style={styles.buttonText}>Supprimer</Text>
             </TouchableOpacity>
