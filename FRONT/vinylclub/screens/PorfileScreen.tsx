@@ -1,101 +1,150 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, TextInput, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
-import CardItem from '@/components/CardItem'; // adapte le chemin si nécessaire
+import CardItem from '@/components/CardItem';
 import useProducts from '@/hooks/useProducts';
 import { useAddresses } from '@/hooks/useAddresses';
+import { useAuth } from '@/hooks/useAuth';
 
-export default function ProfileScreen ()  {
+export default function ProfileScreen() {
     const { products } = useProducts();
-    const { addresses } = useAddresses();
-    const currentUserId = 1; // ← Remplace par un vrai user ID (auth)
+    const { addresses, addAddress, updateAddress } = useAddresses();
+    const { fetchCurrentUser, getTokens } = useAuth();
     const router = useRouter();
 
-    const userProducts = products.filter(p => p.userId === currentUserId);
+    const [loadedUser, setLoadedUser] = useState<any>(null);
+    
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [address, setAddress] = useState('');
+    const [zipCode, setZipCode] = useState('');
+    const [city, setCity] = useState('');
+    const [country, setCountry] = useState('');
+
+    // 🔁 Charger l'utilisateur une seule fois
+    useEffect(() => {
+        const loadUser = async () => {
+            try {
+                const { accessToken } = await getTokens();
+                
+                if (accessToken) {
+                    const freshUser = await fetchCurrentUser(accessToken);
+                    if (freshUser) setLoadedUser(freshUser);
+                }
+            } catch (error) {
+                console.error("Erreur lors du chargement de l'utilisateur :", error);
+            }
+        };
+        loadUser();
+    }, []);
+
+    const isInitialized = useRef(false);
+
+    useEffect(() => {
+        if (loadedUser && addresses.length > 0 && !isInitialized.current) {
+            setFirstName(loadedUser.firstName || '');
+            setLastName(loadedUser.lastName || '');
+            setEmail(loadedUser.email || '');
+
+            const userAddress = addresses.find(a => a.user.id === loadedUser.id);
+            if (userAddress) {
+            setAddress(userAddress.street || '');
+            setZipCode(userAddress.zipCode || '');
+            setCity(userAddress.city || '');
+            setCountry(userAddress.country || '');
+            }
+
+            isInitialized.current = true; // ❗ Ne le refera plus
+        }
+    }, [loadedUser, addresses]);
+
+    const userProducts = products.filter(p => p.userId === loadedUser?.id);
+
+    const handleSave = async () => {
+        try {
+        const userAddress = addresses.find(a => a.user.id === loadedUser?.id);
+
+        if (userAddress) {
+            await updateAddress({
+            id: userAddress.id,
+            street: address,
+            zipCode,
+            city,
+            country,
+            user: loadedUser,
+            });
+            alert('Adresse mise à jour avec succès');
+        } else {
+            await addAddress({
+                street: address,
+                zipCode,
+                city,
+                country,
+                user: loadedUser ?? {},
+            });
+            alert('Adresse ajoutée avec succès');
+        }
+        } catch (err) {
+        console.error('Erreur lors de la sauvegarde de l’adresse:', err);
+        }
+    };
 
     return (
-        <ScrollView style={styles.container}>
-        {/* Section du profil */}
+        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 40 }}>
         <View style={styles.profileSection}>
             <Text style={styles.sectionTitle}>Votre profil</Text>
 
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Nom</Text>
-            <TextInput style={styles.input} placeholder="Nom" />
+            {[
+            { label: 'Nom', value: lastName, setter: setLastName },
+            { label: 'Prénom', value: firstName, setter: setFirstName },
+            { label: 'Email', value: email, setter: setEmail, keyboardType: 'email-address' },
+            { label: 'Adresse', value: address, setter: setAddress },
+            { label: 'Code postal', value: zipCode, setter: setZipCode },
+            { label: 'Ville', value: city, setter: setCity },
+            { label: 'Pays', value: country, setter: setCountry },
+            ].map(({ label, value, setter, keyboardType = 'default' }, index) => (
+            <View key={index} style={styles.inputContainer}>
+                <Text style={styles.label}>{label}</Text>
+                <TextInput
+                style={styles.input}
+                placeholder={label}
+                value={value}
+                onChangeText={setter}
+                keyboardType={keyboardType as any}
+                />
             </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Prénom</Text>
-            <TextInput style={styles.input} placeholder="Prénom" />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
-            <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Mot de passe</Text>
-            <TextInput style={styles.input} placeholder="Mot de passe" secureTextEntry />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Confirmer mot de passe</Text>
-            <TextInput style={styles.input} placeholder="Confirmer mot de passe" secureTextEntry />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Adresse</Text>
-            <TextInput style={styles.input} placeholder="Adresse" />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Code postal</Text>
-            <TextInput style={styles.input} placeholder="Code postal" />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Ville</Text>
-            <TextInput style={styles.input} placeholder="Ville" />
-            </View>
-
-            <View style={styles.inputContainer}>
-            <Text style={styles.label}>Pays</Text>
-            <TextInput style={styles.input} placeholder="Pays" />
-            </View>
+            ))}
         </View>
 
-        {/* Section des annonces */}
         <Text style={styles.sectionTitle}>Vos annonces</Text>
-        <ScrollView style={styles.annoncesSection}>
-            {userProducts.map((product) => {
-                const address = addresses.find(a => a.user.id === product.userId);
-                return (
-                    <CardItem key={product.id} product={product} city={address?.city} />
-                );
+        <View style={styles.annoncesSection}>
+            {userProducts.map(product => {
+            const productAddress = addresses.find(a => a.user.id === product.userId);
+            return (
+                <CardItem key={product.id} product={product} city={productAddress?.city} />
+            );
             })}
-        </ScrollView>
+        </View>
 
-        {/* Boutons */}
         <View style={styles.buttonContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
             style={[styles.button, styles.supprimerButton]}
-            onPress={() => router.push({ pathname: "/login" })}
+            onPress={() => router.push('/login')}
             >
             <Text style={styles.buttonText}>Supprimer</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
             style={[styles.button, styles.validerButton]}
-            onPress={() => router.push({ pathname: "/profile", params: { id: String(currentUserId) } })}
-            onPress={() => router.push({ pathname: "/profile", params: { id: String(user.id) } })}
+            onPress={handleSave}
             >
             <Text style={styles.buttonText}>Valider</Text>
             </TouchableOpacity>
         </View>
         </ScrollView>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -109,9 +158,8 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom: 10,
-        color: colors.brownText, 
         marginVertical: 16,
+        color: colors.brownText,
     },
     inputContainer: {
         marginBottom: 15,
@@ -119,8 +167,8 @@ const styles = StyleSheet.create({
     label: {
         marginBottom: 5,
         fontSize: 16,
-        color: '#666',
         fontWeight: '500',
+        color: '#666',
     },
     input: {
         height: 40,
@@ -135,30 +183,27 @@ const styles = StyleSheet.create({
         color: '#666',
     },
     annoncesSection: {
-        flexDirection: 'row',
         marginBottom: 20,
-    },  
+    },
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 40,
+        paddingHorizontal: 10,
     },
     button: {
         padding: 10,
-        borderRadius:20,
-        width: '35%',
+        borderRadius: 20,
+        width: '40%',
         alignItems: 'center',
     },
     supprimerButton: {
         backgroundColor: colors.orange,
     },
     validerButton: {
-        backgroundColor: colors.green, // Couleur verte pour le bouton
+        backgroundColor: colors.green,
     },
     buttonText: {
         color: 'black',
         fontWeight: 'bold',
     },
 });
-
-

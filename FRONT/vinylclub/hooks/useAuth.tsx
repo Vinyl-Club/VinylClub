@@ -317,47 +317,73 @@ export const useAuth = () => {
     }
   };
 
-  // ✅ Vérifier l'authentification au démarrage
-  const checkAuthState = useCallback(async () => {
-    try {
-      console.log('🔍 Checking auth state...');
-      const { accessToken, user } = await getTokens();
-      
-      if (accessToken && user) {
-        console.log('🔑 Found stored tokens, validating...');
-        // Vérifier si le token est toujours valide
-        const response = await fetch(`${API_URL_AUTH}/validate`, {
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-          },
-        });
+  const fetchCurrentUser = async (accessToken: string): Promise<User | null> => {
+  try {
+    const response = await fetch(`${API_URL_AUTH}/me`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
-        console.log('📥 Validation response status:', response.status);
+    if (response.ok) {
+      const user: User = await response.json();
+      console.log('👤 User fetched from /auth/me:', user);
+      return user;
+    } else {
+      console.warn('⚠️ Failed to fetch user from /auth/me:', response.status);
+      return null;
+    }
+  } catch (error) {
+    console.error('❌ Error fetching user from /auth/me:', error);
+    return null;
+  }
+};
 
-        if (response.ok) {
-          console.log('✅ Token is valid, user authenticated');
+
+  /// ✅ Vérifier l'authentification au démarrage
+const checkAuthState = useCallback(async () => {
+  try {
+    console.log('🔍 Checking auth state...');
+    const { accessToken, refreshToken } = await getTokens();
+
+    if (accessToken) {
+      console.log('🔑 Found stored access token, validating...');
+      // Vérifier si le token est toujours valide
+      const response = await fetch(`${API_URL_AUTH}/validate`, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+
+      console.log('📥 Validation response status:', response.status);
+
+      if (response.ok) {
+        console.log('✅ Token is valid, fetching fresh user...');
+        const freshUser = await fetchCurrentUser(accessToken);
+        if (freshUser) {
+          await saveTokens(accessToken, refreshToken!, freshUser);
           setAuthState({
-            user: user,
+            user: freshUser,
             isLoading: false,
             isAuthenticated: true,
           });
         } else {
-          console.log('❌ Token invalid, trying to refresh...');
-          // Token invalide, essayer de rafraîchir
-          const { refreshToken } = await getTokens();
-          if (refreshToken) {
-            const newTokens = await refreshTokens(refreshToken);
-            if (!newTokens) {
-              console.log('❌ Refresh failed, clearing tokens');
-              await clearTokens();
-              setAuthState({
-                user: null,
-                isLoading: false,
-                isAuthenticated: false,
-              });
-            }
-          } else {
-            console.log('❌ No refresh token, clearing tokens');
+          console.warn('⚠️ Failed to fetch user, clearing tokens...');
+          await clearTokens();
+          setAuthState({
+            user: null,
+            isLoading: false,
+            isAuthenticated: false,
+          });
+        }
+      } else {
+        console.log('❌ Token invalid, trying to refresh...');
+        if (refreshToken) {
+          const newTokens = await refreshTokens(refreshToken);
+          if (!newTokens) {
+            console.log('❌ Refresh failed, clearing tokens');
             await clearTokens();
             setAuthState({
               user: null,
@@ -365,24 +391,33 @@ export const useAuth = () => {
               isAuthenticated: false,
             });
           }
+        } else {
+          console.log('❌ No refresh token, clearing tokens');
+          await clearTokens();
+          setAuthState({
+            user: null,
+            isLoading: false,
+            isAuthenticated: false,
+          });
         }
-      } else {
-        console.log('🔍 No stored tokens found');
-        setAuthState({
-          user: null,
-          isLoading: false,
-          isAuthenticated: false,
-        });
       }
-    } catch (error) {
-      console.error('💥 Auth state check error:', error);
+    } else {
+      console.log('🔍 No stored access token found');
       setAuthState({
         user: null,
         isLoading: false,
         isAuthenticated: false,
       });
     }
-  }, []);
+  } catch (error) {
+    console.error('💥 Auth state check error:', error);
+    setAuthState({
+      user: null,
+      isLoading: false,
+      isAuthenticated: false,
+    });
+  }
+}, []);
 
   // ✅ Vérifier l'état d'authentification au montage du composant
   useEffect(() => {
@@ -435,5 +470,8 @@ export const useAuth = () => {
     
     // Vérification manuelle de l'état
     checkAuthState,
+    fetchCurrentUser,
+    getTokens,
+    saveTokens,
   };
 };

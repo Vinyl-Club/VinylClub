@@ -6,13 +6,14 @@ import Header from '@/components/Header';
 import { NavBar } from '@/components/NavBar';
 import CardHome from '@/components/CardHome';
 import { useAuth } from '@/hooks/useAuth';
+import colors from '@/constants/colors';
 
 
 // Define the HomeScreen component
 export default function HomeScreen() {
   const { search } = useLocalSearchParams<{ search?: string }>();
   const [searchQuery, setSearchQuery] = useState(search?? '');
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -39,10 +40,14 @@ export default function HomeScreen() {
       
       {/* Navigation bar component */}
       <NavBar />
-
-      <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-        <Text style={styles.logoutText}>Déconnexion</Text>
-      </TouchableOpacity>
+      {user && (
+        <View style={styles.welcomeContainer}>
+          <Text style={styles.welcomeText}>Bienvenue, {user.firstName} !</Text>
+          <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>Déconnexion</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       {/* CardHome component to display the list of products */}
       <CardHome searchQuery={searchQuery}/>
 
@@ -51,14 +56,23 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  welcomeContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal:20,
+    marginTop: 10,
+  },
   logoutButton: {
     padding: 5,
-    alignSelf: 'flex-end',
-    margin: 15,
   },
   logoutText: {
     color: 'black',
     fontWeight: 'bold',
   },
+  welcomeText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.brownText, 
+  },
 });
-

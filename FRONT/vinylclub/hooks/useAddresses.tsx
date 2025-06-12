@@ -1,6 +1,4 @@
-// Import necessary hooks from React
 import { useCallback, useEffect, useState } from 'react';
-// Import the Address type from local types
 import { Address } from '../types/index';
 
 export function useAddresses() {
@@ -13,10 +11,8 @@ export function useAddresses() {
 
     // Define a function to fetch addresses from the API
     const fetchAddresses = useCallback(async () => {
-        // Set loading to true when starting to fetch
         setLoading(true);
         try {
-            // Fetch data from the API endpoint
             const response = await fetch('http://localhost:8090/api/addresses', {
                 method: 'GET',
                 headers: {
@@ -25,30 +21,76 @@ export function useAddresses() {
                 },
             });
 
-            // Check if the response is not OK, throw an error if it's not
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            // Parse the JSON data from the response
             const data = await response.json();
-            // Update the addresses state with the fetched data
             setAddresses(Array.isArray(data) ? data : data.content);
         } catch (err: any) {
-            // Set error state if an error occurs during fetching
             setError(err);
             console.error('Error loading addresses:', err);
         } finally {
-            // Set loading to false after fetching is complete, whether successful or not
             setLoading(false);
         }
     }, []);
+
+    // Define a function to update an address
+    const updateAddress = useCallback(async (address: Address) => {
+        try {
+            const response = await fetch(`http://localhost:8090/api/addresses/${address.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(address),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Refresh the list of addresses after updating
+            const data = await response.json(); // ✅ récupère les données
+            await fetchAddresses();
+            return data; // ✅ retourne la nouvelle adresse
+        } catch (err: any) {
+            setError(err);
+            console.error('Error updating address:', err);
+        }
+    }, [fetchAddresses]);
+
+    // Define a function to add a new address
+    const addAddress = useCallback(async (address: Omit<Address, 'id'>) => {
+        try {
+            const response = await fetch('http://localhost:8090/api/addresses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify(address),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json(); // ✅ récupère les données
+            await fetchAddresses();
+            return data; // ✅ retourne la nouvelle adresse
+        } catch (err: any) {
+            setError(err);
+            console.error('Error adding address:', err);
+        }
+    }, [fetchAddresses]);
 
     // Use the useEffect hook to fetch addresses when the component mounts
     useEffect(() => {
         fetchAddresses();
     }, [fetchAddresses]);
 
-    // Return the addresses, loading status, and any error
-    return { addresses, loading, error };
+    // Return the addresses, loading status, error, and functions to update and add addresses
+    return { addresses, loading, error, updateAddress, addAddress };
 }
