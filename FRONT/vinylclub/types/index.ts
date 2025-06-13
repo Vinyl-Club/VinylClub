@@ -1,7 +1,7 @@
 // This file defines TypeScript interfaces for the data structures used in the Vinyl Club application.
 // Interface defining the structure of a Category object
 export interface Categories {
-    id: string; // Unique identifier for the category
+    id: number; // Unique identifier for the category
     name: string; // Name of the category
 }
 export interface Product {

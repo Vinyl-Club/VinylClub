@@ -129,11 +129,11 @@ export default function AddListingPage() {
   async function handleValidate() {
     // 1) validations de base
     if (!title || !description || !price || !quantity || !releaseYear || !categoryId || !state) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      alert('Veuillez remplir tous les champs obligatoires');
       return;
     }
     if (!artistName.trim()) {
-      Alert.alert('Erreur', 'L’artiste est obligatoire');
+      alert('L’artiste est obligatoire');
       return;
     }
 
@@ -147,7 +147,7 @@ export default function AddListingPage() {
       });
       if (!resA.ok) {
         const err = await resA.json();
-        Alert.alert('Erreur', err.message || 'Impossible de créer l’artiste');
+        alert( err.message || 'Impossible de créer l’artiste');
         return;
       }
       artistId = (await resA.json()).id;
@@ -171,7 +171,7 @@ export default function AddListingPage() {
         });
         if (!resB.ok) {
           const err = await resB.json();
-          Alert.alert('Erreur', err.message || 'Impossible de créer l’album');
+          alert(err.message || 'Impossible de créer l’album');
           return;
         }
         albumId = (await resB.json()).id;
@@ -200,7 +200,7 @@ export default function AddListingPage() {
   });
   if (!resP.ok) {
     const err = await resP.json();
-    Alert.alert('Erreur', err.message || 'Impossible de créer le produit');
+    alert(err.message || 'Impossible de créer le produit');
     return;
   }
   const { id: productId } = await resP.json();
@@ -229,15 +229,14 @@ export default function AddListingPage() {
 
     if (!resI.ok) {
       console.error('Erreur upload image', i, await resI.text())
-      Alert.alert(
-        'Attention',
+      alert(
         `Produit créé, mais échec de l’upload de l’image #${i + 1}`
       )
       // on continue quand même
     }
   }
 
-    Alert.alert('Succès', 'Annonce ajoutée avec succès !');
+    alert('Annonce ajoutée avec succès !');
     // … reset du formulaire …
     setTitle(''); setDescription(''); setPrice('');
     setQuantity(''); setReleaseYear(''); setCategoryId('');

@@ -8,14 +8,16 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import { useCategories } from '../hooks/useCategories';
-import { Categories } from '@/types/index';
 import colors from '@/constants/colors';
 
-export function NavBar() {
+interface NavBarProps {
+    selectedCategory: number | null;
+    onSelectCategory: (categoryId: number | null) => void;
+}
+
+export function NavBar({ selectedCategory, onSelectCategory }: NavBarProps) {
     // Custom hook to fetch categories data
     const { categories, loading } = useCategories();
-    // State to keep track of the selected category
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     // Display a loading indicator while data is being fetched
     if (loading) {
@@ -23,37 +25,48 @@ export function NavBar() {
     }
 
     return (
-        <View style={styles.container}>
-            {/* Horizontal scrollable list of categories */}
-            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
-                {categories.map((category: Categories, index: number) => (
-                    <View key={category.id} style={styles.categoryWrapper}>
-                        {/* Pressable component for each category item */}
-                        <Pressable
-                            onPress={() => setSelectedCategory(category.id)}
-                            style={[
-                                styles.categoriesItem,
-                                selectedCategory === category.id && styles.categoriesItemSelected,
-                            ]}
-                        >
-                            {/* Text for the category name */}
-                            <Text
-                                style={[
-                                    styles.categoriesText,
-                                    selectedCategory === category.id && styles.categoriesTextSelected,
-                                ]}
-                            >
-                                {category.name}
-                            </Text>
-                        </Pressable>
+    <View style={styles.container}>
+        <ScrollView horizontal showsHorizontalScrollIndicator>
+            {/* “Toutes” */}
+            <Pressable
+            onPress={() => onSelectCategory(null)}
+            style={[
+                styles.categoriesItem,
+                selectedCategory === null && styles.categoriesItemSelected,
+            ]}
+            >
+            <Text
+                style={[
+                styles.categoriesText,
+                selectedCategory === null && styles.categoriesTextSelected,
+                ]}
+            >
+                Toutes
+            </Text>
+            </Pressable>
 
-                        {/* Separator between categories, except after the last item */}
-                        {index !== categories.length - 1 && (
-                            <Text style={styles.separator}>|</Text>
-                        )}
-                    </View>
-                ))}
-            </ScrollView>
+            {categories.map((cat) => (
+            <View key={cat.id} style={styles.categoryWrapper}>
+                <Pressable
+                onPress={() => onSelectCategory(cat.id)}
+                style={[
+                    styles.categoriesItem,
+                    selectedCategory === cat.id && styles.categoriesItemSelected,
+                ]}
+                >
+                <Text
+                    style={[
+                    styles.categoriesText,
+                    selectedCategory === cat.id && styles.categoriesTextSelected,
+                    ]}
+                >
+                    {cat.name}
+                </Text>
+                </Pressable>
+                <Text style={styles.separator}>|</Text>
+            </View>
+            ))}
+        </ScrollView>
         </View>
     );
 }
