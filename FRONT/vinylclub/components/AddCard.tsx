@@ -12,49 +12,50 @@ import {
   ScrollView,
   SafeAreaView,
   Alert,
+  Image,
 } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { useAuth } from '@/hooks/useAuth';
 
-interface Category {
-  id: number;
-  name: string;
-}
-
-interface Artist {
-  id: number;
-  name: string;
-}
-
-interface Album {
-  id: number;
-  name: string;
-}
+interface Category { id: number; name: string }
+interface Artist   { id: number; name: string }
+interface Album    { id: number; name: string }
+interface ArtistPayload { name: string }
+interface AlbumPayload  { name: string }
 
 export default function AddListingPage() {
-  const [artistName, setArtistName] = useState('');
-  const [albumName, setAlbumName] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [releaseYear, setReleaseYear] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [price, setPrice] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [state, setState] = useState('');
-  const [artists, setArtists] = useState<Artist[]>([]);
-  const [albums, setAlbums] = useState<Album[]>([]);
+  const { user } = useAuth(); // utilisateur connecté
+  const userId = user?.id;
 
-  // États pour l'auto-complétion
+  // --- Form states ---
+  const [artistName, setArtistName]           = useState('');
+  const [albumName, setAlbumName]             = useState('');
+  const [title, setTitle]                     = useState('');
+  const [description, setDescription]         = useState('');
+  const [releaseYear, setReleaseYear]         = useState('');
+  const [categoryId, setCategoryId]           = useState('');
+  const [price, setPrice]                     = useState('');
+  const [quantity, setQuantity]               = useState('');
+  const [state, setState]                     = useState('');
+
+  const [categories, setCategories]           = useState<Category[]>([]);
+  const [artists, setArtists]                 = useState<Artist[]>([]);
+  const [albums, setAlbums]                   = useState<Album[]>([]);
   const [filteredArtists, setFilteredArtists] = useState<Artist[]>([]);
-  const [filteredAlbums, setFilteredAlbums] = useState<Album[]>([]);
+  const [filteredAlbums, setFilteredAlbums]   = useState<Album[]>([]);
   const [selectedArtistId, setSelectedArtistId] = useState<number | null>(null);
-  const [selectedAlbumId, setSelectedAlbumId] = useState<number | null>(null);
+  const [selectedAlbumId, setSelectedAlbumId]   = useState<number | null>(null);
+
+  // Images state
+  const [images, setImages]                   = useState<ImagePicker.ImagePickerAsset[]>([]);
 
   const productStates = [
     { label: 'Très bon état', value: 'TRES_BON_ETAT' },
-    { label: 'Bon état', value: 'BON_ETAT' },
-    { label: 'Mauvais état', value: 'MAUVAIS_ETAT' },
+    { label: 'Bon état',      value: 'BON_ETAT'      },
+    { label: 'Mauvais état',  value: 'MAUVAIS_ETAT'  },
   ];
 
+  // Fetch initial data
   useEffect(() => {
     fetchCategories();
     fetchArtists();
@@ -63,228 +64,273 @@ export default function AddListingPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:8090/api/categories');
-      const data = await response.json();
-      setCategories(data);
-    } catch (error) {
-      console.error('Erreur lors du chargement des catégories:', error);
+      const res = await fetch('http://localhost:8090/api/categories');
+      setCategories(await res.json());
+    } catch (e) {
+      console.error('Erreur loading categories:', e);
     }
   };
-
   const fetchArtists = async () => {
     try {
-      const response = await fetch('http://localhost:8090/api/artists');
-      const data = await response.json();
-      setArtists(data);
-      console.log('Artistes chargés:', data); // Debug
-    } catch (error) {
-      console.error('Erreur lors du chargement des artistes:', error);
+      const res = await fetch('http://localhost:8090/api/artists');
+      setArtists(await res.json());
+    } catch (e) {
+      console.error('Erreur loading artists:', e);
     }
   };
-
   const fetchAlbums = async () => {
     try {
-      const response = await fetch('http://localhost:8090/api/albums');
-      const data = await response.json();
-      setAlbums(data);
-    } catch (error) {
-      console.error('Erreur lors du chargement des albums:', error);
+      const res = await fetch('http://localhost:8090/api/albums');
+      setAlbums(await res.json());
+    } catch (e) {
+      console.error('Erreur loading albums:', e);
     }
   };
 
-  // Fonction pour filtrer les artistes
+  // Autocomplete handlers
   const handleArtistTextChange = (text: string) => {
     setArtistName(text);
-    setSelectedArtistId(null); // Reset de la sélection
-    
-    if (text.length > 0) {
-      const filtered = artists.filter(artist =>
-        artist.name.toLowerCase().includes(text.toLowerCase())
-      );
-      setFilteredArtists(filtered);
-      console.log('Artistes filtrés:', filtered); // Debug
-    } else {
-      setFilteredArtists([]);
-    }
+    setSelectedArtistId(null);
+    setFilteredArtists(text
+      ? artists.filter(a => a.name.toLowerCase().includes(text.toLowerCase()))
+      : []);
   };
-
-  // Fonction pour sélectionner un artiste
   const handleArtistSelect = (artist: Artist) => {
     setArtistName(artist.name);
     setSelectedArtistId(artist.id);
     setFilteredArtists([]);
   };
-
-  // Fonction pour filtrer les albums
   const handleAlbumTextChange = (text: string) => {
     setAlbumName(text);
-    setSelectedAlbumId(null); // Reset de la sélection
-    
-    if (text.length > 0) {
-      const filtered = albums.filter(album =>
-        album.name.toLowerCase().includes(text.toLowerCase())
-      );
-      setFilteredAlbums(filtered);
-    } else {
-      setFilteredAlbums([]);
-    }
+    setSelectedAlbumId(null);
+    setFilteredAlbums(text
+      ? albums.filter(a => a.name.toLowerCase().includes(text.toLowerCase()))
+      : []);
   };
-
-  // Fonction pour sélectionner un album
   const handleAlbumSelect = (album: Album) => {
     setAlbumName(album.name);
     setSelectedAlbumId(album.id);
     setFilteredAlbums([]);
   };
 
-  const handleAddImages = () => {
-    Alert.alert('Fonctionnalité à venir', 'Sélection d\'images en développement');
+  // Image picker
+  const handleAddImages = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: true,
+      quality: 0.8,
+    });
+    if (!result.canceled) {
+      setImages(prev => [...prev, ...(result.assets||[])]);
+    }
   };
 
-  const handleValidate = async () => {
+  // Validate and submit
+  async function handleValidate() {
+    // 1) validations de base
     if (!title || !description || !price || !quantity || !releaseYear || !categoryId || !state) {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
       return;
     }
-
-    const productData = {
-      title: title,
-      description: description,
-      price: parseFloat(price),
-      quantity: parseInt(quantity),
-      releaseYear: parseInt(releaseYear),
-      userId: 1,
-      artist: selectedArtistId ? { id: selectedArtistId } : null,
-      category: { id: parseInt(categoryId) },
-      album: selectedAlbumId ? { id: selectedAlbumId } : null,
-      status: "AVAILABLE",
-      state: state
-    };
-
-    try {
-      const response = await fetch('http://localhost:8090/api/products', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productData),
-      });
-
-      if (response.ok) {
-        Alert.alert('Succès', 'Annonce ajoutée avec succès !');
-        // Reset du formulaire
-        setTitle('');
-        setDescription('');
-        setPrice('');
-        setQuantity('');
-        setReleaseYear('');
-        setCategoryId('');
-        setState('');
-        setArtistName('');
-        setAlbumName('');
-        setSelectedArtistId(null);
-        setSelectedAlbumId(null);
-        setFilteredArtists([]);
-        setFilteredAlbums([]);
-      } else {
-        const errorData = await response.json();
-        Alert.alert('Erreur', `Erreur lors de l'ajout: ${errorData.message || 'Erreur inconnue'}`);
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-      Alert.alert('Erreur', 'Erreur de connexion');
+    if (!artistName.trim()) {
+      Alert.alert('Erreur', 'L’artiste est obligatoire');
+      return;
     }
+
+    // 2) créer l’artiste si besoin
+    let artistId = selectedArtistId;
+    if (!artistId) {
+      const resA = await fetch('http://localhost:8090/api/artists', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: artistName.trim() } as ArtistPayload),
+      });
+      if (!resA.ok) {
+        const err = await resA.json();
+        Alert.alert('Erreur', err.message || 'Impossible de créer l’artiste');
+        return;
+      }
+      artistId = (await resA.json()).id;
+    }
+    // 2) déterminer l’ID de l’album : on évite de recréer un doublon
+    let albumId = selectedAlbumId;
+    const nameTrim = albumName.trim();
+    if (nameTrim && !albumId) {
+      // rechercher dans la liste chargée
+      const existing = albums.find(a =>
+        a.name.toLowerCase() === nameTrim.toLowerCase()
+      );
+      if (existing) {
+        albumId = existing.id;
+      } else {
+        // créer seulement si inexistant
+        const resB = await fetch('http://localhost:8090/api/albums', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: nameTrim } as AlbumPayload),
+        });
+        if (!resB.ok) {
+          const err = await resB.json();
+          Alert.alert('Erreur', err.message || 'Impossible de créer l’album');
+          return;
+        }
+        albumId = (await resB.json()).id;
+      }
+    }
+
+    // 3) poster le produit
+  const productData = {
+    title,
+    description,
+    price: parseFloat(price),
+    quantity: parseInt(quantity, 10),
+    releaseYear: parseInt(releaseYear, 10),
+    userId,                          // issu de useAuth()
+    artist: { id: artistId! },      // idem pour artistId déterminé plus haut
+    category: { id: parseInt(categoryId, 10) },
+    album:  albumId ? { id: albumId } : null,
+    status: 'AVAILABLE',
+    state,
   };
+
+  const resP = await fetch('http://localhost:8090/api/products', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(productData),
+  });
+  if (!resP.ok) {
+    const err = await resP.json();
+    Alert.alert('Erreur', err.message || 'Impossible de créer le produit');
+    return;
+  }
+  const { id: productId } = await resP.json();
+
+
+    /// 4) upload des images — une requête par fichier, part 'file'
+    for (let i = 0; i < images.length; i++) {
+    const asset = images[i]
+
+    // 1) charger la donnée binaire (nécessaire sur web + mobile)
+    const response = await fetch(asset.uri)
+    const blob = await response.blob()
+
+    // 2) construire le FormData avec une vraie 'file'
+    const formData = new FormData()
+    formData.append('file', blob, `photo-${i}.jpg`)
+
+    // 3) poster vers /api/images/upload?productId=...
+    const resI = await fetch(
+      `http://localhost:8090/api/images/upload?productId=${productId}`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    )
+
+    if (!resI.ok) {
+      console.error('Erreur upload image', i, await resI.text())
+      Alert.alert(
+        'Attention',
+        `Produit créé, mais échec de l’upload de l’image #${i + 1}`
+      )
+      // on continue quand même
+    }
+  }
+
+    Alert.alert('Succès', 'Annonce ajoutée avec succès !');
+    // … reset du formulaire …
+    setTitle(''); setDescription(''); setPrice('');
+    setQuantity(''); setReleaseYear(''); setCategoryId('');
+    setState(''); setArtistName(''); setAlbumName('');
+    setSelectedArtistId(null); setSelectedAlbumId(null);
+    setFilteredArtists([]); setFilteredAlbums([]); setImages([]);
+  }
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Ajouter une annonce</Text>
 
-        {/* Titre du produit */}
+        {/* --- Titre --- */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Titre du produit *</Text>
           <TextInput
             style={styles.textInput}
             value={title}
             onChangeText={setTitle}
-            placeholder="Ex: Abbey Road - Vinyl LP"
+            placeholder="Ex : Abbey Road"
           />
         </View>
 
-        {/* Auto-complétion Artiste */}
+        {/* --- Artiste autocomplete --- */}
         <View style={[styles.inputGroup, styles.autocompleteGroup, { zIndex: 3 }]}>
-          <Text style={styles.label}>Artiste</Text>
+          <Text style={styles.label}>Artiste *</Text>
           <Autocomplete
             data={filteredArtists}
             value={artistName}
             onChangeText={handleArtistTextChange}
-            placeholder="Tapez le nom de l'artiste..."
+            placeholder="Tapez un nom..."
             inputContainerStyle={styles.autocompleteInputContainer}
             containerStyle={styles.autocompleteWrapper}
             listContainerStyle={styles.autocompleteListContainer}
+            hideResults={!filteredArtists.length}
             flatListProps={{
-              style: styles.autocompleteList,
               keyboardShouldPersistTaps: 'always',
               nestedScrollEnabled: true,
-              renderItem: ({ item, index }: { item: Artist; index: number }) => (
-                <TouchableOpacity 
-                  key={index}
+              renderItem: ({ item }) => (
+                <TouchableOpacity
                   style={styles.autocompleteItem}
                   onPress={() => handleArtistSelect(item)}
                 >
                   <Text style={styles.autocompleteItemText}>{item.name}</Text>
                 </TouchableOpacity>
               ),
-              keyExtractor: (item: Artist) => item.id.toString()
+              keyExtractor: (item) => item.id.toString(),
             }}
-            hideResults={filteredArtists.length === 0}
           />
         </View>
 
-        {/* Auto-complétion Album */}
+        {/* --- Album autocomplete --- */}
         <View style={[styles.inputGroup, styles.autocompleteGroup, { zIndex: 2 }]}>
           <Text style={styles.label}>Album</Text>
           <Autocomplete
             data={filteredAlbums}
             value={albumName}
             onChangeText={handleAlbumTextChange}
-            placeholder="Tapez le nom de l'album..."
+            placeholder="Tapez un titre..."
             inputContainerStyle={styles.autocompleteInputContainer}
             containerStyle={styles.autocompleteWrapper}
             listContainerStyle={styles.autocompleteListContainer}
-            hideResults={filteredAlbums.length === 0}
+            hideResults={!filteredAlbums.length}
             flatListProps={{
               keyboardShouldPersistTaps: 'always',
               nestedScrollEnabled: true,
-              renderItem: ({ item, index }: { item: Album; index: number }) => (
-                <TouchableOpacity 
-                  key={index}
+              renderItem: ({ item }) => (
+                <TouchableOpacity
                   style={styles.autocompleteItem}
                   onPress={() => handleAlbumSelect(item)}
                 >
                   <Text style={styles.autocompleteItemText}>{item.name}</Text>
                 </TouchableOpacity>
               ),
-              keyExtractor: (item: Album) => item.id.toString()
+              keyExtractor: (item) => item.id.toString(),
             }}
           />
         </View>
 
-        {/* Année de sortie */}
+        {/* --- Année de sortie --- */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Année de sortie *</Text>
           <TextInput
             style={[styles.textInput, styles.yearInput]}
             value={releaseYear}
             onChangeText={setReleaseYear}
-            placeholder="1969"
             keyboardType="numeric"
             maxLength={4}
           />
         </View>
 
-        {/* Ajouter des images */}
+        {/* --- Ajouter des images --- */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Ajouter des images</Text>
           <TouchableOpacity style={styles.imageButton} onPress={handleAddImages}>
@@ -292,7 +338,20 @@ export default function AddListingPage() {
           </TouchableOpacity>
         </View>
 
-        {/* Catégorie */}
+        {/* Aperçu */}
+        {images.length > 0 && (
+          <View style={styles.previewContainer}>
+            {images.map((asset, idx) => (
+              <Image
+                key={idx}
+                source={{ uri: asset.uri }}
+                style={styles.previewImage}
+              />
+            ))}
+          </View>
+        )}
+
+        {/* --- Catégorie --- */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Catégorie *</Text>
           <View style={styles.pickerContainer}>
@@ -301,28 +360,27 @@ export default function AddListingPage() {
               onValueChange={setCategoryId}
               style={styles.picker}
             >
-              <Picker.Item label="Sélectionner une catégorie" value="" />
-              {categories.map((category) => (
-                <Picker.Item key={category.id} label={category.name} value={category.id.toString()} />
+              <Picker.Item label="Sélectionner..." value="" />
+              {categories.map(c => (
+                <Picker.Item key={c.id} label={c.name} value={c.id.toString()} />
               ))}
             </Picker>
           </View>
         </View>
 
-        {/* Description */}
+        {/* --- Description --- */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Description *</Text>
           <TextInput
             style={[styles.textInput, styles.textArea]}
             value={description}
             onChangeText={setDescription}
-            placeholder="Décrivez votre vinyl..."
             multiline
             numberOfLines={4}
           />
         </View>
 
-        {/* État */}
+        {/* --- État --- */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>État *</Text>
           <View style={styles.pickerStateContainer}>
@@ -331,42 +389,37 @@ export default function AddListingPage() {
               onValueChange={setState}
               style={styles.picker}
             >
-              <Picker.Item label="Sélectionner l'état" value="" />
-              {productStates.map((condition, index) => (
-                <Picker.Item key={index} label={condition.label} value={condition.value} />
+              <Picker.Item label="Sélectionner..." value="" />
+              {productStates.map((c, i) => (
+                <Picker.Item key={i} label={c.label} value={c.value} />
               ))}
             </Picker>
           </View>
         </View>
 
-        {/* Prix */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Prix *</Text>
-          <View style={styles.priceContainer}>
+        {/* --- Prix & Quantité --- */}
+        <View style={styles.row}>
+          <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
+            <Text style={styles.label}>Prix *</Text>
             <TextInput
-              style={[styles.textInput, styles.priceInput]}
+              style={styles.textInput}
               value={price}
               onChangeText={setPrice}
-              placeholder="29.99"
               keyboardType="decimal-pad"
             />
-            <Text style={styles.euroSymbol}>€</Text>
+          </View>
+          <View style={[styles.inputGroup, { width: 100 }]}>
+            <Text style={styles.label}>Quantité *</Text>
+            <TextInput
+              style={styles.textInput}
+              value={quantity}
+              onChangeText={setQuantity}
+              keyboardType="numeric"
+            />
           </View>
         </View>
 
-        {/* Quantité */}
-        <View style={styles.inputGroup}>
-          <Text style={styles.label}>Quantité *</Text>
-          <TextInput
-            style={[styles.textInput, styles.quantityInput]}
-            value={quantity}
-            onChangeText={setQuantity}
-            placeholder="1"
-            keyboardType="numeric"
-          />
-        </View>
-
-        {/* Bouton Valider */}
+        {/* --- Valider --- */}
         <TouchableOpacity style={styles.validateButton} onPress={handleValidate}>
           <Text style={styles.validateButtonText}>Valider</Text>
         </TouchableOpacity>
@@ -376,173 +429,48 @@ export default function AddListingPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
-  },
+  container:     { flex: 1 },
+  scrollContent: { padding: 20, paddingBottom: 40 },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#8B4513',
-    textAlign: 'center',
+    fontSize: 24, fontWeight: 'bold',
+    color: colors.brownText, textAlign: 'center',
     marginBottom: 30,
   },
-  inputGroup: {
-    marginBottom: 20,
+  inputGroup:        { marginBottom: 20 },
+  label:                { fontSize: 16, color: '#666', marginBottom: 8, fontWeight: '500' },
+  autocompleteGroup:    { marginBottom: 40 },
+  row:               { flexDirection: 'row' },
+  textInput:         {
+    backgroundColor: 'white', borderRadius: 8,
+    paddingHorizontal: 15, paddingVertical: 12,
+    borderWidth: 1, borderColor: '#E0E0E0',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3, shadowRadius: 7, elevation: 4,
   },
-  // Style spécial pour les groupes avec auto-complétion
-  autocompleteGroup: {
-    marginBottom: 40, // Réduit de 80 à 40
+  textArea:          { height: 100, textAlignVertical: 'top' },
+  yearInput:         { width: 120 },
+  imageButton:       {
+    backgroundColor: 'white', borderRadius: 8,
+    padding: 15, alignItems: 'center',
+    borderWidth: 1, borderColor: '#E0E0E0',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1, shadowRadius: 2, elevation: 2,
   },
-  label: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 8,
-    fontWeight: '500',
+  previewContainer:  { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 20 },
+  previewImage:      { width: 80, height: 80, margin: 5, borderRadius: 8 },
+  pickerContainer:   { borderRadius: 8, backgroundColor: '#F0F0F0', borderWidth:1, borderColor:'#E0E0E0', elevation:2 },
+  pickerStateContainer: { width:150, borderRadius:8, backgroundColor:'#F0F0F0', borderWidth:1, borderColor:'#E0E0E0', elevation:2 },
+  picker:            { height: 50 },
+  autocompleteWrapper:       { flex: 1 },
+  autocompleteInputContainer:{ borderWidth:1, borderColor:'#E0E0E0', backgroundColor:'white', borderRadius:8, paddingHorizontal:15, height:48 },
+  autocompleteListContainer: { position:'absolute', top:48, left:0, right:0, maxHeight:120, backgroundColor:'white', borderWidth:1, borderColor:'#E0E0E0', borderTopWidth:0, borderBottomLeftRadius:8, borderBottomRightRadius:8 },
+  autocompleteItem:          { padding:12, borderBottomWidth:1, borderBottomColor:'#F0F0F0' },
+  validateButton:    {
+    backgroundColor: colors.green, borderRadius:25,
+    paddingVertical:15, paddingHorizontal:40,
+    alignSelf:'flex-end', marginTop:30,
+    elevation:4
   },
-  textInput: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    paddingVertical: 12,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 7,
-    elevation: 4,
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top',
-  },
-  imageButton: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  pickerContainer: {
-    backgroundColor: '#F0F0F0',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 7,
-    elevation: 4,
-  },
-  pickerStateContainer: {
-    backgroundColor: '#F0F0F0',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 7,
-    elevation: 4,
-    width: 150,
-  },
-  picker: {
-    height: 50,
-    backgroundColor: 'transparent',
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: 150,
-  },
-  priceInput: {
-    flex: 1,
-    marginRight: 10,
-    width: 150,
-  },
-  euroSymbol: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#666',
-  },
-  quantityInput: {
-    width: 150,
-  },
-  yearInput: {
-    width: 120,
-  },
-  validateButton: {
-    backgroundColor: colors.green,
-    borderRadius: 25,
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    alignSelf: 'flex-end',
-    marginTop: 30,
-    marginRight: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  validateButtonText: {
-    color: 'black',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  // Styles pour l'auto-complétion
-  autocompleteWrapper: {
-    flex: 1,
-  },
-  autocompleteInputContainer: {
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    backgroundColor: 'white',
-    borderRadius: 8,
-    paddingHorizontal: 15,
-    height: 48,
-    
-  },
-  autocompleteListContainer: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    borderTopWidth: 0,
-    borderBottomLeftRadius: 8,
-    borderBottomRightRadius: 8,
-    maxHeight: 120,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 48,
-    zIndex: 1000,
-  },
-  autocompleteList: {
-    backgroundColor: 'white',
-    margin: 0,
-    padding: 0,
-  },
-  autocompleteItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  autocompleteItemText: {
-    fontSize: 16,
-    color: '#333',
-  },
+  validateButtonText:{ color:'white', fontSize:18, fontWeight:'bold' },
+  autocompleteItemText:       { fontSize: 16, color: '#333' },
 });

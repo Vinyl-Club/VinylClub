@@ -55,3 +55,11 @@ green: 8AA39F
 orange: D48541
 brown text: 9C581E
 beige: F6EBDD
+
+# installer rxpo-image-picker
+
+npx expo install expo-image-picker
+
+# pour les mise a jour de expo
+
+npx expo install --fix
