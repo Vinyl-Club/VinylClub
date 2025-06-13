@@ -1,5 +1,6 @@
 // Import necessary components from React Native and local files
 import { View, ScrollView } from 'react-native';
+import { useState} from 'react';
 import { useRouter } from 'expo-router';
 import Header from '@/components/Header';
 import { NavBar } from '@/components/NavBar';
@@ -8,6 +9,8 @@ import DetailsCard from '@/components/DetailsCard';
 // Define the DetailsScreen component
 export default function DetailsScreen() {
     const router = useRouter();
+
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
 
     const handleSearch = (query: string) => {
     router.push(`/?search=${encodeURIComponent(query)}`);
@@ -20,7 +23,10 @@ export default function DetailsScreen() {
             <Header onSearch={handleSearch} />
 
             {/* Navigation bar component */}
-            <NavBar />
+            <NavBar
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+            />
 
             {/* ScrollView to enable scrolling within the content area */}
             <ScrollView contentContainerStyle={{ padding: 16 }}>
@@ -30,3 +36,7 @@ export default function DetailsScreen() {
         </View>
     );
 }
+// function useState<T>(arg0: null): [any, any] {
+//     throw new Error('Function not implemented.');
+// }
+

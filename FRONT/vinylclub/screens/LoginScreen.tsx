@@ -1,18 +1,45 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    StyleSheet,
+    Modal,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
 import { useAuth } from '@/hooks/useAuth';
 
 export default function LoginScreen() {
-    const [email, setEmail] = useState('');
+    const [email, setEmail]       = useState('');
     const [password, setPassword] = useState('');
+    const [showGDPR, setShowGDPR] = useState(false);
     const router = useRouter();
-    const {login} = useAuth();
+    const { login } = useAuth();
+
+    // Au montage, vérifier si l'utilisateur a déjà accepté la popup
+    useEffect(() => {
+        AsyncStorage.getItem('gdprAccepted')
+        .then(value => {
+            if (value !== 'yes') {
+            setShowGDPR(true);
+            }
+        })
+        .catch(() => {
+            // En cas d'erreur de lecture, on affiche tout de même
+            setShowGDPR(true);
+        });
+    }, []);
+
+    const acceptGDPR = async () => {
+        await AsyncStorage.setItem('gdprAccepted', 'yes');
+        setShowGDPR(false);
+    };
 
     const handleLogin = async () => {
-    const success = await login(email, password);
-
+        const success = await login(email.trim(), password);
         if (success) {
         router.push('/(tabs)');
         } else {
@@ -21,17 +48,44 @@ export default function LoginScreen() {
     };
 
     const handleSignup = () => {
-        router.push('/register'); // Change selon ta route d’inscription
+        router.push('/register');
     };
 
     return (
         <View style={styles.container}>
+        {/* Modal RGPD */}
+        <Modal
+            visible={showGDPR}
+            transparent
+            animationType="slide"
+            onRequestClose={() => {}}
+        >
+            <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+                <Text style={styles.modalTitle}>Protection des données</Text>
+                <Text style={styles.modalText}>
+                Nous respectons votre vie privée : les informations que vous
+                saisissez ne seront pas revendues ni partagées à des tiers.
+                </Text>
+                <TouchableOpacity
+                style={styles.modalButton}
+                onPress={acceptGDPR}
+                >
+                <Text style={styles.modalButtonText}>J’ai compris</Text>
+                </TouchableOpacity>
+            </View>
+            </View>
+        </Modal>
+
+        {/* Formulaire de connexion */}
         <Text style={styles.title}>Bienvenue sur{'\n'}Vinyl.Club</Text>
 
         <TextInput
             style={styles.input}
             placeholder="Email"
             placeholderTextColor="#333"
+            keyboardType="email-address"
+            autoCapitalize="none"
             onChangeText={setEmail}
             value={email}
         />
@@ -76,11 +130,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         padding: 12,
         marginBottom: 16,
-        shadowColor: '#000',
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 7,
-        elevation: 4,
+        boxShadow: '0px 2px 7px rgba(0,0,0,0.3)',
         color: '#666',
     },
     link: {
@@ -99,5 +149,41 @@ const styles = StyleSheet.create({
         color: 'black',
         fontWeight: '600',
     },
-});
 
+    // Modal RGPD
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 24,
+        marginHorizontal: 20,
+        width: '80%',
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 12,
+    },
+    modalText: {
+        fontSize: 14,
+        textAlign: 'center',
+        marginBottom: 20,
+        color: '#444',
+    },
+    modalButton: {
+        backgroundColor: colors.green,
+        borderRadius: 8,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+    },
+    modalButtonText: {
+        color: 'white',
+        fontWeight: '600',
+    },
+});
