@@ -37,43 +37,59 @@ export function useUser() {
    * @param updates Partial fields to update.
    */
   const updateUser = useCallback(async (updates: Partial<User>) => {
-    if (!user) return;
+  if (!user) return;
+
+  // Prépare le payload complet
+  const payload = {
+    id:        user.id,
+    firstName: updates.firstName ?? user.firstName,
+    lastName:  updates.lastName  ?? user.lastName,
+    email:     user.email,       // non editable mais requis par ton API
+    phone:     updates.phone     ?? user.phone,
+  };
+
+  try {
+    const { accessToken } = await getTokens();
+    const response = await fetch(
+      `http://localhost:8090/api/users/${user.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(payload),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // On récupère d'abord le texte brut
+    const text = await response.text();
+    let updated: User;
 
     try {
-      const payload = {
-        id: user.id,
-        firstName: updates.firstName ?? user.firstName,
-        lastName:  updates.lastName  ?? user.lastName,
-        email:     user.email,       // Email is not editable but sent for full PUT
-        phone:     updates.phone     ?? user.phone,
+      // Si c'est du JSON valide, on parse
+      updated = JSON.parse(text);
+    } catch {
+      // Sinon on reconstruit l'objet à partir du payload local
+      updated = {
+        ...user,
+        ...payload,
       };
-      console.log('▶️ payload full user:', payload);
-
-      const { accessToken } = await getTokens();
-      const response = await fetch(
-        `http://localhost:8090/api/users/${user.id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const updated = await response.json();
-      setUser(updated);
-      return updated;
-    } catch (err: any) {
-      console.error('❌ Erreur updateUser:', err);
-      setError(err);
     }
-  }, [user, getTokens]);
+
+    setUser(updated);
+    return updated;
+
+  } catch (err: any) {
+    console.error('❌ Erreur updateUser:', err);
+    setError(err);
+  }
+}, [user, getTokens]);
+
 
   /**
    * Delete the current user account and log out.

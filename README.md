@@ -38,20 +38,22 @@
 # Compilez chaque service :
 
 cd back
-cd vinyl-discovery-servicecd ..
-
+cd vinyl-discovery-service
 mvn clean package -DskipTests
-cd ../vinyl-user-service
+cd ..
+cd vinyl-user-service
 mvn clean package -DskipTests
-cd ../vinyl-catalog-service
+cd ..
+cd vinyl-catalog-service
 mvn clean package -DskipTests
-cd ../vinyl-gateway-service
+cd ..
+cd vinyl-gateway-service
 mvn clean package -DskipTests
-cd ../vinyl-auth-service
-mvn clean package -DskipTestscd..
+cd ..
+cd vinyl-auth-service
+mvn clean package -DskipTests
 cd..
 
-cd ..
 
 # Démarrez les conteneurs :
 
