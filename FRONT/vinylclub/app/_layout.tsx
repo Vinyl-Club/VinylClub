@@ -1,45 +1,48 @@
-// Import necessary components and modules
-import { Stack, Redirect } from "expo-router";
-import React from "react";
-import { View, StyleSheet } from "react-native";
+// app/_layout.tsx
+import { Stack, Redirect,  } from 'expo-router';
+import React from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { View, StyleSheet } from 'react-native';
 import colors from '@/constants/colors';
 import { useAuth } from '@/hooks/useAuth';
 
-
-// Define the RootLayout component
 export default function RootLayout() {
   const { isAuthenticated } = useAuth();
-  return (
-    // SafeAreaProvider to handle safe area insets for the app
-    <SafeAreaProvider>
-      {/* SafeAreaView at the top with green background color for the header */}
-      <SafeAreaView style={styles.safeTop} edges={['top']} />
 
-      {/* Main content container with beige background */}
+  return (
+    <SafeAreaProvider>
+      {/* Use <Layout> to wrap any non-<Screen> children */}
+      
+        <SafeAreaView style={styles.safeTop} edges={['top']} />
+     
       <View style={styles.container}>
-        {/* Stack navigator for handling screen navigation */}
         <Stack>
-          {!isAuthenticated ? (
-          <Redirect href="/login" />
-        ) : null}
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          {/* Define a screen named "id" with hidden header */}
-          <Stack.Screen name="id" options={{ headerShown: false }} />
+          {!isAuthenticated && <Redirect href="/login" />}
+
+          {/* écrans publics */}
+          <Stack.Screen name="login"    options={{ headerShown: false }} />
+          <Stack.Screen name="register" options={{ headerShown: false }} />
+
+          {/* ton tab-layout */}
+          <Stack.Screen name="(tabs)"   options={{ headerShown: false }} />
+
+          {/* ton écran de détail dynamique */}
+          <Stack.Screen
+            name="Details/[id]"
+            options={{ headerShown: true, title: 'Détails du produit' }}
+          />
         </Stack>
       </View>
     </SafeAreaProvider>
   );
 }
 
-// Define styles for the component using StyleSheet
 const styles = StyleSheet.create({
   safeTop: {
-    backgroundColor: colors.green, // Green background color for the header
+    backgroundColor: colors.green,
   },
   container: {
     flex: 1,
-    backgroundColor: colors.beige, // Beige background color for the main content
+    backgroundColor: colors.beige,
   },
 });

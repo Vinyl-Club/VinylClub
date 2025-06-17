@@ -200,8 +200,13 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-    container:      { flex: 1, padding: 16 },
-    profileSection: { marginBottom: 20 },
+    container: { 
+        flex: 1, 
+        padding: 16 
+    },
+    profileSection: { 
+        marginBottom: 20 
+    },
     sectionTitle: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -209,24 +214,45 @@ const styles = StyleSheet.create({
         marginVertical: 16,
         color: colors.brownText,
     },
-    inputContainer: { marginBottom: 15 },
-    label:          { marginBottom: 5, fontSize: 16, fontWeight: '500', color: '#666' },
+    inputContainer: { 
+        marginBottom: 15 
+    },
+    label:{ 
+        marginBottom: 5, 
+        fontSize: 16, 
+        fontWeight: '500', 
+        color: '#666' 
+    },
     input: {
         height: 40,
         borderRadius: 8,
         paddingHorizontal: 8,
         backgroundColor: 'white',
-        shadowColor: '#000',
-        shadowOpacity: 0.3,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 7,
-        elevation: 4,
+        boxShadow: '0px 2px 7px rgba(0,0,0,0.3)',
         color: '#666',
     },
-    annoncesSection:{ marginBottom: 20 },
-    buttonContainer:{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10 },
-    button:         { padding: 10, borderRadius: 20, width: '40%', alignItems: 'center' },
-    supprimerButton:{ backgroundColor: colors.orange },
-    validerButton:  { backgroundColor: colors.green },
-    buttonText:     { color: 'black', fontWeight: 'bold' },
+    annoncesSection:{ 
+        marginBottom: 20 
+    },
+    buttonContainer:{ 
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        paddingHorizontal: 10 
+    },
+    button: { 
+        padding: 10, 
+        borderRadius: 20, 
+        width: '40%', 
+        alignItems: 'center' 
+    },
+    supprimerButton:{ 
+        backgroundColor: colors.orange 
+    },
+    validerButton:  { 
+        backgroundColor: colors.green 
+    },
+    buttonText:{ 
+        color: 'black', 
+        fontWeight: 'bold' 
+    },
 });

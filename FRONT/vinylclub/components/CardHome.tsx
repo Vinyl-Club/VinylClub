@@ -1,111 +1,125 @@
-// Import necessary components and hooks from React Native and local files
+// components/CardHome.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import colors from '@/constants/colors';
 import { useRouter } from 'expo-router';
+import colors from '@/constants/colors';
 import { Product } from '@/types/index';
 import useProducts from '@/hooks/useProducts';
 import { useAddresses } from '@/hooks/useAddresses';
 import { API_URL } from '@/constants/config';
 
+interface CardHomeProps {
+  searchQuery: string;
+  categoryId: number | null;       // ← on ajoute ce prop
+}
 
-export default function CardHome({ searchQuery }: { searchQuery: string }) {
-  // Initialize the router for navigation
+export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
   const router = useRouter();
-  // Fetch products and loading state using the custom hook
   const { products, loading } = useProducts();
-  // Fetch addresses using the custom hook
-  const { addresses } = useAddresses();
+  const { addresses }       = useAddresses();
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredProducts(products); // afficher tous les produits si rien n'est saisi
-    } else {
-      const filtered = products.filter(product => {
-        const query = searchQuery.toLowerCase();
-        const artistMatch = product.artist?.name.toLowerCase().includes(query);
-        const titleMatch = product.title.toLowerCase().includes(query);
-        return artistMatch || titleMatch;
-      });
-      setFilteredProducts(filtered);
-    }
-  }, [searchQuery, products]);
+    const query = searchQuery.trim().toLowerCase();
 
-  // Helper function to get the first image URL
-  const getFirstImageUrl = (product: Product) => {
-    if (product.images && product.images.length > 0) {
-      
-      return `${API_URL}${product.images[0].imageUrl}`; // Assuming imageUrl is the property containing the URL
-    }
-    return null; // ou une image par défaut
-  };
+    const filtered = products.filter(product => {
+      // 1) filtre par catégorie si categoryId non null
+      const matchesCategory = categoryId === null
+        ? true
+        : product.category?.id === categoryId;
 
-  // Display a loading indicator while the data is being fetched
+      if (!matchesCategory) return false;
+
+      // 2) filtre par recherche
+      if (!query) return true;
+      const artist = product.artist?.name.toLowerCase() || '';
+      const title  = product.title.toLowerCase();
+      return artist.includes(query) || title.includes(query);
+    });
+
+    setFilteredProducts(filtered);
+  }, [searchQuery, products, categoryId]);
+
   if (loading) {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
   }
 
+  if (filteredProducts.length === 0) {
+    return <Text style={{ textAlign: 'center', marginTop: 20 }}>Aucun résultat trouvé.</Text>;
+  }
+
+  const getFirstImageUrl = (product: Product) => {
+    if (product.images?.length) {
+      return `${API_URL}${product.images[0].imageUrl}`;
+    }
+    return null;
+  };
+
   return (
-    <View style={{ flex: 1 }}>
-      <ScrollView>
-        {filteredProducts.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 20 }}>Aucun résultat trouvé.</Text>
-        ) : (
-          filteredProducts.map((product, index) => {
-            const address = addresses.find(a => a.user.id === product.userId);
-
-            return (
-              <View key={product.id || index} style={styles.card}>
-                <Image
-                  source={{ uri: getFirstImageUrl(product) || 'https://via.placeholder.com/80x80?text=Vinyl' }}
-                  style={styles.image}
-                />
-                <View style={styles.infoContainer}>
-                  <View style={styles.textContainer}>
-                    <Text style={styles.title}>{product.title}</Text>
-                    <View style={styles.artistPriceRow}>
-                      <Text style={styles.subText}>{product.artist.name}</Text>
-                      <Text style={styles.price}>{product.price} €</Text>
-                    </View>
-                    <Text style={styles.subText}>{product.category.name}</Text>
-                    <Text style={styles.subText}>{address ? `${address.city}` : 'Adresse inconnue'}</Text>
-                  </View>
-
-                  <View style={styles.bottomRow}>
-                    <FontAwesome name="heart-o" size={24} color="black" style={styles.icon} />
-                    <TouchableOpacity
-                      style={styles.button}
-                      onPress={() => router.push({ pathname: "/Details/[id]", params: { id: String(product.id) } })}
-                    >
-                      <Text style={styles.buttonText}>Voir le détail</Text>
-                    </TouchableOpacity>
-                  </View>
+    <ScrollView contentContainerStyle={{ padding: 10 }}>
+      {filteredProducts.map((product) => {
+        const address = addresses.find(a => a.user.id === product.userId);
+        return (
+          <View key={product.id} style={styles.card}>
+            <Image
+              source={{
+                uri: getFirstImageUrl(product)
+                  ?? 'https://via.placeholder.com/80x80?text=Vinyl',
+              }}
+              style={styles.image}
+            />
+            <View style={styles.infoContainer}>
+              <View>
+                <Text style={styles.title}>{product.title}</Text>
+                <View style={styles.artistPriceRow}>
+                  <Text style={styles.subText}>{product.artist.name}</Text>
+                  <Text style={styles.price}>{product.price} €</Text>
                 </View>
+                <Text style={styles.subText}>{product.category.name}</Text>
+                <Text style={styles.subText}>
+                  {address?.city ?? 'Adresse inconnue'}
+                </Text>
               </View>
-            );
-          })
-        )}
-      </ScrollView>
-    </View>
+              <View style={styles.bottomRow}>
+                <FontAwesome name="heart-o" size={24} color="black" />
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() =>
+                    router.push({
+                      pathname: '/Details/[id]',
+                      params: { id: String(product.id) },
+                    })
+                  }
+                >
+                  <Text style={styles.buttonText}>Voir le détail</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        );
+      })}
+    </ScrollView>
   );
 }
 
-// Define styles for the component using StyleSheet
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: 'white',
     padding: 16,
     borderRadius: 8,
-    margin: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 7,
-    elevation: 4,
+    marginVertical: 8,
+    boxShadow: '0px 2px 7px rgba(0,0,0,0.3)',
   },
   image: {
     width: 80,
@@ -117,9 +131,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
-  textContainer: {
-    marginBottom: 8,
-  },
   title: {
     fontWeight: 'bold',
     fontSize: 16,
@@ -129,20 +140,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
   },
-  bottomRow: {
+  artistPriceRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
     justifyContent: 'space-between',
   },
   price: {
     color: colors.brownText,
     fontWeight: 'bold',
-    marginEnd: 10,
   },
-  icon: {
-    marginLeft: 'auto',
-    marginRight: 10,
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: colors.green,
@@ -151,12 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   buttonText: {
-    color: 'Black',
+    color: 'black',
     fontWeight: '500',
-  },
-  artistPriceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
 });

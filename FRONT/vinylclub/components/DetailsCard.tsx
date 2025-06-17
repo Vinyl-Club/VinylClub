@@ -137,11 +137,7 @@ const styles = StyleSheet.create({
   },
   selectedThumbnail: {
     borderColor: colors.green,
-    shadowColor: colors.green,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+    boxShadow: `0px 2px 7px ${colors.green}`
   },
   thumbnail: {
     width: 80,

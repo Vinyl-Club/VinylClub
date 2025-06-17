@@ -129,11 +129,11 @@ export default function AddListingPage() {
   async function handleValidate() {
     // 1) validations de base
     if (!title || !description || !price || !quantity || !releaseYear || !categoryId || !state) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs obligatoires');
+      alert('Veuillez remplir tous les champs obligatoires');
       return;
     }
     if (!artistName.trim()) {
-      Alert.alert('Erreur', 'L’artiste est obligatoire');
+      alert('L’artiste est obligatoire');
       return;
     }
 
@@ -147,7 +147,7 @@ export default function AddListingPage() {
       });
       if (!resA.ok) {
         const err = await resA.json();
-        Alert.alert('Erreur', err.message || 'Impossible de créer l’artiste');
+        alert( err.message || 'Impossible de créer l’artiste');
         return;
       }
       artistId = (await resA.json()).id;
@@ -171,7 +171,7 @@ export default function AddListingPage() {
         });
         if (!resB.ok) {
           const err = await resB.json();
-          Alert.alert('Erreur', err.message || 'Impossible de créer l’album');
+          alert(err.message || 'Impossible de créer l’album');
           return;
         }
         albumId = (await resB.json()).id;
@@ -200,7 +200,7 @@ export default function AddListingPage() {
   });
   if (!resP.ok) {
     const err = await resP.json();
-    Alert.alert('Erreur', err.message || 'Impossible de créer le produit');
+    alert(err.message || 'Impossible de créer le produit');
     return;
   }
   const { id: productId } = await resP.json();
@@ -229,15 +229,14 @@ export default function AddListingPage() {
 
     if (!resI.ok) {
       console.error('Erreur upload image', i, await resI.text())
-      Alert.alert(
-        'Attention',
+      alert(
         `Produit créé, mais échec de l’upload de l’image #${i + 1}`
       )
       // on continue quand même
     }
   }
 
-    Alert.alert('Succès', 'Annonce ajoutée avec succès !');
+    alert('Annonce ajoutée avec succès !');
     // … reset du formulaire …
     setTitle(''); setDescription(''); setPrice('');
     setQuantity(''); setReleaseYear(''); setCategoryId('');
@@ -429,48 +428,131 @@ export default function AddListingPage() {
 }
 
 const styles = StyleSheet.create({
-  container:     { flex: 1 },
-  scrollContent: { padding: 20, paddingBottom: 40 },
+  container: { 
+    flex: 1 
+  },
+  scrollContent: {
+    padding: 20, 
+    paddingBottom: 40 
+  },
   title: {
-    fontSize: 24, fontWeight: 'bold',
-    color: colors.brownText, textAlign: 'center',
+    fontSize: 24, 
+    fontWeight: 'bold',
+    color: colors.brownText, 
+    textAlign: 'center',
     marginBottom: 30,
   },
-  inputGroup:        { marginBottom: 20 },
-  label:                { fontSize: 16, color: '#666', marginBottom: 8, fontWeight: '500' },
-  autocompleteGroup:    { marginBottom: 40 },
-  row:               { flexDirection: 'row' },
-  textInput:         {
-    backgroundColor: 'white', borderRadius: 8,
-    paddingHorizontal: 15, paddingVertical: 12,
-    borderWidth: 1, borderColor: '#E0E0E0',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3, shadowRadius: 7, elevation: 4,
+  inputGroup:{ 
+    marginBottom: 20 }
+    ,
+  label: { fontSize: 16, 
+    color: '#666', 
+    marginBottom: 8, 
+    fontWeight: '500' 
   },
-  textArea:          { height: 100, textAlignVertical: 'top' },
-  yearInput:         { width: 120 },
-  imageButton:       {
-    backgroundColor: 'white', borderRadius: 8,
-    padding: 15, alignItems: 'center',
-    borderWidth: 1, borderColor: '#E0E0E0',
-    shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1, shadowRadius: 2, elevation: 2,
+  autocompleteGroup: { 
+    marginBottom: 40 
   },
-  previewContainer:  { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 20 },
-  previewImage:      { width: 80, height: 80, margin: 5, borderRadius: 8 },
-  pickerContainer:   { borderRadius: 8, backgroundColor: '#F0F0F0', borderWidth:1, borderColor:'#E0E0E0', elevation:2 },
-  pickerStateContainer: { width:150, borderRadius:8, backgroundColor:'#F0F0F0', borderWidth:1, borderColor:'#E0E0E0', elevation:2 },
-  picker:            { height: 50 },
-  autocompleteWrapper:       { flex: 1 },
-  autocompleteInputContainer:{ borderWidth:1, borderColor:'#E0E0E0', backgroundColor:'white', borderRadius:8, paddingHorizontal:15, height:48 },
-  autocompleteListContainer: { position:'absolute', top:48, left:0, right:0, maxHeight:120, backgroundColor:'white', borderWidth:1, borderColor:'#E0E0E0', borderTopWidth:0, borderBottomLeftRadius:8, borderBottomRightRadius:8 },
-  autocompleteItem:          { padding:12, borderBottomWidth:1, borderBottomColor:'#F0F0F0' },
+  row: { 
+    flexDirection: 'row' 
+  },
+  textInput: {
+    backgroundColor: 'white', 
+    borderRadius: 8,
+    paddingHorizontal: 15, 
+    paddingVertical: 12,
+    borderWidth: 1, 
+    borderColor: '#E0E0E0',
+    boxShadow: '0px 2px 7px rgba(0,0,0,0.3)',
+  },
+  textArea: { 
+    height: 100, 
+    textAlignVertical: 'top' 
+  },
+  yearInput: { 
+    width: 120 
+  },
+  imageButton: {
+    backgroundColor: 'white', 
+    borderRadius: 8,
+    padding: 15, 
+    alignItems: 'center',
+    borderWidth: 1, 
+    borderColor: '#E0E0E0',
+    boxShadow: '0px 2px 7px rgba(0,0,0,0.3)',
+  },
+  previewContainer: { 
+    flexDirection: 'row', 
+    flexWrap: 'wrap',
+    marginBottom: 20 },
+  previewImage: { 
+    width: 80, 
+    height: 80, 
+    margin: 5, 
+    borderRadius: 8 
+  },
+  pickerContainer: { 
+    borderRadius: 8, 
+    backgroundColor: '#F0F0F0', 
+    borderWidth:1, 
+    borderColor:'#E0E0E0', 
+    elevation:2 
+  },
+  pickerStateContainer: { 
+    width:150, 
+    borderRadius:8, 
+    backgroundColor:'#F0F0F0', 
+    borderWidth:1, 
+    borderColor:'#E0E0E0', 
+    elevation:2 },
+  picker: { 
+    height: 50 
+  },
+  autocompleteWrapper: { 
+    flex: 1 
+  },
+  autocompleteInputContainer:{ 
+    borderWidth:1, 
+    borderColor:'#E0E0E0', 
+    backgroundColor:'white', 
+    borderRadius:8, 
+    paddingHorizontal:15, 
+    height:48 
+  },
+  autocompleteListContainer: { 
+    position:'absolute', 
+    top:48, 
+    left:0, 
+    right:0, 
+    maxHeight:120, 
+    backgroundColor:'white', 
+    borderWidth:1, 
+    borderColor:'#E0E0E0', 
+    borderTopWidth:0, 
+    borderBottomLeftRadius:8, 
+    borderBottomRightRadius:8 
+  },
+  autocompleteItem: { 
+    padding:12, 
+    borderBottomWidth:1, 
+    borderBottomColor:'#F0F0F0' 
+  },
   validateButton:    {
-    backgroundColor: colors.green, borderRadius:25,
-    paddingVertical:15, paddingHorizontal:40,
-    alignSelf:'flex-end', marginTop:30,
+    backgroundColor: colors.green, 
+    borderRadius:25,
+    paddingVertical:15, 
+    paddingHorizontal:40,
+    alignSelf:'flex-end',
+    marginTop:30,
     elevation:4
   },
-  validateButtonText:{ color:'white', fontSize:18, fontWeight:'bold' },
-  autocompleteItemText:       { fontSize: 16, color: '#333' },
+  validateButtonText:{ 
+    color:'white', 
+    fontSize:18, 
+    fontWeight:'bold' 
+  },
+  autocompleteItemText:{ 
+    fontSize: 16, 
+    color: '#333' 
+  },
 });

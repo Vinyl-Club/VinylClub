@@ -16,6 +16,8 @@ export default function HomeScreen() {
   const { logout, user } = useAuth();
   const router = useRouter();
 
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+
   useEffect(() => {
     if (search !== undefined) {
       setSearchQuery(search);
@@ -39,7 +41,10 @@ export default function HomeScreen() {
       <Header onSearch={setSearchQuery} />
       
       {/* Navigation bar component */}
-      <NavBar />
+      <NavBar
+        selectedCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
+      />
       {user && (
         <View style={styles.welcomeContainer}>
           <Text style={styles.welcomeText}>Bienvenue, {user.firstName} !</Text>
@@ -49,7 +54,10 @@ export default function HomeScreen() {
         </View>
       )}
       {/* CardHome component to display the list of products */}
-      <CardHome searchQuery={searchQuery}/>
+      <CardHome 
+        searchQuery={searchQuery}
+        categoryId={selectedCategory}
+      />
 
     </View>
   );
