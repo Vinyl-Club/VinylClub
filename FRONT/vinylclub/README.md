@@ -56,7 +56,7 @@ orange: D48541
 brown text: 9C581E
 beige: F6EBDD
 
-# installer rxpo-image-picker
+# installer expo-image-picker
 
 npx expo install expo-image-picker
 
