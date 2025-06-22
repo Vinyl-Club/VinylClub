@@ -91,7 +91,14 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
                 </Text>
               </View>
               <View style={styles.bottomRow}>
-                <FontAwesome name="heart-o" size={24} color="black" />
+                <TouchableOpacity 
+                style={styles.favoriteButton}
+                onPress={() => {
+                  router.push('/(tabs)/favorite')
+                }}
+                >
+                  <FontAwesome name="heart-o" size={24} color="black" />
+                </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() =>
@@ -150,8 +157,11 @@ const styles = StyleSheet.create({
   },
   bottomRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+  },
+  favoriteButton: {
+    marginRight: 12,
   },
   button: {
     backgroundColor: colors.green,

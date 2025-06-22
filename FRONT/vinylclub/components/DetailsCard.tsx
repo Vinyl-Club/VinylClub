@@ -46,6 +46,10 @@ export default function DetailsCard() {
   const HandleContact = () => {
     router.push ({ pathname: '/(tabs)/cart', params: { id: String(product.id) } });
   };
+
+  const handleAddToFavorites = () => {
+    router.push('/(tabs)/favorite');
+  };
   
   return (
     <View>
@@ -108,7 +112,7 @@ export default function DetailsCard() {
       <Text>{product.category.name}</Text>
       
       {/* Bouton favoris */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleAddToFavorites}>
         <Text style={styles.buttonText}>Ajouter aux favoris</Text>
       </TouchableOpacity>
 

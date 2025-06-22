@@ -44,6 +44,15 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="favorite"
+        options={{
+          title: 'Favoris',
+          tabBarLabel: 'Favoris',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <Ionicons name="heart" size={30} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="cart"
         options={{
           title: 'Panier',

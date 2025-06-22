@@ -2,21 +2,18 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import colors from '@/constants/colors';
 import Headernosearch from '@/components/Headernosearch';
-import CartScreen from '@/screens/CartScreen';
 
-export default function cart() {
+export default function favorite() {
     return (
-        
         <View style={styles.container}>
-        <Headernosearch/>
-        <CartScreen />
-        
+            <Headernosearch />
+            
         </View>
     );
-    }
+}
     const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.beige, 
-    }
+    },
 });
