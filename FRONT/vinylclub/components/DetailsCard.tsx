@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import colors from '@/constants/colors';
 import useProductDetails from '@/hooks/useProductDetails';
 import { useAddressesByUser } from '@/hooks/useAddressesByUser';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { API_URL_IMG } from '@/constants/config';
 
 export default function DetailsCard() {
@@ -14,6 +14,8 @@ export default function DetailsCard() {
   const { address } = useAddressesByUser(userId);
   console.log('Product:', product);
   console.log('Address:', address);
+
+  const router = useRouter();
 
   // State pour gérer l'index de l'image principale affichée
   // State to manage the index of the displayed main image
@@ -41,6 +43,10 @@ export default function DetailsCard() {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
   }
 
+  const HandleContact = () => {
+    router.push ({ pathname: '/(tabs)/cart', params: { id: String(product.id) } });
+  };
+  
   return (
     <View>
       {/* Titre */}
@@ -104,6 +110,10 @@ export default function DetailsCard() {
       {/* Bouton favoris */}
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Ajouter aux favoris</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.button} onPress={HandleContact}>
+        <Text style={styles.buttonText}>Contacter le vendeur</Text>
       </TouchableOpacity>
     </View>
   );

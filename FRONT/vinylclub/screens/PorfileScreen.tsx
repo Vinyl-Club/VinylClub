@@ -7,7 +7,6 @@ import {
     ScrollView,
     TouchableOpacity,
     KeyboardTypeOptions,
-    Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
