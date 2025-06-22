@@ -52,8 +52,7 @@ mvn clean package -DskipTests
 cd ..
 cd vinyl-auth-service
 mvn clean package -DskipTests
-cd..
-
+cd ..
 
 # Démarrez les conteneurs :
 
