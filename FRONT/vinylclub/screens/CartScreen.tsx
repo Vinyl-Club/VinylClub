@@ -107,27 +107,23 @@ export default function ContactScreen() {
 const styles = StyleSheet.create({
     container: {
         padding: 16,
-        backgroundColor: colors.beige,
     },
     sectionTitle: {
         fontSize: 24,
         fontWeight: 'bold',
         color: colors.brownText,
         textAlign: 'center',
-        marginBottom: 16,
+        marginBottom: 50,
     },
     card: {
         flexDirection: 'row',
         backgroundColor: 'white',
         borderRadius: 8,
-        padding: 12,
+        padding: 16,
         alignItems: 'center',
-        marginBottom: 24,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 7,
-        elevation: 4,
+        marginBottom: 50,
+        boxShadow: '0px 2px 7px rgba(0,0,0,0.3)',
+        height : 170,
     },
     image: {
         width: 80,
@@ -138,18 +134,16 @@ const styles = StyleSheet.create({
     info: { flex: 1 },
     title: {
         fontSize: 16,
-        fontWeight: '600',
-        marginBottom: 4,
+        fontWeight: 'bold',
+        marginBottom: 6,
     },
     text: {
         fontSize: 14,
         color: '#333',
     },
     price: {
-        fontSize: 16,
         fontWeight: 'bold',
         color: colors.brownText,
-        marginLeft: 12,
     },
     footer: {
         marginTop: 16,
@@ -160,10 +154,11 @@ const styles = StyleSheet.create({
         color: '#333',
         marginBottom: 8,
         textAlign: 'center',
+        fontWeight: 'bold',
     },
     email: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.green,
+        color: colors.brownText,
     },
 });

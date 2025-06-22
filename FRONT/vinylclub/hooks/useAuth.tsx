@@ -222,12 +222,7 @@ export const useAuth = () => {
 
   // ✅ Connexion avec logs détaillés
   const login = async (email: string, password: string): Promise<boolean> => {
-    try {
-      console.log('🚀 Starting login process...');
-      console.log('📧 Email:', email);
-      console.log('🔑 Password:', password);
-      console.log('📡 API URL:', `${API_URL_AUTH}/login`);
-      
+    try {      
       setAuthState(prev => ({ ...prev, isLoading: true }));
 
       console.log('📤 Sending login request...');
@@ -329,7 +324,6 @@ export const useAuth = () => {
 
     if (response.ok) {
       const user: User = await response.json();
-      console.log('👤 User fetched from /auth/me:', user);
       return user;
     } else {
       console.warn('⚠️ Failed to fetch user from /auth/me:', response.status);
@@ -360,7 +354,6 @@ const checkAuthState = useCallback(async () => {
       console.log('📥 Validation response status:', response.status);
 
       if (response.ok) {
-        console.log('✅ Token is valid, fetching fresh user...');
         const freshUser = await fetchCurrentUser(accessToken);
         if (freshUser) {
           await saveTokens(accessToken, refreshToken!, freshUser);
