@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, ScrollView, } from 'react-native';
 import React, { useState } from 'react';
 import colors from '@/constants/colors';
 import useProductDetails from '@/hooks/useProductDetails';
@@ -52,7 +52,7 @@ export default function DetailsCard() {
   };
   
   return (
-    <View>
+    <ScrollView>
       {/* Titre */}
       <Text style={styles.title}>{product.title}</Text>
       
@@ -119,7 +119,7 @@ export default function DetailsCard() {
       <TouchableOpacity style={styles.button} onPress={HandleContact}>
         <Text style={styles.buttonText}>Contacter le vendeur</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 

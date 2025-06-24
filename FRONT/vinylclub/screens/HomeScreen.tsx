@@ -1,5 +1,5 @@
 // Import necessary components from React Native and local files
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import Header from '@/components/Header';
@@ -36,7 +36,7 @@ export default function HomeScreen() {
 
   return (
     // Main container with flex: 1 to fill the entire screen
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       {/* Header component with a search function that logs the search text */}
       <Header onSearch={setSearchQuery} />
       
@@ -59,7 +59,7 @@ export default function HomeScreen() {
         categoryId={selectedCategory}
       />
 
-    </View>
+    </ScrollView>
   );
 }
 
