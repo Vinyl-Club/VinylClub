@@ -1,4 +1,3 @@
-
 services:
   # Discovery service (Eureka)
   vinyl-discovery-service:
@@ -11,7 +10,7 @@ services:
     networks:
       - vinyl-network
 
-# Auth service
+  # Auth service
   vinyl-auth-service:
     build: ./BACK/vinyl-auth-service
     container_name: vinyl-auth-service
@@ -56,13 +55,73 @@ services:
       - postgres-db
     networks:
       - vinyl-network
-  
+
+  # MongoDB database for favorites - SANS AUTHENTIFICATION
+  mongo-db:
+    image: mongo:7
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - vinyl_favorites_mongo_data:/data/db
+    networks:
+      - vinyl-network
+    # SANS authentification - commande modifiée
+    command: mongod --bind_ip_all --noauth
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # Mongo Express for MongoDB management - SANS AUTH
+  vinyl-mongo-express:
+    image: mongo-express:latest
+    container_name: vinyl-mongo-express
+    ports:
+      - "8086:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo-db
+      - ME_CONFIG_MONGODB_PORT=27017
+      # SUPPRIMÉ: variables d'authentification MongoDB
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin
+    networks:
+      - vinyl-network
+    depends_on:
+      mongo-db:
+        condition: service_healthy
+
+  # Favorites service - AVEC HEALTH CHECK
+  vinyl-favorites-service:
+    build:
+      context: ./BACK/vinyl-favorites-service
+      dockerfile: Dockerfile
+    container_name: vinyl-favorites-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      # FORCER la désactivation par variables d'environnement
+      - SPRING_CLOUD_CONFIG_ENABLED=false
+      - SPRING_CLOUD_CONFIG_IMPORT_CHECK_ENABLED=false
+      - SPRING_CONFIG_IMPORT=
+      - SPRING_CLOUD_CONFIG_FAIL_FAST=false
+      - SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED=false
+    depends_on:
+      mongo-db:
+        condition: service_healthy
+    networks:
+      - vinyl-network
+    restart: on-failure
+
   # Gateway service
   vinyl-gateway-service:
     build: ./BACK/vinyl-gateway-service
     container_name: gateway-service
     ports:
-      - "8090:8090"  # Changed host port to avoid conflict with catalog-service
+      - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -71,6 +130,7 @@ services:
       - vinyl-user-service
       - vinyl-catalog-service
       - vinyl-auth-service
+      - vinyl-favorites-service
     networks:
       - vinyl-network
 
@@ -78,7 +138,6 @@ services:
   postgres-db:
     image: postgres:17
     container_name: postgres-db
-    # Expose PostgreSQL port for local development and service communication
     ports:
       - "5432:5432"
     environment:
@@ -113,4 +172,5 @@ networks:
 
 volumes:
   postgres-data:
-  pgadmin-data:  # New volume for PGAdmin
+  pgadmin-data:
+  vinyl_favorites_mongo_data:
