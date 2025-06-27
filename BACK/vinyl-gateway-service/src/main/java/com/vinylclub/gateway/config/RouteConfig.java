@@ -24,6 +24,10 @@ public class RouteConfig {
     public static final String AUTH_SERVICE_PATH = "/auth";
     public static final String AUTH_SERVICE_ROUTE = "/auth/**";
 
+    public static final String FAVORITES_PATH = "/api/favorites";
+    public static final String FAVORITES_ROUTE = "/api/favorites/**";
+    public static final String FAVORITES_SERVICE_URL = "lb://vinyl-favorites-service";
+
     @Bean
     public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
@@ -39,6 +43,9 @@ public class RouteConfig {
             .route("auth-service", r -> r
                 .path(AUTH_SERVICE_ROUTE)
                 .uri(AUTH_SERVICE_URL))
+            .route("favorites-service", r -> r
+                .path(FAVORITES_ROUTE)
+                .uri(FAVORITES_SERVICE_URL))
 
             .build();
     }
