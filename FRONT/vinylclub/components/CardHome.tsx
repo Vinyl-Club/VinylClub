@@ -9,23 +9,23 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import colors from '@/constants/colors';
 import { Product } from '@/types/index';
 import useProducts from '@/hooks/useProducts';
 import { useAddresses } from '@/hooks/useAddresses';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { API_URL } from '@/constants/config';
 
 interface CardHomeProps {
   searchQuery: string;
-  categoryId: number | null;       // ← on ajoute ce prop
+  categoryId: number | null;
 }
 
 export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
   const router = useRouter();
   const { products, loading } = useProducts();
-  const { addresses }       = useAddresses();
+  const { addresses } = useAddresses();
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
@@ -43,7 +43,7 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
       // 2) filtre par recherche
       if (!query) return true;
       const artist = product.artist?.name.toLowerCase() || '';
-      const title  = product.title.toLowerCase();
+      const title = product.title.toLowerCase();
       return artist.includes(query) || title.includes(query);
     });
 
@@ -91,14 +91,13 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
                 </Text>
               </View>
               <View style={styles.bottomRow}>
-                <TouchableOpacity 
-                style={styles.favoriteButton}
-                onPress={() => {
-                  router.push('/(tabs)/favorite')
-                }}
-                >
-                  <FontAwesome name="heart-o" size={24} color="black" />
-                </TouchableOpacity>
+                {/* Utilisation du composant FavoriteButton réutilisable */}
+                <FavoriteButton 
+                  productId={product.id} 
+                  variant="icon" 
+                  size="medium"
+                  style={styles.favoriteButton}
+                />
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() =>

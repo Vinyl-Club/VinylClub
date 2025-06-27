@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, ScrollView, } from 'react-native';
 import React, { useState } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
 import colors from '@/constants/colors';
 import useProductDetails from '@/hooks/useProductDetails';
 import { useAddressesByUser } from '@/hooks/useAddressesByUser';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { FavoriteButton } from '@/components/FavoriteButton';
 import { API_URL_IMG } from '@/constants/config';
 
 export default function DetailsCard() {
@@ -39,20 +41,33 @@ export default function DetailsCard() {
     setSelectedImageIndex(index);
   };
 
-  if (loading || !product) {
-    return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
-  }
+  const handleGoBack = () => {
+    // Option A: Navigation avec paramètre de rechargement
+    router.push('/(tabs)/?reload=true');
+    
+    // Option B: Ou simplement router.back() si vous utilisez useFocusEffect
+    // router.back();
+  };
 
   const HandleContact = () => {
     router.push ({ pathname: '/(tabs)/cart', params: { id: String(product.id) } });
   };
 
-  const handleAddToFavorites = () => {
-    router.push('/(tabs)/favorite');
-  };
+  if (loading || !product) {
+    return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
+  }
   
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
+      {/* Header avec bouton retour */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+          <FontAwesome name="arrow-left" size={24} color={colors.brownText} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Détail du vinyle</Text>
+        <View style={styles.placeholder} /> {/* Pour centrer le titre */}
+      </View>
+
       {/* Titre */}
       <Text style={styles.title}>{product.title}</Text>
       
@@ -111,19 +126,50 @@ export default function DetailsCard() {
       <Text>{product.releaseYear}</Text>
       <Text>{product.category.name}</Text>
       
-      {/* Bouton favoris */}
-      <TouchableOpacity style={styles.button} onPress={handleAddToFavorites}>
-        <Text style={styles.buttonText}>Ajouter aux favoris</Text>
-      </TouchableOpacity>
+      {/* Section des boutons */}
+      <View style={styles.buttonContainer}>
+        {/* Bouton favoris réutilisable avec variante "button" */}
+        <FavoriteButton 
+          productId={productId} 
+          variant="button" 
+          size="large"
+        />
 
-      <TouchableOpacity style={styles.button} onPress={HandleContact}>
-        <Text style={styles.buttonText}>Contacter le vendeur</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={HandleContact}>
+          <Text style={styles.buttonText}>Contacter le vendeur</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    paddingTop: 50, // Pour éviter la status bar
+    backgroundColor: 'white',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E5E5',
+  },
+  backButton: {
+    padding: 8,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.brownText,
+  },
+  placeholder: {
+    width: 40, // Même largeur que le bouton retour pour centrer le titre
+  },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
@@ -163,7 +209,6 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
     marginVertical: 8,
     gap: '20%',
     paddingHorizontal: 10,
@@ -181,16 +226,22 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontWeight: 'bold',
   },
+  buttonContainer: {
+    paddingHorizontal: 10,
+    marginTop: 20,
+    gap: 12,
+  },
   button: {
     backgroundColor: colors.green,
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 20,
-    alignSelf: 'flex-end',
-    marginTop: 16,
+    alignSelf: 'stretch',
   },
   buttonText: {
     color: 'black',
     fontWeight: 'bold',
+    fontSize: 16,
+    textAlign: 'center',
   }
 });

@@ -4,7 +4,7 @@ import { useUser } from '@/hooks/useUser';
 import { API_URL } from '@/constants/config';
 
 // Service pour les favoris
-export const FavoriteScreen = {
+const FavoritesService = {
   async toggleFavorite(userId: string, productId: number) {
     try {
       const response = await fetch(`${API_URL}/api/favorites/toggle`, {

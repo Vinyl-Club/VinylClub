@@ -29,7 +29,7 @@ export default function RootLayout() {
           {/* ton écran de détail dynamique */}
           <Stack.Screen
             name="Details/[id]"
-            options={{ headerShown: true, title: 'Détails du produit' }}
+            options={{ headerShown: false, title: 'Détails du produit' }}
           />
         </Stack>
       </View>
