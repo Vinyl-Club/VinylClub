@@ -29,18 +29,19 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
 
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 
+  // Filter products by search query and category
   useEffect(() => {
     const query = searchQuery.trim().toLowerCase();
 
     const filtered = products.filter(product => {
-      // 1) filtre par catégorie si categoryId non null
+      // Filter by category if categoryId is provided
       const matchesCategory = categoryId === null
         ? true
         : product.category?.id === categoryId;
 
       if (!matchesCategory) return false;
 
-      // 2) filtre par recherche
+      // Filter by search query (artist or title)
       if (!query) return true;
       const artist = product.artist?.name.toLowerCase() || '';
       const title = product.title.toLowerCase();
@@ -50,14 +51,17 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
     setFilteredProducts(filtered);
   }, [searchQuery, products, categoryId]);
 
+  // Show loading indicator while fetching products
   if (loading) {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
   }
 
+  // Show message if no products match the filters
   if (filteredProducts.length === 0) {
     return <Text style={{ textAlign: 'center', marginTop: 20 }}>Aucun résultat trouvé.</Text>;
   }
 
+  // Get first image URL for a product, or fallback to placeholder
   const getFirstImageUrl = (product: Product) => {
     if (product.images?.length) {
       return `${API_URL}${product.images[0].imageUrl}`;
@@ -68,6 +72,7 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
   return (
     <ScrollView contentContainerStyle={{ padding: 10 }}>
       {filteredProducts.map((product) => {
+        // Find address for the product's user
         const address = addresses.find(a => a.user.id === product.userId);
         return (
           <View key={product.id} style={styles.card}>
@@ -91,13 +96,14 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
                 </Text>
               </View>
               <View style={styles.bottomRow}>
-                {/* Utilisation du composant FavoriteButton réutilisable */}
+                {/* Favorite button for the product */}
                 <FavoriteButton 
                   productId={product.id} 
                   variant="icon" 
                   size="medium"
                   style={styles.favoriteButton}
                 />
+                {/* Navigate to product details */}
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() =>
@@ -118,6 +124,7 @@ export default function CardHome({ searchQuery, categoryId }: CardHomeProps) {
   );
 }
 
+// Styles for the card and its elements
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',

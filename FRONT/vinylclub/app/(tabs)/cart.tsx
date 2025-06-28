@@ -4,19 +4,23 @@ import colors from '@/constants/colors';
 import Headernosearch from '@/components/Headernosearch';
 import CartScreen from '@/screens/CartScreen';
 
+// Main cart screen component
 export default function cart() {
     return (
-        
+        // Container view for the cart screen
         <View style={styles.container}>
-        <Headernosearch/>
-        <CartScreen />
-        
+            {/* Header without search bar */}
+            <Headernosearch/>
+            {/* Main cart content */}
+            <CartScreen />
         </View>
     );
-    }
-    const styles = StyleSheet.create({
+}
+
+// Styles for the container
+const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.beige, 
+        backgroundColor: colors.beige, // Set background color from constants
     }
 });

@@ -19,13 +19,13 @@ export function useUser() {
     setLoading(true);
     try {
       const { accessToken } = await getTokens();
-      if (!accessToken) throw new Error('Aucun token d’accès disponible');
+      if (!accessToken) throw new Error('No access token available');
       const freshUser = await fetchCurrentUser(accessToken);
       if (freshUser) {
         setUser(freshUser);
       }
     } catch (err: any) {
-      console.error('❌ Erreur loadUser:', err);
+      console.error('❌ Error loadUser:', err);
       setError(err);
     } finally {
       setLoading(false);
@@ -37,69 +37,69 @@ export function useUser() {
    * @param updates Partial fields to update.
    */
   const updateUser = useCallback(async (updates: Partial<User>) => {
-  if (!user) return;
+    if (!user) return;
 
-  // Prépare le payload complet
-  const payload = {
-    id:        user.id,
-    firstName: updates.firstName ?? user.firstName,
-    lastName:  updates.lastName  ?? user.lastName,
-    email:     user.email,       // non editable mais requis par ton API
-    phone:     updates.phone     ?? user.phone,
-  };
-
-  try {
-    const { accessToken } = await getTokens();
-    const response = await fetch(
-      `http://localhost:8090/api/users/${user.id}`,
-      {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(payload),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    // On récupère d'abord le texte brut
-    const text = await response.text();
-    let updated: User;
+    // Prepare the payload with only updatable fields
+    const payload = {
+      id:        user.id,
+      firstName: updates.firstName ?? user.firstName,
+      lastName:  updates.lastName  ?? user.lastName,
+      email:     user.email,       // Email is not updatable in this context
+      phone:     updates.phone     ?? user.phone,
+    };
 
     try {
-      // Si c'est du JSON valide, on parse
-      updated = JSON.parse(text);
-    } catch {
-      // Sinon on reconstruit l'objet à partir du payload local
-      updated = {
-        ...user,
-        ...payload,
-      };
+      const { accessToken } = await getTokens();
+      const response = await fetch(
+        `http://localhost:8090/api/users/${user.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // First get the raw text
+      const text = await response.text();
+      let updated: User;
+
+      try {
+        // If it's valid JSON, parse it
+        updated = JSON.parse(text);
+      } catch {
+        // Otherwise, reconstruct the object from the local payload
+        updated = {
+          ...user,
+          ...payload,
+        };
+      }
+
+      setUser(updated);
+      return updated;
+
+    } catch (err: any) {
+      console.error('❌ Error updateUser:', err);
+      setError(err);
     }
-
-    setUser(updated);
-    return updated;
-
-  } catch (err: any) {
-    console.error('❌ Erreur updateUser:', err);
-    setError(err);
-  }
-}, [user, getTokens]);
+  }, [user, getTokens]);
 
 
   /**
    * Delete the current user account and log out.
    */
   const deleteUser = useCallback(async () => {
-    if (!user) throw new Error('Aucun utilisateur chargé');
+    if (!user) throw new Error('No user loaded');
 
     try {
       const { accessToken } = await getTokens();
-      if (!accessToken) throw new Error('Aucun token d’accès disponible');
+      if (!accessToken) throw new Error('No access token available');
 
       const response = await fetch(
         `http://localhost:8090/api/users/${user.id}`,
@@ -119,7 +119,7 @@ export function useUser() {
       await logout();
       setUser(null);
     } catch (err: any) {
-      console.error('❌ Erreur deleteUser:', err);
+      console.error('❌ Error deleteUser:', err);
       setError(err);
       throw err;
     }

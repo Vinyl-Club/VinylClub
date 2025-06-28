@@ -6,7 +6,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 
 interface FavoriteButtonProps {
   productId: number;
-  variant?: 'icon' | 'button'; // Variante icône seule ou bouton avec texte
+  variant?: 'icon' | 'button'; // Display as icon only or button with text
   size?: 'small' | 'medium' | 'large';
   style?: any;
 }
@@ -17,9 +17,10 @@ export const FavoriteButton = ({
   size = 'medium',
   style 
 }: FavoriteButtonProps) => {
+  // Custom hook to manage favorite state and loading
   const { isFavorite, loading, toggleFavorite, isReady } = useFavorites(productId);
 
-  // Tailles selon la variante
+  // Icon and padding sizes for each variant
   const sizes = {
     small: { icon: 16, padding: 4 },
     medium: { icon: 24, padding: 8 },
@@ -29,7 +30,7 @@ export const FavoriteButton = ({
   const currentSize = sizes[size];
 
   if (variant === 'icon') {
-    // Version icône seule (pour CardHome)
+    // Icon-only button (used in CardHome)
     return (
       <TouchableOpacity
         style={[
@@ -54,7 +55,7 @@ export const FavoriteButton = ({
     );
   }
 
-  // Version bouton avec texte (pour DetailsCard)
+  // Button with icon and text (used in DetailsCard)
   return (
     <TouchableOpacity 
       style={[

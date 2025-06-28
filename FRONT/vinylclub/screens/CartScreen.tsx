@@ -20,7 +20,7 @@ export default function ContactScreen() {
     const [seller, setSeller]   = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // 1) On fetch le produit
+    // Fetch product and seller info on mount
     useEffect(() => {
         if (!id) return;
         (async () => {
@@ -30,7 +30,7 @@ export default function ContactScreen() {
             const data: Product = await res.json();
             setProduct(data);
 
-            // 2) Dès qu'on connaît product.userId, on fetch le user
+            // Fetch seller info after product is loaded
             const userRes = await fetch(`${API_URL}/api/users/${data.userId}`);
             if (!userRes.ok) throw new Error('Vendeur introuvable');
             const userData: User = await userRes.json();
@@ -43,11 +43,12 @@ export default function ContactScreen() {
         })();
     }, [id]);
 
-    // 3) Hook pour la ville
+    // Fetch seller address using custom hook
     const userId = product?.userId ?? null;
     const { address, loading: addrLoading } = useAddressesByUser(userId);
 
     if (loading) {
+        // Show loading indicator while fetching data
         return (
         <ActivityIndicator
             style={{ flex: 1 }}
@@ -58,6 +59,7 @@ export default function ContactScreen() {
     }
 
     if (!product) {
+        // Show error if product not found
         return (
         <View style={styles.container}>
             <Text style={styles.sectionTitle}>Produit introuvable</Text>
@@ -65,12 +67,12 @@ export default function ContactScreen() {
         );
     }
 
-    // url image ou placeholder
+    // Get product image or fallback to placeholder
     const imageUrl = product.images?.[0]?.imageUrl
         ? `${API_URL}${product.images[0].imageUrl}`
         : 'https://via.placeholder.com/80x80?text=Vinyl';
 
-    // email du vendeur, depuis le fetch user
+    // Get seller email or fallback
     const sellerEmail = seller?.email ?? 'Email indisponible';
 
     return (
@@ -104,6 +106,7 @@ export default function ContactScreen() {
     );
 }
 
+// Styles for the component
 const styles = StyleSheet.create({
     container: {
         padding: 16,

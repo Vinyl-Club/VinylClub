@@ -24,7 +24,7 @@ interface ArtistPayload { name: string }
 interface AlbumPayload  { name: string }
 
 export default function AddListingPage() {
-  const { user } = useAuth(); // utilisateur connecté
+  const { user } = useAuth(); // user connected
   const userId = user?.id;
 
   // --- Form states ---

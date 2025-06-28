@@ -18,25 +18,29 @@ import { useAddresses } from '@/hooks/useAddresses';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { API_URL } from '@/constants/config';
 
+// Main screen for favorites
 export default function FavoriteScreen() {
   const router = useRouter();
+  // Gets the user's favorites and associated functions
   const { favorites, loading, error, refetch, removeFavoriteFromList, user } = useUserFavorites();
+  // Gets the addresses of users
   const { addresses } = useAddresses();
 
-  // Recharger les favoris quand l'écran devient visible
+  // Reloads favorites every time the screen is focused
   useFocusEffect(
     useCallback(() => {
-      console.log('FavoriteScreen - Écran refocusé, rechargement des favoris');
+      console.log('FavoriteScreen - Screen refocused, reloading favorites');
       refetch();
     }, [refetch])
   );
 
-  // Callback pour gérer la suppression d'un favori
+  // Callback to handle removing a favorite locally
   const handleFavoriteRemoved = useCallback((productId: number) => {
-    console.log('FavoriteScreen - Favori supprimé:', productId);
+    console.log('FavoriteScreen - Favorite removed:', productId);
     removeFavoriteFromList(productId);
   }, [removeFavoriteFromList]);
 
+  // Gets the URL of the product's first image
   const getFirstImageUrl = (product: any) => {
     if (product.images?.length) {
       return `${API_URL}${product.images[0].imageUrl}`;
@@ -44,7 +48,7 @@ export default function FavoriteScreen() {
     return null;
   };
 
-  // Debug: Affichons les données pour comprendre le problème
+  // Debug: Log important data to the console
   console.log('FavoriteScreen Debug:', {
     user,
     favorites,
@@ -55,75 +59,76 @@ export default function FavoriteScreen() {
     firstFavorite: favorites?.[0]
   });
 
-  // Fonction pour rendre le contenu selon l'état
+  // Function to display content based on loading, error, etc.
   const renderContent = () => {
-    // Chargement initial
+    // Show a loading indicator if needed
     if (loading && favorites.length === 0) {
       return (
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color={colors.green} />
-          <Text style={styles.loadingText}>Chargement de vos favoris...</Text>
+          <Text style={styles.loadingText}>Loading your favorites...</Text>
         </View>
       );
     }
 
-    // Gestion d'erreur
+    // Show an error message if needed
     if (error) {
       return (
         <View style={styles.centerContainer}>
-          <Text style={styles.errorText}>Erreur: {error}</Text>
+          <Text style={styles.errorText}>Error: {error}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={refetch}>
-            <Text style={styles.retryButtonText}>Réessayer</Text>
+            <Text style={styles.retryButtonText}>Retry</Text>
           </TouchableOpacity>
         </View>
       );
     }
 
-    // Utilisateur non connecté
+    // Prompt the user to log in if not authenticated
     if (!user) {
       return (
         <View style={styles.centerContainer}>
-          <Text style={styles.emptyText}>Connectez-vous pour voir vos favoris</Text>
+          <Text style={styles.emptyText}>Log in to see your favorites</Text>
           <TouchableOpacity 
             style={styles.loginButton} 
             onPress={() => router.push('/login')}
           >
-            <Text style={styles.loginButtonText}>Se connecter</Text>
+            <Text style={styles.loginButtonText}>Log in</Text>
           </TouchableOpacity>
         </View>
       );
     }
 
-    // Liste vide
+    // Show a message if the favorites list is empty
     if (!favorites || favorites.length === 0) {
       return (
         <View style={styles.centerContainer}>
-          <Text style={styles.emptyText}>Aucun favori pour le moment</Text>
+          <Text style={styles.emptyText}>No favorites yet</Text>
           <Text style={styles.emptySubText}>
-            Parcourez nos vinyles et ajoutez vos coups de cœur !
+            Browse our vinyls and add your favorites!
           </Text>
           <TouchableOpacity 
             style={styles.browseButton} 
             onPress={() => router.push('/(tabs)')}
           >
-            <Text style={styles.browseButtonText}>Parcourir les vinyles</Text>
+            <Text style={styles.browseButtonText}>Browse vinyls</Text>
           </TouchableOpacity>
         </View>
       );
     }
 
-    // Liste des favoris avec vérifications de sécurité
+    // Display the list of favorites
     return (
       <>
         {favorites.map((product, index) => {
-          // Vérification de sécurité pour éviter l'erreur
+          // Check that the product exists
           if (!product) {
-            console.warn(`FavoriteScreen - Produit undefined à l'index ${index}`);
+            console.warn(`FavoriteScreen - Product undefined at index ${index}`);
             return null;
           }
 
-          console.log('FavoriteScreen - Rendu produit:', product);
+          console.log('FavoriteScreen - Rendering product:', product);
 
+          // Find the address associated with the product's user
           const address = addresses.find(a => a.user.id === product.userId);
           return (
             <View key={product.id || index} style={styles.card}>
@@ -135,18 +140,18 @@ export default function FavoriteScreen() {
               />
               <View style={styles.infoContainer}>
                 <View style={styles.mainInfo}>
-                  <Text style={styles.productTitle}>{product.title || 'Titre inconnu'}</Text>
+                  <Text style={styles.productTitle}>{product.title || 'Unknown title'}</Text>
                   <View style={styles.artistPriceRow}>
-                    <Text style={styles.subText}>{product.artist?.name || 'Artiste inconnu'}</Text>
+                    <Text style={styles.subText}>{product.artist?.name || 'Unknown artist'}</Text>
                     <Text style={styles.price}>{product.price || '0'} €</Text>
                   </View>
-                  <Text style={styles.subText}>{product.category?.name || 'Catégorie inconnue'}</Text>
+                  <Text style={styles.subText}>{product.category?.name || 'Unknown category'}</Text>
                   <Text style={styles.subText}>
-                    {address?.city ?? 'Adresse inconnue'}
+                    {address?.city ?? 'Unknown address'}
                   </Text>
                 </View>
                 <View style={styles.bottomRow}>
-                  {/* Bouton favori avec callback de suppression */}
+                  {/* Favorite button (removes product from favorites) */}
                   {product.id && (
                     <FavoriteButton 
                       productId={product.id} 
@@ -155,6 +160,7 @@ export default function FavoriteScreen() {
                       style={styles.favoriteButton}
                     />
                   )}
+                  {/* Button to go to product details */}
                   <TouchableOpacity
                     style={styles.detailButton}
                     onPress={() =>
@@ -164,7 +170,7 @@ export default function FavoriteScreen() {
                       })
                     }
                   >
-                    <Text style={styles.detailButtonText}>Voir le détail</Text>
+                    <Text style={styles.detailButtonText}>See details</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -175,6 +181,7 @@ export default function FavoriteScreen() {
     );
   };
 
+  // Main render of the screen
   return (
     <View style={styles.container1}>
       <Headernosearch />
@@ -186,7 +193,7 @@ export default function FavoriteScreen() {
         }
       >
         <Text style={styles.sectionTitle}>
-          Vos Favoris {favorites.length > 0 ? `(${favorites.length})` : ''}
+          Your Favorites {favorites.length > 0 ? `(${favorites.length})` : ''}
         </Text>
         
         {renderContent()}
@@ -195,6 +202,7 @@ export default function FavoriteScreen() {
   );
 }
 
+// Styles for the screen and components
 const styles = StyleSheet.create({
   container1: {
     flex: 1,
@@ -210,7 +218,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
     color: colors.brownText,
   },
-  // Styles pour les cartes de favoris
+  // Styles for favorite cards
   card: {
     flexDirection: 'row',
     backgroundColor: 'white',
@@ -279,7 +287,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
   },
-  // Styles pour les états vides/erreur/chargement
+  // Styles for empty/error/loading states
   centerContainer: {
     alignItems: 'center',
     justifyContent: 'center',

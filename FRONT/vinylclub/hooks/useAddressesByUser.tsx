@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Address } from '../types/index';
 
+// Custom hook to fetch the address of a user by userId
 export function useAddressesByUser(userId: number | null) {
-    const [address, setAddress] = useState<Address | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
+    const [address, setAddress] = useState<Address | null>(null); // Stores the user's address
+    const [loading, setLoading] = useState(true); // Loading state
+    const [error, setError] = useState<Error | null>(null); // Error state
 
+    // Fetches the address from the API
     const fetchAddress = useCallback(async () => {
         if (!userId) return;
 
@@ -21,7 +23,7 @@ export function useAddressesByUser(userId: number | null) {
 
             if (!response.ok) {
                 if (response.status === 404) {
-                    // Pas d'adresse trouvée pour cet utilisateur (pas une vraie erreur applicative)
+                    // No address found for this user (not a real error)
                     setAddress(null);
                 } else {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -29,20 +31,19 @@ export function useAddressesByUser(userId: number | null) {
                 return;
             }
             const data = await response.json();
-            console.log(data);
             if (data.length > 0) {
-                setAddress(data[0]); // Prendre la première adresse du tableau
+                setAddress(data[0]); // Take the first address from the array
             } else {
                 setAddress(null);
             }
         } catch (err: any) {
             setError(err);
-            console.error('Erreur lors du chargement de l\'adresse utilisateur :', err);
         } finally {
             setLoading(false);
         }
     }, [userId]);
 
+    // Refetch address when userId changes
     useEffect(() => {
         fetchAddress();
     }, [fetchAddress]);
