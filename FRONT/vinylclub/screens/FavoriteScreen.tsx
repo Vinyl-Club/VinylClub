@@ -68,7 +68,7 @@ export const useFavorites = (productId: number) => {
 
   const checkFavoriteStatus = async () => {
     if (user?.id && productId) {
-      const status = await FavoritesService.checkFavorite(user.id.toString(), productId);
+      const status = await FavoriteScreen.checkFavorite(user.id.toString(), productId);
       console.log('useFavorites - Statut favori:', status);
       setIsFavorite(status);
     }
@@ -83,7 +83,7 @@ export const useFavorites = (productId: number) => {
     setLoading(true);
     try {
       console.log('useFavorites - Toggle favori pour:', user.id, productId);
-      const result = await FavoritesService.toggleFavorite(user.id.toString(), productId);
+      const result = await FavoriteScreen.toggleFavorite(user.id.toString(), productId);
       console.log('useFavorites - Résultat toggle:', result);
       if (result && result.success) {
         setIsFavorite(result.isFavorite);
