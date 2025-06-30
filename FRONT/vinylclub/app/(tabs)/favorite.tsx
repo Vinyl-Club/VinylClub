@@ -102,15 +102,15 @@ export default function FavoriteScreen() {
     if (!favorites || favorites.length === 0) {
       return (
         <View style={styles.centerContainer}>
-          <Text style={styles.emptyText}>No favorites yet</Text>
-          <Text style={styles.emptySubText}>
-            Browse our vinyls and add your favorites!
-          </Text>
+          <Text style={styles.emptyText}>Vous n&apos;avez pas de favoris</Text>
+            <Text style={styles.emptySubText}>
+            Parcourez nos vinyles et ajoutez vos favoris !
+            </Text>
           <TouchableOpacity 
             style={styles.browseButton} 
             onPress={() => router.push('/(tabs)')}
           >
-            <Text style={styles.browseButtonText}>Browse vinyls</Text>
+            <Text style={styles.browseButtonText}>Parcourir les Vinyls</Text>
           </TouchableOpacity>
         </View>
       );
