@@ -19,22 +19,14 @@ export default function RootLayout() {
         <Stack>
           {!isAuthenticated && <Redirect href="/login" />}
 
-<<<<<<< HEAD
           {/* Screen publics */}
-=======
-          {/* public screens */}
->>>>>>> 587d43e96f7bfce9b294d0d3cea8dbc07710f5da
           <Stack.Screen name="login"    options={{ headerShown: false }} />
           <Stack.Screen name="register" options={{ headerShown: false }} />
 
           {/* your tab-layout */}
           <Stack.Screen name="(tabs)"   options={{ headerShown: false }} />
 
-<<<<<<< HEAD
           {/* Your dynamic detail screen */}
-=======
-          {/* your dynamic detail screen */}
->>>>>>> 587d43e96f7bfce9b294d0d3cea8dbc07710f5da
           <Stack.Screen
             name="Details/[id]"
             options={{ headerShown: false, title: 'Détails du produit' }}
