@@ -10,8 +10,10 @@ type CardItemProps = {
     city?: string;
 };
 
+// CardItem displays product info in a styled card with an action button
 export default function CardItem({ product, city }: CardItemProps) {
     const router = useRouter();
+    // Use product image if available, else fallback to placeholder
     const imageUrl =
         product.images && product.images.length > 0
         ? `${API_URL}${product.images[0].imageUrl}`
@@ -19,26 +21,31 @@ export default function CardItem({ product, city }: CardItemProps) {
 
     return (
         <View style={styles.card}>
-        <Image source={{ uri: imageUrl }} style={styles.image} />
-        <View style={styles.infoContainer}>
-            <View style={styles.textContainer}>
-            <Text style={styles.title}>{product.title}</Text>
-            <View style={styles.artistPriceRow}>
-                <Text style={styles.subText}>{product.artist.name}</Text>
-                <Text style={styles.price}>{product.price} €</Text>
+            {/* Product image */}
+            <Image source={{ uri: imageUrl }} style={styles.image} />
+            <View style={styles.infoContainer}>
+                <View style={styles.textContainer}>
+                    {/* Product title */}
+                    <Text style={styles.title}>{product.title}</Text>
+                    <View style={styles.artistPriceRow}>
+                        {/* Artist name and price */}
+                        <Text style={styles.subText}>{product.artist.name}</Text>
+                        <Text style={styles.price}>{product.price} €</Text>
+                    </View>
+                    {/* Category and city */}
+                    <Text style={styles.subText}>{product.category.name}</Text>
+                    <Text style={styles.subText}>{city || 'Ville inconnue'}</Text>
+                </View>
+                <View style={styles.bottomRow}>
+                    {/* Action button (e.g., delete or navigate) */}
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => router.push({ pathname: "/profile", params: { id: String(product.id) } })}
+                    >
+                        <Text style={styles.buttonText}>Supprimer</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <Text style={styles.subText}>{product.category.name}</Text>
-            <Text style={styles.subText}>{city || 'Ville inconnue'}</Text>
-            </View>
-            <View style={styles.bottomRow}>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() => router.push({ pathname: "/profile", params: { id: String(product.id) } })}
-            >
-                <Text style={styles.buttonText}>Supprimer</Text>
-            </TouchableOpacity>
-            </View>
-        </View>
         </View>
     );
 }
@@ -50,7 +57,7 @@ const styles = StyleSheet.create({
         padding: 16,
         borderRadius: 8,
         marginVertical: 8,
-        boxShadow: '0px 2px 7px rgba(0,0,0,0.3)',
+        boxShadow: '0px 2px 7px rgba(0,0,0,0.3)', // Not supported in React Native, kept for reference
         width: '80%',
     },
     image: {
@@ -76,7 +83,6 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     bottomRow: {
-        
         alignItems: 'flex-end',
         gap: 8,
     },

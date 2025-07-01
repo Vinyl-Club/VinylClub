@@ -36,7 +36,5 @@ export default function DetailsScreen() {
         </View>
     );
 }
-// function useState<T>(arg0: null): [any, any] {
-//     throw new Error('Function not implemented.');
-// }
+// This component serves as the details screen for displaying detailed information about a product or item.
 

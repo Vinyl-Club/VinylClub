@@ -16,6 +16,6 @@ export default function Login() {
     const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: colors.beige, // ← fond beige de ta page
+        backgroundColor: colors.beige, 
     }
 });

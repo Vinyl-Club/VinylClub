@@ -17,25 +17,22 @@ export const useUserFavorites = () => {
   const [error, setError] = useState<string | null>(null);
   const { user, loadUser } = useUser();
 
-  // Fonction pour récupérer les détails d'un produit
+  // Fetch product details by productId
   const fetchProductDetails = async (productId: string): Promise<Product | null> => {
     try {
       const response = await fetch(`${API_URL}/api/products/${productId}`);
       if (!response.ok) {
-        console.warn(`Produit ${productId} non trouvé`);
         return null;
       }
       return await response.json();
     } catch (error) {
-      console.error(`Erreur lors de la récupération du produit ${productId}:`, error);
       return null;
     }
   };
 
-  // Fonction pour récupérer les favoris
+  // Fetch user's favorite products
   const fetchFavorites = useCallback(async () => {
     if (!user?.id) {
-      console.log('useUserFavorites - Pas d\'utilisateur connecté');
       setFavorites([]);
       return;
     }
@@ -44,42 +41,27 @@ export const useUserFavorites = () => {
     setError(null);
     
     try {
-      console.log('useUserFavorites - Récupération des favoris pour:', user.id);
-      
-      // Étape 1: Récupérer les références des favoris
+      // Step 1: Get favorite references for the user
       const favoritesResponse = await fetch(`${API_URL}/api/favorites/${user.id}`);
-      
       if (!favoritesResponse.ok) {
         throw new Error(`Erreur HTTP: ${favoritesResponse.status}`);
       }
-      
       const favoriteReferences: FavoriteReference[] = await favoritesResponse.json();
-      console.log('useUserFavorites - Références favoris récupérées:', favoriteReferences);
-      
       if (!Array.isArray(favoriteReferences) || favoriteReferences.length === 0) {
-        console.log('useUserFavorites - Aucun favori trouvé');
         setFavorites([]);
         return;
       }
-      
-      // Étape 2: Récupérer les détails de chaque produit
-      console.log('useUserFavorites - Récupération des détails des produits...');
+      // Step 2: Fetch details for each favorite product
       const productPromises = favoriteReferences.map(fav => 
         fetchProductDetails(fav.productId)
       );
-      
       const products = await Promise.all(productPromises);
-      
-      // Filtrer les produits null (produits supprimés ou non trouvés)
+      // Filter out null products (deleted or not found)
       const validProducts = products.filter((product): product is Product => 
         product !== null && product !== undefined
       );
-      
-      console.log('useUserFavorites - Produits favoris récupérés:', validProducts);
       setFavorites(validProducts);
-      
     } catch (error) {
-      console.error('Erreur lors de la récupération des favoris:', error);
       setError(error instanceof Error ? error.message : 'Erreur inconnue');
       setFavorites([]);
     } finally {
@@ -87,22 +69,21 @@ export const useUserFavorites = () => {
     }
   }, [user?.id]);
 
-  // Charger l'utilisateur si pas encore fait
+  // Ensure user is loaded before fetching favorites
   useEffect(() => {
     if (!user) {
-      console.log('useUserFavorites - Chargement de l\'utilisateur...');
       loadUser();
     }
   }, [user, loadUser]);
 
-  // Charger les favoris quand l'utilisateur est disponible
+  // Fetch favorites when user is available
   useEffect(() => {
     if (user?.id) {
       fetchFavorites();
     }
   }, [user?.id, fetchFavorites]);
 
-  // Fonction pour supprimer un favori de la liste locale
+  // Remove a favorite from the local list
   const removeFavoriteFromList = useCallback((productId: number) => {
     setFavorites(prev => prev.filter(product => product.id !== productId));
   }, []);

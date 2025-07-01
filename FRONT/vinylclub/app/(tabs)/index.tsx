@@ -6,14 +6,15 @@ import { useFocusEffect } from 'expo-router';
 import colors from '@/constants/colors';
 
 export default function Index() {
+  // State to force re-render of HomeScreen
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // Rafraîchir la page d'accueil quand on y revient (clic sur tab home)
+  // Refresh the home page when it regains focus (e.g., when the home tab is clicked)
   useFocusEffect(
     useCallback(() => {
-      console.log('Page d\'accueil refocusée - déclenchement du rafraîchissement');
+      console.log('Home page refocused - triggering refresh');
       
-      // Forcer le re-render en changeant la key
+      // Force re-render by updating the key
       setRefreshKey(prev => prev + 1);
       
     }, [])
@@ -21,6 +22,7 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
+      {/* Pass a changing key to HomeScreen to force remount on refresh */}
       <HomeScreen key={refreshKey} />
     </View>
   );

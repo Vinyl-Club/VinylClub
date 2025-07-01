@@ -9,21 +9,23 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { API_URL_IMG } from '@/constants/config';
 
 export default function DetailsCard() {
+  // Get product ID from route params
   const { id } = useLocalSearchParams();
   const productId = parseInt(id as string, 10);
+
+  // Fetch product details and loading state
   const { product, loading } = useProductDetails(productId);
+
+  // Fetch seller address by userId
   const userId = product?.userId ?? null;
   const { address } = useAddressesByUser(userId);
-  console.log('Product:', product);
-  console.log('Address:', address);
 
   const router = useRouter();
 
-  // State pour gérer l'index de l'image principale affichée
-  // State to manage the index of the displayed main image
+  // State for selected image index (main image)
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
-  // Helper function to get image URL by index
+  // Get image URL by index
   const getImageUrl = (product: any, index: number): string | null => {
     if (product?.images && product.images.length > index) {
       return `${API_URL_IMG}${product.images[index].id}`;
@@ -31,47 +33,47 @@ export default function DetailsCard() {
     return null;
   };
 
-  // Helper function to get main image URL based on selected index
+  // Get main image URL
   const getMainImageUrl = (product: any): string => {
     return getImageUrl(product, selectedImageIndex) || 'https://via.placeholder.com/300x160?text=Vinyl';
   };
 
-  // Function to handle thumbnail click
+  // Change main image on thumbnail click
   const handleThumbnailClick = (index: number) => {
     setSelectedImageIndex(index);
   };
 
+  // Go back to previous screen
   const handleGoBack = () => {
-    // Option A: Navigation avec paramètre de rechargement
     router.push('/(tabs)/?reload=true');
-    
-    // Option B: Ou simplement router.back() si vous utilisez useFocusEffect
-    // router.back();
+    // Or use router.back();
   };
 
+  // Navigate to contact/cart page
   const HandleContact = () => {
     router.push ({ pathname: '/(tabs)/cart', params: { id: String(product.id) } });
   };
 
+  // Show loader while loading or if product is missing
   if (loading || !product) {
     return <ActivityIndicator size="large" color={colors.green} style={{ marginTop: 20 }} />;
   }
   
   return (
     <ScrollView style={styles.container}>
-      {/* Header avec bouton retour */}
+      {/* Header with back button and title */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
           <FontAwesome name="arrow-left" size={24} color={colors.brownText} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Détail du vinyle</Text>
-        <View style={styles.placeholder} /> {/* Pour centrer le titre */}
+        <View style={styles.placeholder} />
       </View>
 
-      {/* Titre */}
+      {/* Product title */}
       <Text style={styles.title}>{product.title}</Text>
       
-      {/* Image principale */}
+      {/* Main product image */}
       <TouchableOpacity onPress={() => handleThumbnailClick(0)}>
         <Image 
           source={{ uri: getMainImageUrl(product) }} 
@@ -80,7 +82,7 @@ export default function DetailsCard() {
         />
       </TouchableOpacity>
       
-      {/* Miniatures */}
+      {/* Thumbnails if multiple images */}
       {product.images && product.images.length > 1 && (
         <View style={styles.thumbnailRow}>
           {product.images.map((imageData: any, index: number) => (
@@ -105,30 +107,29 @@ export default function DetailsCard() {
         </View>
       )}
       
-      {/* Vendeur et Localisation */}
+      {/* Seller and location info */}
       <View style={styles.infoRow}>
         <Text>{address?.user?.firstName} {address?.user?.lastName}</Text>
         <Text>{address ? address.city : 'Ville inconnue'}</Text>
       </View>
       
-      {/* Date de création */}
+      {/* Creation date */}
       <Text>Posté le : {new Date(product.createdAt).toLocaleDateString()}</Text>
       
-      {/* Prix et description */}
+      {/* Price and description */}
       <View style={styles.infoDescription}>
         <Text style={styles.price}>{product.price} €</Text>
         <Text style={styles.label}>{product.description}</Text>
       </View>
       
-      {/* Détails supplémentaires */}
+      {/* Album, artist, state, year, category */}
       <Text>{product.album.name} \ {product.artist.name}</Text>
       <Text>{product.state}</Text>
       <Text>{product.releaseYear}</Text>
       <Text>{product.category.name}</Text>
       
-      {/* Section des boutons */}
+      {/* Favorite and contact buttons */}
       <View style={styles.buttonContainer}>
-        {/* Bouton favoris réutilisable avec variante "button" */}
         <FavoriteButton 
           productId={productId} 
           variant="button" 
@@ -143,6 +144,7 @@ export default function DetailsCard() {
   );
 }
 
+// Styles for the component
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    paddingTop: 50, // Pour éviter la status bar
+    paddingTop: 50, // Avoid status bar
     backgroundColor: 'white',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E5E5',
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
     color: colors.brownText,
   },
   placeholder: {
-    width: 40, // Même largeur que le bouton retour pour centrer le titre
+    width: 40, // Same width as back button for centering
   },
   title: {
     fontSize: 22,
