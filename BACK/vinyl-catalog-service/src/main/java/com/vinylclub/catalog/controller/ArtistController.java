@@ -34,8 +34,8 @@ public class ArtistController {
     private ArtistService artistService;
 
     /**
-     * Récupérer tous les artistes
-     * GET /api/artists
+     *Recover all the artists
+     *Get /API /Artists
      */
     @GetMapping
     public ResponseEntity<List<ArtistDTO>> getAllArtists() {
@@ -44,8 +44,8 @@ public class ArtistController {
     }
 
     /**
-     * Récupérer un artiste par ID
-     * GET /api/artists/1
+     *Recover an artist by ID
+     *Get/API/Artists/1
      */
     @GetMapping("/{id}")
     public ResponseEntity<ArtistDTO> getArtistById(@PathVariable Long id) {
@@ -54,7 +54,7 @@ public class ArtistController {
     }
 
     /**
-     * Rechercher des artistes
+     * Search for artists
      * GET /api/artists/search?query=rock
      */
     @GetMapping("/search")
@@ -64,8 +64,8 @@ public class ArtistController {
     }
 
     /**
-     * Récupérer les produits d'un artiste
-     * GET /api/artists/1/products?page=0&size=12
+     *Recover the products of an artist
+     *Get/API/Artists/1/Products? Page = 0 & size = 12
      */
     @GetMapping("/{id}/products")
     public ResponseEntity<Page<ProductDTO>> getProductsByArtist(
@@ -78,8 +78,8 @@ public class ArtistController {
     }
 
     /**
-     * Créer un nouvel artiste
-     * POST /api/artists
+     *Create a new artist
+     *Post /API /Artists
      */
     @PostMapping
     public ResponseEntity<ArtistDTO> createArtist(@Valid @RequestBody ArtistDTO artistDTO) {
@@ -88,8 +88,8 @@ public class ArtistController {
     }
 
     /**
-     * Mettre à jour un artiste
-     * PUT /api/artists/1
+     *Update an artist
+     *Put/API/artists/1
      */
     @PutMapping("/{id}")
     public ResponseEntity<ArtistDTO> updateArtist(
@@ -100,8 +100,8 @@ public class ArtistController {
     }
 
     /**
-     * Supprimer un artiste
-     * DELETE /api/artists/1
+     *Supprimer un artiste
+     *DELETE /api/artists/1
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteArtist(@PathVariable Long id) {

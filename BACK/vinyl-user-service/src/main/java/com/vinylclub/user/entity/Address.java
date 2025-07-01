@@ -27,7 +27,7 @@ public class Address {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     
-    // AJOUTEZ CE CONSTRUCTEUR PAR DÉFAUT
+    // Add this default manufacturer
     public Address() {
     }
     
@@ -40,7 +40,7 @@ public class Address {
         this.user = user;
     }
     
-    // Getters and Setters... (le reste de votre code)
+    // Getters and Setters
     public User getUser() {
         return user;
     }  

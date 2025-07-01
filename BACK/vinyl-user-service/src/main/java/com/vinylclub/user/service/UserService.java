@@ -118,7 +118,7 @@ public class UserService {
     }
 
 
-     public boolean validatePassword(String email, String rawPassword) {
+    public boolean validatePassword(String email, String rawPassword) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user != null) {
             return passwordEncoder.matches(rawPassword, user.getPassword());

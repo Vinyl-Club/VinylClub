@@ -125,8 +125,8 @@ public List<AddressDTO> getAddressesByUserId(Long userId) {
     Optional<Address> addressOpt = addressRepository.findByUserId(userId);
     
     return addressOpt
-        .map(address -> List.of(address))  // Convertir en liste si présent
-        .orElse(Collections.emptyList())   // Liste vide si absent
+        .map(address -> List.of(address))  // Convert to the list if present
+        .orElse(Collections.emptyList())   // Empty list if absent
         .stream()
         .map(this::convertToDTO)
         .toList();

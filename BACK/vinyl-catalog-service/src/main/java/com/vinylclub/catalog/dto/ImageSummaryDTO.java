@@ -1,14 +1,14 @@
 package com.vinylclub.catalog.dto;
 
 /**
- * Version allégée du DTO Image sans les données binaires
- * Utilisée pour les listes et les réponses où les bytes ne sont pas nécessaires
+ *Lighter version of the DTO Image without binary data
+ *Used for lists and answers where Bytes are not necessary
  */
 public class ImageSummaryDTO {
     private Long id;
     private Long productId;
 
-    // Constructeurs
+    // Builders
     public ImageSummaryDTO() {}
 
     public ImageSummaryDTO(Long id, Long productId) {
@@ -16,7 +16,7 @@ public class ImageSummaryDTO {
         this.productId = productId;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -24,7 +24,7 @@ public class ImageSummaryDTO {
     public void setProductId(Long productId) { this.productId = productId; }
 
     /**
-     * Génère l'URL pour récupérer l'image complète
+     *Generates the URL to recover the full image
      */
     public String getImageUrl() {
         return "/api/images/" + this.id;

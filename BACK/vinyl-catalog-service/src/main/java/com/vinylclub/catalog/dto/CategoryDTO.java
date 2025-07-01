@@ -4,7 +4,7 @@ public class CategoryDTO {
     private Long id;
     private String name;
 
-    // Constructeurs
+    // Builders
     public CategoryDTO() {}
 
     public CategoryDTO(Long id, String name) {
@@ -12,7 +12,7 @@ public class CategoryDTO {
         this.name = name;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

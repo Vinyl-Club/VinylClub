@@ -29,11 +29,11 @@ public class Images {
     private Product product;
    
     @Column(name = "image", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARBINARY)  // ✅ SOLUTION : Force le type VARBINARY pour PostgreSQL
+    @JdbcTypeCode(SqlTypes.VARBINARY)  //  SOLUTION: Force VARBINARY type for PostgreSQL
     @JsonIgnore
     private byte[] image;
    
-    // Constructeurs
+    // Builders
     public Images() {}
    
     public Images(Product product, byte[] image) {
@@ -41,7 +41,7 @@ public class Images {
         this.image = image;
     }
    
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }

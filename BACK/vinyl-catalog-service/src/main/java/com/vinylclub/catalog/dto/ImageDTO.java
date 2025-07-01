@@ -2,10 +2,10 @@ package com.vinylclub.catalog.dto;
 
 public class ImageDTO {
     private Long id;
-    private byte[] image;        // données binaires de l'image (correspond à votre entity Images)
-    private Long productId;      // ID du produit associé (au lieu de l'objet Product complet)
+    private byte[] image;        // binary image data (corresponds to your entity images)
+    private Long productId;      // Id of the associated product (instead of the complete product object)
 
-    // Constructeurs
+    // Builders
     public ImageDTO() {}
 
     public ImageDTO(byte[] image, Long productId) {
@@ -19,7 +19,7 @@ public class ImageDTO {
         this.productId = productId;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -31,7 +31,7 @@ public class ImageDTO {
     public Long getProductId() { return productId; }
     public void setProductId(Long productId) { this.productId = productId; }
 
-    // Méthodes utilitaires
+    // Utility methods
     public String getBase64Image() {
         if (image == null) return null;
         return java.util.Base64.getEncoder().encodeToString(image);
@@ -46,21 +46,21 @@ public class ImageDTO {
     }
 
     /**
-     * Retourne la taille de l'image en bytes
+     *Return the size of the image to bytes
      */
     public long getImageSize() {
         return image != null ? image.length : 0;
     }
 
     /**
-     * Détermine le type MIME à partir des bytes de l'image
+     *Determines the type MINE from image bytes
      */
     public String determineContentType() {
         if (image == null || image.length < 4) {
             return "application/octet-stream";
         }
 
-        // Vérifier les signatures de fichiers
+        // Check file signatures
         if (image[0] == (byte) 0xFF && image[1] == (byte) 0xD8) {
             return "image/jpeg";
         }
@@ -73,11 +73,11 @@ public class ImageDTO {
             return "image/webp";
         }
 
-        return "image/jpeg"; // Par défaut
+        return "image/jpeg"; // By default
     }
 
     /**
-     * Formate la taille du fichier en format lisible
+     *Format the size of the file in legible format
      */
     public String getFormattedImageSize() {
         long size = getImageSize();

@@ -23,7 +23,7 @@ public class AddressDTO {
         this.user = user;
     }
 
-    // Getters et setters
+    // Getters and setters
     public Long getId() {
         return id;
     }

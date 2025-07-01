@@ -9,22 +9,22 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 @Configuration
 public class CorsConfig {
     /**
-     * Configuration CORS pour autoriser les requêtes cross-origin.
+     *Configuration cors to allow cross-origin requests.
      * 
-     * @return CorsWebFilter configuré
+     * @return corswebfilter configured
      */
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         
-        // Autoriser votre frontend
+        // Allow your front
         corsConfig.addAllowedOrigin("http://localhost:8085");
         corsConfig.addAllowedOrigin("http://127.0.0.1:8085");
         
-        // Toutes les méthodes
+        // All methods
         corsConfig.addAllowedMethod("*");
         
-        // Tous les headers
+        // All headers
         corsConfig.addAllowedHeader("*");
         
         // Credentials

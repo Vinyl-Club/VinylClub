@@ -57,8 +57,8 @@ public class UserController {
         return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
-    //  Valider le mot de passe d'un utilisateur
-    //  POST /users/validate-password
+    //  Validate a user's password
+    //  Post /USERS /VALIDATE-PASSWORD
      
     @PostMapping("/validate-password")
     public ResponseEntity<Boolean> validatePassword(@RequestBody ValidatePasswordRequest request) {

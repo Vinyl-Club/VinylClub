@@ -30,8 +30,8 @@ public class AuthController {
     private JwtService jwtService;
 
     /**
-     * LOGIN - Authentification utilisateur
-     * POST /auth/login
+     *Login -User authentication
+     *Post /Auth /Login
      */
    @PostMapping("/login")
 public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
@@ -53,7 +53,7 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
 }
 
     /**
-     * REFRESH TOKEN - Renouvellement du token
+     * REFRESH TOKEN - Token renewal
      * POST /auth/refresh
      */
     @PostMapping("/refresh")
@@ -61,12 +61,12 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
         try {
             String refreshToken = refreshRequest.getRefreshToken();
             
-            // Valider le refresh token
+            // Validate the refresh token
             if (!jwtService.validateRefreshToken(refreshToken)) {
                 return ResponseEntity.badRequest().build();
             }
             
-            // Générer nouveaux tokens
+            // Generate new tokens
             LoginResponse response = authService.refreshTokens(refreshToken);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -75,7 +75,7 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
     }
 
     /**
-     * VALIDATE TOKEN - Validation du token
+     * VALIDATE TOKEN - Validate token
      * GET /auth/validate
      */
     @GetMapping("/validate")
@@ -91,7 +91,7 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
                 return ResponseEntity.badRequest().build();
             }
             
-            // Récupérer les infos utilisateur
+            // Recover user information
             UserDTO user = authService.getUserFromToken(token);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
@@ -100,15 +100,15 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
     }
 
     /**
-     * LOGOUT - Déconnexion (optionnel avec JWT)
-     * POST /auth/logout
+     *Logout -Disconnection (optional with JWT)
+     *Post /Auth /Logout
      */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestHeader("Authorization") String authHeader) {
         try {
-            // Avec JWT, on peut simplement répondre OK
-            // Le client supprimera les tokens côté frontend
-            // Optionnel : blacklister le token
+            // With JWT, we can just answer ok
+            // The customer will delete the tokens on the frontend side
+            // Optional: Blacklister the token
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
@@ -116,7 +116,7 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
     }
 
     /**
-     * GET CURRENT USER - Informations utilisateur connecté
+     * GET CURRENT USER - Logged in user information
      * GET /auth/me
      */
     @GetMapping("/me")

@@ -13,25 +13,25 @@ import com.vinylclub.catalog.entity.Images;
 public interface ImageRepository extends JpaRepository<Images, Long> {
     
     /**
-     * Trouver toutes les images d'un produit
+     *Find all the images of a product
      */
     @Query("SELECT i FROM Images i WHERE i.product.id = :productId")
     List<Images> findByProductId(@Param("productId") Long productId);
     
     /**
-     * Compter le nombre d'images d'un produit
+     *Count the number of images of a product
      */
     @Query("SELECT COUNT(i) FROM Images i WHERE i.product.id = :productId")
     long countByProductId(@Param("productId") Long productId);
     
     /**
-     * Vérifier si un produit a des images
+     *Check if a product has images
      */
     @Query("SELECT CASE WHEN COUNT(i) > 0 THEN true ELSE false END FROM Images i WHERE i.product.id = :productId")
     boolean existsByProductId(@Param("productId") Long productId);
     
     /**
-     * Supprimer toutes les images d'un produit
+     *Delete all images from a product
      */
     @Query("DELETE FROM Images i WHERE i.product.id = :productId")
     void deleteByProductId(@Param("productId") Long productId);

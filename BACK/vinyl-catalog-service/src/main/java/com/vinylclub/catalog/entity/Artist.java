@@ -21,7 +21,7 @@ public class Artist {
     @Column(nullable = true, length = 500)
     private String bio;
 
-    // CONSTRUCTEURS
+    // Builders
     public Artist() {}
 
     public Artist(String name) {

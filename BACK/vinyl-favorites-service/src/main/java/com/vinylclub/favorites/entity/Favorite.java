@@ -14,7 +14,7 @@ public class Favorite {
     private String id;
     private String userId;
     private String productId;
-    private LocalDateTime createdAt; // Retiré final pour éviter les problèmes de sérialisation
+    private LocalDateTime createdAt; // Final withdrawn to avoid serialization problems
     
     public Favorite() {
         this.createdAt = LocalDateTime.now();
@@ -26,7 +26,7 @@ public class Favorite {
         this.createdAt = LocalDateTime.now();
     }
     
-    // Getters et Setters
+    // Getters and Setters
     public String getId() {
         return id;
     }

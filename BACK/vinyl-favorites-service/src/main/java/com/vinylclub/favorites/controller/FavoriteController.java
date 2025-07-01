@@ -23,7 +23,7 @@ public class FavoriteController {
     @Autowired
     private FavoriteService favoriteService;
     
-    // Toggle favori (ajouter/supprimer)
+    // Toggle favorite (add/remove)
     @PostMapping("/toggle")
     public ResponseEntity<?> toggleFavorite(@RequestBody Favorite favorite) {
         try {
@@ -38,7 +38,7 @@ public class FavoriteController {
         }
     }
     
-    // Vérifier si en favori
+    // Check if favorited
     @GetMapping("/check/{userId}/{productId}")
     public ResponseEntity<Map<String, Boolean>> checkFavorite(
             @PathVariable String userId, 
@@ -47,14 +47,14 @@ public class FavoriteController {
         return ResponseEntity.ok(Map.of("isFavorite", isFav));
     }
     
-    // Liste des favoris
+    // List of favorites
     @GetMapping("/{userId}")
     public ResponseEntity<List<Favorite>> getUserFavorites(@PathVariable String userId) {
         List<Favorite> favorites = favoriteService.getUserFavorites(userId);
         return ResponseEntity.ok(favorites);
     }
     
-    // Nombre de favoris
+    // Number of favorites
     @GetMapping("/{userId}/count")
     public ResponseEntity<Map<String, Long>> getFavoritesCount(@PathVariable String userId) {
         long count = favoriteService.getFavoritesCount(userId);

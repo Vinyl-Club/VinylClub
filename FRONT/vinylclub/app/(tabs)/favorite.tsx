@@ -176,7 +176,7 @@ export default function FavoriteScreen() {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container1}>
       <Headernosearch />
       <ScrollView 
         style={styles.container} 
@@ -196,6 +196,10 @@ export default function FavoriteScreen() {
 }
 
 const styles = StyleSheet.create({
+  container1: {
+    flex: 1,
+    backgroundColor: colors.beige,
+  },
   container: {
     flex: 1,
     padding: 16,

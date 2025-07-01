@@ -5,7 +5,7 @@ public class ImageUploadResponse {
     private String message;
     private Long imageId;
 
-    // Constructeurs
+    // Builders
     public ImageUploadResponse() {}
 
     public ImageUploadResponse(boolean success, String message, Long imageId) {
@@ -14,7 +14,7 @@ public class ImageUploadResponse {
         this.imageId = imageId;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public boolean isSuccess() {
         return success;
     }

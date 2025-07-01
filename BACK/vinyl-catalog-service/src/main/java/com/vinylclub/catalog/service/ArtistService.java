@@ -28,7 +28,7 @@ public class ArtistService {
     private ProductService productService;
 
     /**
-     * Récupérer tous les artistes
+     *Recover all the artists
      */
     public List<ArtistDTO> getAllArtists() {
         List<Artist> artists = artistRepository.findAll();
@@ -38,7 +38,7 @@ public class ArtistService {
     }
 
     /**
-     * Récupérer un artiste par ID
+     *Recover an artist by ID
      */
     public ArtistDTO getArtistById(Long id) {
         Artist artist = artistRepository.findById(id)
@@ -47,7 +47,7 @@ public class ArtistService {
     }
 
     /**
-     * Rechercher des artistes par nom
+     *Search artists by name
      */
     public List<ArtistDTO> searchArtists(String query) {
         List<Artist> artists = artistRepository.searchByName(query);
@@ -57,23 +57,23 @@ public class ArtistService {
     }
 
     /**
-     * Récupérer les produits d'un artiste
+     *Recover the products of an artist
      */
     public Page<ProductDTO> getProductsByArtist(Long artistId, Pageable pageable) {
-        // Vérifier que l'artiste existe
+        // Check that the artist exists
         artistRepository.findById(artistId)
                 .orElseThrow(() -> new RuntimeException("Artist not found with id: " + artistId));
         
-        // Récupérer les produits
+        // Recover products
         return productRepository.findByArtistId(artistId, pageable)
                 .map(product -> productService.convertToDTO(product));
     }
 
     /**
-     * Créer un nouvel artiste
+     *Create a new artist
      */
     public ArtistDTO createArtist(ArtistDTO artistDTO) {
-        // Vérifier que le nom n'existe pas déjà
+        // Check that the name does not already exist
         if (artistRepository.findByNameIgnoreCase(artistDTO.getName()).isPresent()) {
             throw new RuntimeException("Artist with name '" + artistDTO.getName() + "' already exists");
         }
@@ -84,13 +84,13 @@ public class ArtistService {
     }
 
     /**
-     * Mettre à jour un artiste
+     *Update an artist
      */
     public ArtistDTO updateArtist(Long id, ArtistDTO artistDTO) {
         Artist existingArtist = artistRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Artist not found with id: " + id));
 
-        // Vérifier que le nouveau nom n'existe pas déjà (sauf si c'est le même artiste)
+        // Check that the new name does not already exist (unless it is the same artist)
         artistRepository.findByNameIgnoreCase(artistDTO.getName())
                 .ifPresent(artist -> {
                     if (!artist.getId().equals(id)) {
@@ -106,10 +106,10 @@ public class ArtistService {
     }
 
     /**
-     * Supprimer un artiste
+     * Delete an artiste
      */
     public void deleteArtist(Long id) {
-        // Vérifier que l'artiste n'a pas de produits associés
+        // Check that the artist has no associated products
         Page<ProductDTO> products = getProductsByArtist(id, Pageable.ofSize(1));
         if (products.getTotalElements() > 0) {
             throw new RuntimeException("Cannot delete artist: " + products.getTotalElements() + " products are associated with this artist");

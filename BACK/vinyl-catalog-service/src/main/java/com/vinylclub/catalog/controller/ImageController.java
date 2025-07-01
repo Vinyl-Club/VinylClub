@@ -33,8 +33,8 @@ public class ImageController {
     private ImageService imageService;
 
     /**
-     * UPLOAD IMAGE - Ajouter une image pour un produit
-     * POST /api/images/upload?productId=1
+     *Upload Image -Add an image for a product
+     *Post/API/Images/Upload? Productid = 1
      */
     @PostMapping("/upload")
     public ResponseEntity<ImageUploadResponse> uploadImage(
@@ -42,26 +42,26 @@ public class ImageController {
             @RequestParam("productId") Long productId) {
         
         try {
-            // Validation du fichier
+            // File validation
             if (file.isEmpty()) {
                 return ResponseEntity.badRequest()
                     .body(new ImageUploadResponse(false, "Fichier vide", null));
             }
 
-            // Validation du type de fichier
+            // File type validation
             String contentType = file.getContentType();
             if (!isValidImageType(contentType)) {
                 return ResponseEntity.badRequest()
                     .body(new ImageUploadResponse(false, "Type de fichier non supporté. Utilisez JPG, PNG, ou WEBP", null));
             }
 
-            // Validation de la taille (max 5MB)
+            // Size validation (max 5MB)
             if (file.getSize() > 5 * 1024 * 1024) {
                 return ResponseEntity.badRequest()
                     .body(new ImageUploadResponse(false, "Fichier trop volumineux. Maximum 5MB", null));
             }
 
-            // Sauvegarder l'image
+            // Save image
             Images savedImage = imageService.saveImage(file, productId);
             
             ImageUploadResponse response = new ImageUploadResponse(
@@ -82,8 +82,8 @@ public class ImageController {
     }
 
     /**
-     * GET IMAGE - Récupérer une image par son ID
-     * GET /api/images/1
+     *Get Image -Recover an image by his ID
+     *Get/API/Images/1
      */
 @GetMapping("/{imageId}")
 public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
@@ -105,9 +105,9 @@ public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
         
         System.out.println("DEBUG: Image trouvée, taille: " + imageBytes.length + " bytes");
         
-        // Version simplifiée des headers
+        // Simplified version of the Headers
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_JPEG); // Par défaut JPEG
+        headers.setContentType(MediaType.IMAGE_JPEG); // By default JPEG
         headers.setContentLength(imageBytes.length);
         
         System.out.println("DEBUG: Headers configurés, retour de l'image");
@@ -122,8 +122,8 @@ public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
 }
 
     /**
-     * GET IMAGES BY PRODUCT - Récupérer toutes les images d'un produit
-     * GET /api/images/product/1
+     *Get images by product -Recover all the images of a product
+     *Get/API/Images/Product/1
      */
     @GetMapping("/product/{productId}")
 public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long productId) {
@@ -132,8 +132,8 @@ public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long prod
 }
 
     /**
-     * DELETE IMAGE - Supprimer une image
-     * DELETE /api/images/1
+     *DELETE IMAGE -Supprimer une image
+     *DELETE /api/images/1
      */
     @DeleteMapping("/{imageId}")
     public ResponseEntity<Void> deleteImage(@PathVariable Long imageId) {
@@ -146,7 +146,7 @@ public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long prod
     }
 
     /**
-     * Validation du type de fichier image
+     *Validation of the image file type
      */
     private boolean isValidImageType(String contentType) {
         return contentType != null && (
@@ -158,14 +158,14 @@ public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long prod
     }
 
     /**
-     * Déterminer le type MIME à partir des bytes
+     *Determine the MIME type from bytes
      */
     private String determineContentType(byte[] imageBytes) {
         if (imageBytes.length < 4) {
             return "application/octet-stream";
         }
 
-        // Vérifier les signatures de fichiers
+        // Check file signatures
         if (imageBytes[0] == (byte) 0xFF && imageBytes[1] == (byte) 0xD8) {
             return "image/jpeg";
         }
@@ -178,6 +178,6 @@ public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long prod
             return "image/webp";
         }
 
-        return "image/jpeg"; // Par défaut
+        return "image/jpeg"; // By default
     }
 }

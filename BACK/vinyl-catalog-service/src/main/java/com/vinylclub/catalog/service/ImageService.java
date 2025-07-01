@@ -26,26 +26,26 @@ public class ImageService {
     private ProductRepository productRepository;
 
     /**
-     * Sauvegarder une image pour un produit
+     *Save an image for a product
      */
     public Images saveImage(MultipartFile file, Long productId) throws IOException {
-        // Vérifier que le produit existe
+        // Check that the product exists
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
-        // Créer l'entité Image
+        // Create the image entity
         Images image = new Images();
         image.setProduct(product);
         image.setImage(file.getBytes());
 
-        // Sauvegarder en base
+        // Save in base
         return imageRepository.save(image);
     }
 
 
 
     /**
-     * Récupérer une image par son ID
+     *Recover an image by his ID
      */
     public Images getImageById(Long imageId) {
         return imageRepository.findById(imageId)
@@ -53,10 +53,10 @@ public class ImageService {
     }
 
     /**
-     * Récupérer les IDs des images d'un produit
+     *Recover the IDS IDs from a product
      */
     public List<Long> getImageIdsByProductId(Long productId) {
-        // Vérifier que le produit existe
+        // Check that the product exists
         if (!productRepository.existsById(productId)) {
             throw new RuntimeException("Product not found with id: " + productId);
         }
@@ -68,10 +68,10 @@ public class ImageService {
     }
 
     /**
-     * Récupérer toutes les images d'un produit (avec bytes)
+     *Recover all the images of a product (with bytes)
      */
 public List<ImageDTO> getImageDTOsByProductId(Long productId) {
-    // Supposons que vous avez une méthode dans votre repository pour récupérer par productId
+    // Suppose you have a method in your restitory to recover by Productid
     List<Images> images = imageRepository.findByProductId(productId);
     
     return images.stream()
@@ -91,7 +91,7 @@ private ImageDTO convertToDTO(Images imageEntity) {
 }
 
     /**
-     * Supprimer une image
+     * Delete an image
      */
     public void deleteImage(Long imageId) {
         if (!imageRepository.existsById(imageId)) {
@@ -101,7 +101,7 @@ private ImageDTO convertToDTO(Images imageEntity) {
     }
 
     /**
-     * Supprimer toutes les images d'un produit
+     *Delete all images from a product
      */
     public void deleteImagesByProductId(Long productId) {
         List<Images> images = imageRepository.findByProductId(productId);
@@ -109,7 +109,7 @@ private ImageDTO convertToDTO(Images imageEntity) {
     }
 
     /**
-     * Compter le nombre d'images d'un produit
+     *Count the number of images of a product
      */
     public long countImagesByProductId(Long productId) {
         return imageRepository.countByProductId(productId);

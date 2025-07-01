@@ -43,32 +43,32 @@ public class ProductService {
     @Autowired
     private AlbumRepository albumRepository;
 
-    // PAGE D'ACCUEIL - Tous les produits avec pagination
+    // Home page -All products with pagination
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
         Page<Product> products = productRepository.findByStatus(ProductStatus.AVAILABLE, pageable);
         return products.map(this::convertToDTO);
     }
 
-    // DÉTAILS PRODUIT
+    // Product details
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         return convertToDTO(product);
     }
 
-    // RECHERCHE
+    // Search products by title or artist
     public Page<ProductDTO> searchProducts(String query, Pageable pageable) {
         Page<Product> products = productRepository.searchByTitleOrArtist(query, pageable);
         return products.map(this::convertToDTO);
     }
 
-    // FILTRAGE PAR CATÉGORIE
+    // Category filtering
     public Page<ProductDTO> getProductsByCategory(Long categoryId, Pageable pageable) {
         Page<Product> products = productRepository.findByCategoryId(categoryId, pageable);
         return products.map(this::convertToDTO);
     }
 
-    // PRODUITS RÉCENTS (pour page d'accueil)
+    // Recent products (for home page)
     public List<ProductDTO> getRecentProducts(int limit) {
         Pageable pageable = PageRequest.of(0, limit);
         List<Product> products = productRepository.findRecentProducts(pageable);
@@ -76,12 +76,12 @@ public class ProductService {
     }
 
     /**
-     * CRÉER PRODUIT (pour admin)
+     *Create product (for admin)
      */
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
         
-        // Champs de base
+        // Basic fields
         product.setTitle(productDTO.getTitle());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
@@ -89,7 +89,7 @@ public class ProductService {
         product.setReleaseYear(productDTO.getReleaseYear());
         product.setUserId(productDTO.getUserId());
         
-        // Gestion des enums
+        // Enum management
         if (productDTO.getStatus() != null) {
             product.setStatus(ProductStatus.valueOf(productDTO.getStatus()));
         } else {
@@ -100,7 +100,7 @@ public class ProductService {
             product.setState(ProductState.valueOf(productDTO.getState()));
         }
         
-        // Relations - Récupération depuis les repositories
+        // Relations -Recovery from restitories
         if (productDTO.getArtist() != null && productDTO.getArtist().getId() != null) {
             Artist artist = artistRepository.findById(productDTO.getArtist().getId())
                 .orElseThrow(() -> new RuntimeException("Artist not found with id: " + productDTO.getArtist().getId()));
@@ -123,12 +123,12 @@ public class ProductService {
         return convertToDTO(savedProduct);
     }
 
-    // METTRE À JOUR PRODUIT
+    // Update product 
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         
-        // Mise à jour des champs
+        // Update inputs
         existingProduct.setTitle(productDTO.getTitle());
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setPrice(productDTO.getPrice());
@@ -139,12 +139,12 @@ public class ProductService {
         return convertToDTO(updatedProduct);
     }
 
-    // SUPPRIMER PRODUIT
+    // Delete product
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
 
-    // CONVERSION ENTITY → DTO (VERSION OPTIMISÉE)
+    // ENTITY Conversion → DTO (Optimized version)
     public ProductDTO convertToDTO(Product product) {
         ProductDTO dto = new ProductDTO();
         dto.setId(product.getId());
@@ -159,7 +159,7 @@ public class ProductService {
         dto.setCreatedAt(product.getCreatedAt());
         dto.setUpdatedAt(product.getUpdatedAt());
 
-        // Relations
+        // Realationships
         if (product.getArtist() != null) {
             dto.setArtist(new ArtistDTO(
                 product.getArtist().getId(),
@@ -182,7 +182,7 @@ public class ProductService {
             ));
         }
 
-        // Images (VERSION OPTIMISÉE - sans les bytes, juste les métadonnées + URLs)
+        // Images (optimized version -without the Bytes, just metadata + urls)
         if (product.getImages() != null && !product.getImages().isEmpty()) {
             List<ImageSummaryDTO> imageSummaries = product.getImages().stream()
                 .map(this::convertImageToSummaryDTO)
@@ -193,7 +193,7 @@ public class ProductService {
         return dto;
     }
 
-    // CONVERSION Images Entity → ImageDTO (pour usage spécifique avec bytes complets)
+    // Conversion images entity → imagedto (for specific use with complete bytes)
     private ImageDTO convertImageToDTO(com.vinylclub.catalog.entity.Images imageEntity) {
         ImageDTO imageDTO = new ImageDTO();
         imageDTO.setId(imageEntity.getId());
@@ -202,7 +202,7 @@ public class ProductService {
         return imageDTO;
     }
 
-    // NOUVELLE MÉTHODE : Conversion Images Entity → ImageSummaryDTO (pour ProductDTO optimisé)
+    // New method: Conversion Images Entity → ImagesumMarydto (for productdto optimized)
     private ImageSummaryDTO convertImageToSummaryDTO(com.vinylclub.catalog.entity.Images imageEntity) {
         ImageSummaryDTO summaryDTO = new ImageSummaryDTO();
         summaryDTO.setId(imageEntity.getId());
@@ -210,7 +210,7 @@ public class ProductService {
         return summaryDTO;
     }
 
-    // CONVERSION DTO → ENTITY (pour création/mise à jour)
+    // DTO conversion → Entity (for creation/update)
     private Product convertToEntity(ProductDTO dto) {
         Product product = new Product();
         product.setTitle(dto.getTitle());
@@ -220,8 +220,8 @@ public class ProductService {
         product.setReleaseYear(dto.getReleaseYear());
         product.setUserId(dto.getUserId());
         
-        // Les relations doivent être gérées séparément
-        // (récupération depuis les repositories)
+        // Relations must be managed separately
+        // (recovery from restitories)
         
         return product;
     }

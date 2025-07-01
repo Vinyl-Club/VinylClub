@@ -31,26 +31,26 @@ public class AuthService {
     private final String userServiceBaseUrl = "http://VINYL-USER-SERVICE/api/users";
 
     /**
-     * Authentification utilisateur
+     *User authentication
      */
     public LoginResponse login(LoginRequest loginRequest) {
-        // 1. Récupérer l'utilisateur depuis user-service
+        // 1. Recover the user from user-service
         UserDTO user = getUserByEmail(loginRequest.getEmail());
         
         if (user == null) {
             throw new RuntimeException("User not found");
         }
 
-        // 2. Vérifier le mot de passe
+        // 2. Check the password
         if (!validatePassword(loginRequest.getEmail(), loginRequest.getPassword())) {
             throw new RuntimeException("Invalid credentials");
         }
 
-        // 3. Générer les tokens
+        // 3. Generate tokens
         String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail());
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());
 
-        // 4. Retourner la réponse
+        // 4. Turn the answer
         return new LoginResponse(
             accessToken,
             refreshToken,
@@ -60,22 +60,22 @@ public class AuthService {
     }
 
     /**
-     * Renouvellement des tokens
+     *Renewal of tokens
      */
     public LoginResponse refreshTokens(String refreshToken) {
         try {
-            // Extraire les infos du refresh token
+            // Extract information from the refresh token
             Long userId = jwtService.getUserIdFromToken(refreshToken);
             String email = jwtService.getEmailFromToken(refreshToken);
 
-            // Récupérer les infos utilisateur
+            // Recover user information
             UserDTO user = getUserById(userId);
             
             if (user == null || !user.getEmail().equals(email)) {
                 throw new RuntimeException("Invalid refresh token");
             }
 
-            // Générer nouveaux tokens
+            // Generate new tokens
             String newAccessToken = jwtService.generateAccessToken(userId, email);
             String newRefreshToken = jwtService.generateRefreshToken(userId, email);
 
@@ -91,7 +91,7 @@ public class AuthService {
     }
 
     /**
-     * Récupérer utilisateur depuis le token
+     *Recover user from the token
      */
     public UserDTO getUserFromToken(String token) {
         try {
@@ -103,23 +103,23 @@ public class AuthService {
     }
 
     /**
-     * Récupérer utilisateur par email depuis user-service
+     *Recover user by email from user-service
      */
     private UserDTO getUserByEmail(String email) {
     try {
         String url = userServiceBaseUrl + "/email/" + email;
-        System.out.println("Calling URL: " + url); // Log pour vérifier l'URL appelée
+        System.out.println("Calling URL: " + url); // Log to check the URL called
         ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
-        System.out.println("Response: " + response.getBody()); // Log pour vérifier la réponse reçue
+        System.out.println("Response: " + response.getBody()); // Log to check the answer received
         return response.getBody();
     } catch (Exception e) {
-        System.out.println("Error fetching user: " + e.getMessage()); // Log pour vérifier les erreurs
+        System.out.println("Error fetching user: " + e.getMessage()); // Log to check the errors
         return null;
     }
 }
 
     /**
-     * Récupérer utilisateur par ID depuis user-service
+     *Recover User by ID from Uservice
      */
     private UserDTO getUserById(Long userId) {
         try {
@@ -133,11 +133,11 @@ public class AuthService {
     }
 
     /**
-     * Valider le mot de passe via user-service
+     *Validate the password via user-service
      */
     private boolean validatePassword(String email, String password) {
         try {
-            // Créer la requête de validation
+            // Create the validation request
             ValidatePasswordRequest request = new ValidatePasswordRequest(email, password);
             
             String url = userServiceBaseUrl + "/validate-password";
@@ -160,7 +160,7 @@ public class AuthService {
     }
 
     /**
-     * DTO pour validation du mot de passe
+     *DTO for validation of the password
      */
     private static class ValidatePasswordRequest {
         private String email;

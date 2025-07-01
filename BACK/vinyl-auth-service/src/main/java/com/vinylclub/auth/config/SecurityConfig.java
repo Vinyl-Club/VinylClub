@@ -35,7 +35,7 @@ public class SecurityConfig {
         System.out.println("🌐 RestTemplate bean created: " + restTemplate().getClass().getSimpleName());
         System.out.println("🚀 Security filter chain configured successfully!");
 
-        // Configuration de la sécurité HTTP
+        // HTTP security configuration
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz

@@ -9,7 +9,7 @@ public class UserDTO implements Serializable {
     private String lastName;
     private String phone;
     
-    // Constructeurs
+    // Builders
     public UserDTO() {
     }
     
@@ -21,7 +21,7 @@ public class UserDTO implements Serializable {
         this.phone = phone;
     }
     
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }

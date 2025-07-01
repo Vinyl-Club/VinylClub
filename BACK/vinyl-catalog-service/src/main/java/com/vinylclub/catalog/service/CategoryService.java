@@ -29,7 +29,7 @@ public class CategoryService {
     private ProductService productService;
 
     /**
-     * Récupérer toutes les catégories
+     *Recover all categories
      */
     public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
@@ -39,7 +39,7 @@ public class CategoryService {
     }
 
     /**
-     * Récupérer une catégorie par ID
+     *Recover a category by ID
      */
     public CategoryDTO getCategoryById(Long id) {
         Category category = categoryRepository.findById(id)
@@ -48,23 +48,23 @@ public class CategoryService {
     }
 
     /**
-     * Récupérer les produits d'une catégorie
+     *Recover products from a category
      */
     public Page<ProductDTO> getProductsByCategory(Long categoryId, Pageable pageable) {
-        // Vérifier que la catégorie existe
+        // Check that the category exists
         categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
         
-        // Récupérer les produits
+        // Recover products
         return productRepository.findByCategoryId(categoryId, pageable)
                 .map(product -> productService.convertToDTO(product));
     }
 
     /**
-     * Créer une nouvelle catégorie
+     *Create a new category
      */
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        // Vérifier que le nom n'existe pas déjà
+        // Check that the name does not already exist
         if (categoryRepository.findByNameIgnoreCase(categoryDTO.getName()).isPresent()) {
             throw new RuntimeException("Category with name '" + categoryDTO.getName() + "' already exists");
         }
@@ -75,13 +75,13 @@ public class CategoryService {
     }
 
     /**
-     * Mettre à jour une catégorie
+     *Update a category
      */
     public CategoryDTO updateCategory(Long id, CategoryDTO categoryDTO) {
         Category existingCategory = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
 
-        // Vérifier que le nouveau nom n'existe pas déjà (sauf si c'est la même catégorie)
+        // Check that the new name does not already exist (unless it is the same category)
         categoryRepository.findByNameIgnoreCase(categoryDTO.getName())
                 .ifPresent(category -> {
                     if (!category.getId().equals(id)) {
@@ -96,10 +96,10 @@ public class CategoryService {
     }
 
     /**
-     * Supprimer une catégorie
+     *Delete a category
      */
     public void deleteCategory(Long id) {
-        // Vérifier que la catégorie n'a pas de produits associés
+        // Check that the category has no associated products
         Page<ProductDTO> products = getProductsByCategory(id, Pageable.ofSize(1));
         if (products.getTotalElements() > 0) {
             throw new RuntimeException("Cannot delete category: " + products.getTotalElements() + " products are associated with this category");

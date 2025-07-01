@@ -32,8 +32,8 @@ public class ProductController {
     private ProductService productService;
 
     /**
-     * PAGE D'ACCUEIL - Tous les produits avec pagination
-     * GET /api/products?page=0&size=12
+     *Home page -All products with pagination
+     *Get /API /Products? Page = 0 & size = 12
      */
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> getAllProducts(
@@ -45,8 +45,8 @@ public class ProductController {
     }
 
     /**
-     * PAGE D'ACCUEIL - Produits récents/vedettes
-     * GET /api/products/recent
+     *Home page -Recent products/Vedottes
+     *Get/API/Products/Recent
      */
     @GetMapping("/recent")
     public ResponseEntity<List<ProductDTO>> getRecentProducts(
@@ -56,8 +56,8 @@ public class ProductController {
     }
 
     /**
-     * DÉTAILS PRODUIT - Un produit spécifique
-     * GET /api/products/1
+     *Product details -A specific product
+     *Get/API/Products/1
      */
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
@@ -66,8 +66,8 @@ public class ProductController {
     }
 
     /**
-     * RECHERCHE - Rechercher des produits
-     * GET /api/products/search?query=rock&page=0&size=12
+     *Research -Search for products
+     *Get/API/Products/Search? Query = Rock & Page = 0 & size = 12
      */
     @GetMapping("/search")
     public ResponseEntity<Page<ProductDTO>> searchProducts(
@@ -80,8 +80,8 @@ public class ProductController {
     }
 
     /**
-     * FILTRAGE - Produits par catégorie
-     * GET /api/products/category/1?page=0&size=12
+     *Filter -Products by category
+     *Get/API/Products/Category/1? Page = 0 & size = 12
      */
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<ProductDTO>> getProductsByCategory(
@@ -94,8 +94,8 @@ public class ProductController {
     }
 
     /**
-     * ADMIN - Créer un nouveau produit
-     * POST /api/products
+     *Admin -Create a new product
+     *Post /API /Products
      */
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
@@ -104,8 +104,8 @@ public class ProductController {
     }
 
     /**
-     * ADMIN - Mettre à jour un produit
-     * PUT /api/products/1
+     *Admin -Update a product
+     *Put/API/Products/1
      */
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(
@@ -116,8 +116,8 @@ public class ProductController {
     }
 
     /**
-     * ADMIN - Supprimer un produit
-     * DELETE /api/products/1
+     *Admin -Delete a product
+     *Delete/API/Products/1
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {

@@ -33,8 +33,8 @@ public class CategoryController {
     private CategoryService categoryService;
 
     /**
-     * Récupérer toutes les catégories
-     * GET /api/categories
+     *Recover all categories
+     *Get /API /Categories
      */
     @GetMapping
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
@@ -43,8 +43,8 @@ public class CategoryController {
     }
 
     /**
-     * Récupérer une catégorie par ID
-     * GET /api/categories/1
+     *Recover a category by ID
+     *Get/API/Categories/1
      */
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
@@ -53,8 +53,8 @@ public class CategoryController {
     }
 
     /**
-     * Récupérer les produits d'une catégorie
-     * GET /api/categories/1/products?page=0&size=12
+     *Recover products from a category
+     *Get/API/Categories/1/Products? Page = 0 & size = 12
      */
     @GetMapping("/{id}/products")
     public ResponseEntity<Page<ProductDTO>> getProductsByCategory(
@@ -67,8 +67,8 @@ public class CategoryController {
     }
 
     /**
-     * Créer une nouvelle catégorie
-     * POST /api/categories
+     *Create a new category
+     *Post /API /Categories
      */
     @PostMapping
     public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
@@ -77,8 +77,8 @@ public class CategoryController {
     }
 
     /**
-     * Mettre à jour une catégorie
-     * PUT /api/categories/1
+     *Update a category
+     *Put/api/categories/1
      */
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(
@@ -89,8 +89,8 @@ public class CategoryController {
     }
 
     /**
-     * Supprimer une catégorie
-     * DELETE /api/categories/1
+     *Delete a category
+     *Delete/API/Categories/1
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {

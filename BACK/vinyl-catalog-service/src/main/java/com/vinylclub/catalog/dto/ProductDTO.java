@@ -15,7 +15,7 @@ public class ProductDTO {
     private String state;
     private Long userId;
     
-    // Relations incluses
+    // Relationships included
     private ArtistDTO artist;
     private CategoryDTO category;
     private AlbumDTO album; 
@@ -24,7 +24,7 @@ public class ProductDTO {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    // Constructeurs
+    // Builders
     public ProductDTO() {}
 
     public ProductDTO(Long id, String title, String description, BigDecimal price, 
@@ -38,7 +38,7 @@ public class ProductDTO {
         this.category = category;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

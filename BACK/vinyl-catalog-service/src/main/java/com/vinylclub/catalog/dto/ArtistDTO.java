@@ -5,7 +5,7 @@ public class ArtistDTO {
     private String name;
     private String bio;
 
-    // Constructeurs
+    // Builders
     public ArtistDTO() {}
 
     public ArtistDTO(Long id, String name, String bio) {
@@ -14,7 +14,7 @@ public class ArtistDTO {
         this.bio = bio;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

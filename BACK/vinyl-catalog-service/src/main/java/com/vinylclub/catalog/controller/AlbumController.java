@@ -28,8 +28,8 @@ public class AlbumController {
     private AlbumService albumService;
 
     /**
-     * Récupérer tous les albums
-     * GET /api/albums
+     *Recover all albums
+     *Get /API /Albums
      */
     @GetMapping
     public ResponseEntity<List<AlbumDTO>> getAllAlbums() {
@@ -38,8 +38,8 @@ public class AlbumController {
     }
 
     /**
-     * Récupérer un album par ID
-     * GET /api/albums/1
+     *Recover an album by ID
+     *Get/API/Albums/1
      */
     @GetMapping("/{id}")
     public ResponseEntity<AlbumDTO> getAlbumById(@PathVariable Long id) {
@@ -48,8 +48,8 @@ public class AlbumController {
     }
 
     /**
-     * Créer un nouvel album
-     * POST /api/albums
+     *Create a new album
+     *Post /API /Albums
      */
     @PostMapping
     public ResponseEntity<AlbumDTO> createAlbum(@Valid @RequestBody AlbumDTO albumDTO) {
@@ -58,8 +58,8 @@ public class AlbumController {
     }
 
     /**
-     * Mettre à jour un album
-     * PUT /api/albums/1
+     *Update an album
+     *Put/API/albums/1
      */
     @PutMapping("/{id}")
     public ResponseEntity<AlbumDTO> updateAlbum(
@@ -70,8 +70,8 @@ public class AlbumController {
     }
 
     /**
-     * Supprimer un album
-     * DELETE /api/albums/1
+     *Supprimer un album
+     *DELETE /api/albums/1
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {

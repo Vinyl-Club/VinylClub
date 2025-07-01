@@ -45,10 +45,10 @@ public class FavoriteService {
     public boolean toggleFavorite(String userId, String productId) {
         if (isFavorite(userId, productId)) {
             removeFavorite(userId, productId);
-            return false; // Supprimé
+            return false; // Deleted
         } else {
             addFavorite(userId, productId);
-            return true; // Ajouté
+            return true; // Added
         }
     }
 }

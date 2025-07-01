@@ -19,7 +19,7 @@ public class AlbumService {
     private AlbumRepository albumRepository;
 
     /**
-     * Récupérer tous les albums
+     *Recover all albums
      */
     public List<AlbumDTO> getAllAlbums() {
         List<Album> albums = albumRepository.findAll();
@@ -29,7 +29,7 @@ public class AlbumService {
     }
 
     /**
-     * Récupérer un album par ID
+     *Recover an album by ID
      */
     public AlbumDTO getAlbumById(Long id) {
         Album album = albumRepository.findById(id)
@@ -38,10 +38,10 @@ public class AlbumService {
     }
 
     /**
-     * Créer un nouvel album
+     *Create a new album
      */
     public AlbumDTO createAlbum(AlbumDTO albumDTO) {
-        // Vérifier que le nom n'existe pas déjà
+        // Check that the name does not already exist
         if (albumRepository.findByNameIgnoreCase(albumDTO.getName()).isPresent()) {
             throw new RuntimeException("Album with name '" + albumDTO.getName() + "' already exists");
         }
@@ -52,13 +52,13 @@ public class AlbumService {
     }
 
     /**
-     * Mettre à jour un album
+     *Update an album
      */
     public AlbumDTO updateAlbum(Long id, AlbumDTO albumDTO) {
         Album existingAlbum = albumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Album not found with id: " + id));
 
-        // Vérifier que le nouveau nom n'existe pas déjà (sauf si c'est le même album)
+        // Check that the new name does not already exist (unless it's the same album)
         albumRepository.findByNameIgnoreCase(albumDTO.getName())
                 .ifPresent(album -> {
                     if (!album.getId().equals(id)) {
@@ -73,7 +73,7 @@ public class AlbumService {
     }
 
     /**
-     * Supprimer un album
+     * Delete album
      */
     public void deleteAlbum(Long id) {
         albumRepository.deleteById(id);

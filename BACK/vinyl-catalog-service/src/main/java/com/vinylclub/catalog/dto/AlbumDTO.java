@@ -4,7 +4,7 @@ public class AlbumDTO {
     private Long id;
     private String name;
 
-    // Constructeurs
+    // Builders
     public AlbumDTO() {}
 
     public AlbumDTO(Long id, String name) {
@@ -12,7 +12,7 @@ public class AlbumDTO {
         this.name = name;
     }
 
-    // Getters et Setters
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

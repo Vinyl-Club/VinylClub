@@ -20,10 +20,12 @@ public class JwtService {
     @Value("${jwt.secret:mySecretKey}")
     private String jwtSecret;
 
-    @Value("${jwt.access-token-expiration:3600000}") // 1 heure par défaut
+    @Value("${jwt.access-token-expiration:3600000}") // 1 hour by default
+
     private Long accessTokenExpiration;
 
-    @Value("${jwt.refresh-token-expiration:604800000}") // 7 jours par défaut
+    @Value("${jwt.refresh-token-expiration:604800000}") // 7 days by default
+
     private Long refreshTokenExpiration;
 
     private SecretKey getSigningKey() {
@@ -31,7 +33,7 @@ public class JwtService {
     }
 
     /**
-     * Génère un access token
+     *Grinds an access token
      */
     public String generateAccessToken(Long userId, String email) {
         Map<String, Object> claims = new HashMap<>();
@@ -43,7 +45,7 @@ public class JwtService {
     }
 
     /**
-     * Génère un refresh token
+     *Grinds a token refresh
      */
     public String generateRefreshToken(Long userId, String email) {
         Map<String, Object> claims = new HashMap<>();
@@ -55,7 +57,7 @@ public class JwtService {
     }
 
     /**
-     * Crée un token JWT
+     *Create a jwt token
      */
     private String createToken(Map<String, Object> claims, String subject, Long expiration) {
         Date now = new Date();
@@ -71,14 +73,14 @@ public class JwtService {
     }
 
     /**
-     * Extrait l'email du token
+     *Extract the token email
      */
     public String getEmailFromToken(String token) {
         return getClaimsFromToken(token).getSubject();
     }
 
     /**
-     * Extrait l'userId du token
+     *Extracts the userId from the token
      */
     public Long getUserIdFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
@@ -86,7 +88,7 @@ public class JwtService {
     }
 
     /**
-     * Extrait le type du token
+     *Extract the type of token
      */
     public String getTokenType(String token) {
         Claims claims = getClaimsFromToken(token);
@@ -94,7 +96,7 @@ public class JwtService {
     }
 
     /**
-     * Extrait toutes les claims du token
+     *Extract all the token claims
      */
     private Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
@@ -105,7 +107,7 @@ public class JwtService {
     }
 
     /**
-     * Vérifie si le token a expiré
+     * Checks if the token has expired
      */
     public Boolean isTokenExpired(String token) {
         try {
@@ -117,7 +119,7 @@ public class JwtService {
     }
 
     /**
-     * Valide le token
+     * Validate the token
      */
     public Boolean validateToken(String token, String email) {
         try {
@@ -129,7 +131,7 @@ public class JwtService {
     }
 
     /**
-     * Valide que c'est un access token
+     * Validates that it is an access token
      */
     public Boolean validateAccessToken(String token) {
         try {
@@ -141,7 +143,7 @@ public class JwtService {
     }
 
     /**
-     * Valide que c'est un refresh token
+     * Validates that it is a refresh token
      */
     public Boolean validateRefreshToken(String token) {
         try {
@@ -153,7 +155,7 @@ public class JwtService {
     }
 
     /**
-     * Retourne le temps d'expiration en secondes
+     *Return the expiration time in seconds
      */
     public Long getAccessTokenExpirationInSeconds() {
         return accessTokenExpiration / 1000;

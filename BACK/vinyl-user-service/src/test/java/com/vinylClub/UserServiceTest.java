@@ -26,7 +26,7 @@ public class UserServiceTest {
 
     @Test
     public void testCreateUser_shouldHashPassword_andSaveUser() {
-        // Arrange (préparation des données de test)
+        // Arrange (preparation of test data)
         User user = new User();
         user.setEmail("floflo@test");
         user.setPassword("flo123");
@@ -37,7 +37,7 @@ public class UserServiceTest {
 
         String hashedPassword = "$2a$10$hashedExample";
 
-        // On simule l'encodage du mot de passe
+        // We simulate password encoding
         when(passwordEncoder.encode("flo123")).thenReturn(hashedPassword);
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -54,7 +54,7 @@ public class UserServiceTest {
         assertNotNull(result.getCreatedAt());
         assertNotNull(result.getUpdatedAt());
 
-        // On vérifie que le repository a bien été appelé
+        // We verify that the rest is called
         verify(userRepository, times(1)).save(any(User.class));
         verify(passwordEncoder, times(1)).encode("flo123");
     }
