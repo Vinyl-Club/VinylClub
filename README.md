@@ -1,9 +1,7 @@
 # VinylClub
 
 ## Projet
-VinylClub est une application de mise en relation entre particuliers qui souhaient vendre et acheter des vinyles neufs et d'occasions.
-
-TEST A SUPPRIMER 
+VinylClub est une application de mise en relation entre particuliers qui souhaient vendre et acheter des vinyles neufs et d'occasions. 
 
 
 ## Pour exécuter une application Spring Boot avec Maven, vous pouvez utiliser la commande suivante dans votre terminal :
