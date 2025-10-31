@@ -22,7 +22,7 @@
 // }
 
 import Header from '@/components/layout/Header';
-import {global} from '@/styles/global.css';
+
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
