@@ -6,9 +6,9 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <header className="p-4 border-b">
         <nav className="flex gap-4">
           <Link href="/">Accueil</Link>
-          <Link href="/(public)/catalog">Catalogue</Link>
-          <Link href="/(public)/login">Connexion</Link>
-          <Link href="/(public)/register">Inscription</Link>
+          <Link href="/catalog">Catalogue</Link>
+          <Link href="/login">Connexion</Link>
+          <Link href="/register">Inscription</Link>
         </nav>
       </header>
 
