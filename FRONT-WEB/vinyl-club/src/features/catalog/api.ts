@@ -46,6 +46,7 @@ export async function catalog(): Promise<Product[]> {
   }
 
   const json = await res.json();
+  console.log(json)
 
   let items: Product[];
   if (Array.isArray(json)) {
