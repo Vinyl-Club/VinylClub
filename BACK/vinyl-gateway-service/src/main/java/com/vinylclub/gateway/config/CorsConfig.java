@@ -20,6 +20,9 @@ public class CorsConfig {
         // Allow your front
         corsConfig.addAllowedOrigin("http://localhost:8085");
         corsConfig.addAllowedOrigin("http://127.0.0.1:8085");
+
+        corsConfig.addAllowedOrigin("http://localhost:3000");
+        corsConfig.addAllowedOrigin("http://127.0.0.1:3000");
         
         // All methods
         corsConfig.addAllowedMethod("*");
