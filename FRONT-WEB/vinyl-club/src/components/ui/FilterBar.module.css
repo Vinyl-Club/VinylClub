@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter+Tight:ital,wght@1,100..900&family=Sriracha&display=swap');
+
 .nav { background: #D48541; }
 
 .list {
@@ -9,12 +11,18 @@
     margin: 0;
 }
 .item {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(0,0,0,0.06);
+    background: #D48541;
+    border: none;
     color: #1a1a1a;
-    border-radius: 999px;
+    /* border-radius: 999px; */
     padding: 6px 12px;
-    font-size: 14px;
+    font-size: 20px;
+    font: bold;
     cursor: pointer;
     white-space: nowrap;
+}
+
+.item:hover {
+    background: #DFB793;
+    color: black;
 }

@@ -1,56 +1,60 @@
-.topbar {
-    display: grid;
-    grid-template-columns: 1fr minmax(240px, 520px) auto;
-    align-items: center;
-    gap: 16px;
-    padding: 12px 24px;
-    height: 5em;
-    background: #8AA39F;           /* vert/gris */
-    border-bottom: 6px solid #D48541; 
+.topbar{
+  --bar-h: 80px;                 /* hauteur de la barre */
+  height: var(--bar-h);
+  display: grid;
+  grid-template-columns: auto 1fr auto;  /* logo | search | burger */
+  align-items: center;
+  gap: 16px;
+  padding: 8px 24px;
+  background: #8AA39F;
 }
 
-.logo { 
-    display: flex; 
-    align-items: center; 
-    width: 10em;
-    
+/* === LOGO === */
+/* Boîte du logo : on fixe juste la hauteur = topbar, la largeur est déduite
+   grâce à l'aspect-ratio du fichier (826/571 ici). */
+.logoBox{
+  height: calc(var(--bar-h) - 10px);   /* petit respir haut/bas */
+  aspect-ratio: 826 / 571;             /* ratio de ton logo.png */
+  position: relative;                  /* requis par Image fill */
+  overflow: hidden;                    /* sécurité */
+  display: block;
 }
 
-.search {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    background: #fff;
-    border-radius: 999px;
-
-    border: 1px solid #e5e5e5;
+.logoImg{
+  object-fit: contain;                 /* pas de rognage du logo */
+  object-position: left center;        /* ancre à gauche si tu veux */
+  /* Pas besoin de width/height ici : c’est géré par fill + la box */
 }
-.input {
-    order: none; 
-    outline: none; 
-    padding: 8px 12px;
-    border-radius: 999px 0 0 999px;
-}
-.searchBtn { 
-    border: none;
-    background: transparent; 
-    cursor: pointer; }
 
-.burger {
-    width: 40px; 
-    height: 36px; 
-    display: inline-flex; 
-    gap: 3px;
-    align-items: center; 
-    justify-content: center; 
-    background: transparent; 
-    border: none; 
-    cursor: pointer;
+/* === SEARCH (même ligne, rétrécit si besoin) === */
+.search{
+  min-width: 0;                        /* CRUCIAL pour rétrécir */
+  width: clamp(240px, 40vw, 480px);
+  justify-self: end;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background: #fff;
+  border-radius: 999px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 6px 10px rgb(0 0 0 / 0.3);
+  overflow: hidden;
 }
-.bar { width: 20px; 
-    height: 2px; 
-    background: #111; 
-    display: block; }
+.input{ outline:none; padding:8px 12px; border:0; min-width:0; }
+.searchBtn{ border:0; background:transparent; cursor:pointer; padding:0 10px; }
 
-@media (max-width: 768px) {
-    .topbar { grid-template-columns: auto 1fr auto; }
+/* === BURGER === */
+.burger{
+  width: 44px; height: 36px;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  gap:6px; background:transparent; border:0; padding:0; cursor:pointer;
+}
+.bar{ width:30px; height:6px; background:#111; border-radius:999px; display:block; }
+
+/* === MOBILE (même layout, on serre un peu) === */
+@media (max-width: 768px){
+  .topbar{ --bar-h: 68px; gap:12px; padding:6px 12px; }
+  .logoBox{ height: calc(var(--bar-h) - 8px); }
+  .search{ width: clamp(180px, 48vw, 340px); }
+  .burger{ width:48px; height:40px; gap:7px; }
+  .bar{ width:32px; height:7px; }
 }
