@@ -39,16 +39,43 @@
   box-shadow: 0 6px 10px rgb(0 0 0 / 0.3);
   overflow: hidden;
 }
-.input{ outline:none; padding:8px 12px; border:0; min-width:0; }
-.searchBtn{ border:0; background:transparent; cursor:pointer; padding:0 10px; }
+
+.input{
+  outline:none;
+  padding:8px 12px;
+  border:0; min-width:0;
+}
+
+.searchBtn{
+  border:0;
+  background:transparent;
+  cursor:pointer;
+  padding:0 10px;
+}
 
 /* === BURGER === */
 .burger{
-  width: 44px; height: 36px;
-  display:flex; flex-direction:column; justify-content:center; align-items:center;
-  gap:6px; background:transparent; border:0; padding:0; cursor:pointer;
+  width: 44px;
+  height: 36px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:6px;
+  background:transparent;
+  border:0;
+  padding:0;
+  cursor:pointer;
 }
-.bar{ width:30px; height:6px; background:#111; border-radius:999px; display:block; }
+
+.bar{
+  width:30px;
+  height:6px;
+  background:#111;
+  border-radius:999px;
+  display:block;
+}
+
 
 /* === MOBILE (même layout, on serre un peu) === */
 @media (max-width: 768px){
