@@ -7,13 +7,13 @@ export default function FilterBar() {
 
     return (
         <nav className={styles.nav} aria-label="Filtres">
-        <ul className={styles.list}>
-            {items.map((label) => (
-            <li key={label}>
-                <button className={styles.item} type="button">{label}</button>
-            </li>
-            ))}
-        </ul>
+            <ul className={styles.list}>
+                {items.map((label) => (
+                <li key={label}>
+                    <button className={styles.item} type="button">{label}</button>
+                </li>
+                ))}
+            </ul>
         </nav>
     );
 }

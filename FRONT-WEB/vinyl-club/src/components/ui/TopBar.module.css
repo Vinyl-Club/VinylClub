@@ -16,7 +16,8 @@
   position: relative;
   overflow: hidden;
 }
-.logoImg{ object-fit: contain;
+.logoImg{ 
+  object-fit: contain;
   object-position: left center;
 }
 
