@@ -1,6 +1,7 @@
 package com.vinylclub.catalog.controller;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vinylclub.catalog.dto.ProductDTO;
 import com.vinylclub.catalog.service.ProductService;
+import com.vinylclub.catalog.entity.ProductFormat;
 
 import jakarta.validation.Valid;
 
@@ -32,8 +34,8 @@ public class ProductController {
     private ProductService productService;
 
     /**
-     *Home page -All products with pagination
-     *Get /API /Products? Page = 0 & size = 12
+     * Home page -All products with pagination
+     * Get /API /Products? Page = 0 & size = 12
      */
     @GetMapping
     public ResponseEntity<Page<ProductDTO>> getAllProducts(
@@ -45,8 +47,8 @@ public class ProductController {
     }
 
     /**
-     *Home page -Recent products/Vedottes
-     *Get/API/Products/Recent
+     * Home page -Recent products/Vedottes
+     * Get/API/Products/Recent
      */
     @GetMapping("/recent")
     public ResponseEntity<List<ProductDTO>> getRecentProducts(
@@ -56,8 +58,8 @@ public class ProductController {
     }
 
     /**
-     *Product details -A specific product
-     *Get/API/Products/1
+     * Product details -A specific product
+     * Get/API/Products/1
      */
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
@@ -66,8 +68,8 @@ public class ProductController {
     }
 
     /**
-     *Research -Search for products
-     *Get/API/Products/Search? Query = Rock & Page = 0 & size = 12
+     * Research -Search for products
+     * Get/API/Products/Search? Query = Rock & Page = 0 & size = 12
      */
     @GetMapping("/search")
     public ResponseEntity<Page<ProductDTO>> searchProducts(
@@ -80,8 +82,8 @@ public class ProductController {
     }
 
     /**
-     *Filter -Products by category
-     *Get/API/Products/Category/1? Page = 0 & size = 12
+     * Filter -Products by category
+     * Get/API/Products/Category/1? Page = 0 & size = 12
      */
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<ProductDTO>> getProductsByCategory(
@@ -93,9 +95,31 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/price")
+    public ResponseEntity<Page<ProductDTO>> getProductsByPrice(
+            @RequestParam BigDecimal price,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getProductsByPrice(price, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/format")
+    public ResponseEntity<Page<ProductDTO>> getProductsByFormat(
+            @RequestParam ProductFormat format,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getProductsByFormat(format, pageable);
+        return ResponseEntity.ok(products);
+    }
+
     /**
-     *Admin -Create a new product
-     *Post /API /Products
+     * Admin -Create a new product
+     * Post /API /Products
      */
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
@@ -104,20 +128,20 @@ public class ProductController {
     }
 
     /**
-     *Admin -Update a product
-     *Put/API/Products/1
+     * Admin -Update a product
+     * Put/API/Products/1
      */
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @Valid @RequestBody ProductDTO productDTO) {
         ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
         return ResponseEntity.ok(updatedProduct);
     }
 
     /**
-     *Admin -Delete a product
-     *Delete/API/Products/1
+     * Admin -Delete a product
+     * Delete/API/Products/1
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {

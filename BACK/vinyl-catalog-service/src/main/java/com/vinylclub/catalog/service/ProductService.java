@@ -2,6 +2,7 @@ package com.vinylclub.catalog.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,7 @@ import com.vinylclub.catalog.entity.Category;
 import com.vinylclub.catalog.entity.Product;
 import com.vinylclub.catalog.entity.ProductState;
 import com.vinylclub.catalog.entity.ProductStatus;
+import com.vinylclub.catalog.entity.ProductFormat;
 import com.vinylclub.catalog.repository.AlbumRepository;
 import com.vinylclub.catalog.repository.ArtistRepository;
 import com.vinylclub.catalog.repository.CategoryRepository;
@@ -52,7 +54,7 @@ public class ProductService {
     // Product details
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         return convertToDTO(product);
     }
 
@@ -68,6 +70,18 @@ public class ProductService {
         return products.map(this::convertToDTO);
     }
 
+    // Price filtering
+    public Page<ProductDTO> getProductsByPrice(BigDecimal price, Pageable pageable) {
+        Page<Product> products = productRepository.findByPrice(price, pageable);
+        return products.map(this::convertToDTO);
+    }
+
+    // Format filtering
+    public Page<ProductDTO> getProductsByFormat(ProductFormat format, Pageable pageable) {
+        Page<Product> products = productRepository.findByFormat(format, pageable);
+        return products.map(this::convertToDTO);
+    }
+
     // Recent products (for home page)
     public List<ProductDTO> getRecentProducts(int limit) {
         Pageable pageable = PageRequest.of(0, limit);
@@ -76,65 +90,65 @@ public class ProductService {
     }
 
     /**
-     *Create product (for admin)
+     * Create product (for admin)
      */
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
-        
+
         // Basic fields
         product.setTitle(productDTO.getTitle());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
-        product.setQuantity(productDTO.getQuantity() != null ? productDTO.getQuantity() : 0);
-        product.setReleaseYear(productDTO.getReleaseYear());
-        product.setUserId(productDTO.getUserId());
-        
+        product.setFormat(productDTO.getFormat());
+
         // Enum management
         if (productDTO.getStatus() != null) {
             product.setStatus(ProductStatus.valueOf(productDTO.getStatus()));
         } else {
             product.setStatus(ProductStatus.AVAILABLE);
         }
-        
+
         if (productDTO.getState() != null) {
             product.setState(ProductState.valueOf(productDTO.getState()));
         }
-        
+
         // Relations -Recovery from restitories
         if (productDTO.getArtist() != null && productDTO.getArtist().getId() != null) {
             Artist artist = artistRepository.findById(productDTO.getArtist().getId())
-                .orElseThrow(() -> new RuntimeException("Artist not found with id: " + productDTO.getArtist().getId()));
+                    .orElseThrow(
+                            () -> new RuntimeException("Artist not found with id: " + productDTO.getArtist().getId()));
             product.setArtist(artist);
         }
-        
+
         if (productDTO.getCategory() != null && productDTO.getCategory().getId() != null) {
             Category category = categoryRepository.findById(productDTO.getCategory().getId())
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + productDTO.getCategory().getId()));
+                    .orElseThrow(() -> new RuntimeException(
+                            "Category not found with id: " + productDTO.getCategory().getId()));
             product.setCategory(category);
         }
-        
+
         if (productDTO.getAlbum() != null && productDTO.getAlbum().getId() != null) {
             Album album = albumRepository.findById(productDTO.getAlbum().getId())
-                .orElseThrow(() -> new RuntimeException("Album not found with id: " + productDTO.getAlbum().getId()));
+                    .orElseThrow(
+                            () -> new RuntimeException("Album not found with id: " + productDTO.getAlbum().getId()));
             product.setAlbum(album);
         }
-        
+
         Product savedProduct = productRepository.save(product);
         return convertToDTO(savedProduct);
     }
 
-    // Update product 
+    // Update product
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
         // Update inputs
         existingProduct.setTitle(productDTO.getTitle());
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setPrice(productDTO.getPrice());
-        existingProduct.setQuantity(productDTO.getQuantity());
-        existingProduct.setReleaseYear(productDTO.getReleaseYear());
-        
+        existingProduct.setFormat(productDTO.getFormat());
+
         Product updatedProduct = productRepository.save(existingProduct);
         return convertToDTO(updatedProduct);
     }
@@ -151,42 +165,37 @@ public class ProductService {
         dto.setTitle(product.getTitle());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
-        dto.setQuantity(product.getQuantity());
-        dto.setReleaseYear(product.getReleaseYear());
+        dto.setFormat(product.getFormat());
         dto.setStatus(product.getStatus() != null ? product.getStatus().toString() : null);
         dto.setState(product.getState() != null ? product.getState().toString() : null);
-        dto.setUserId(product.getUserId());
         dto.setCreatedAt(product.getCreatedAt());
         dto.setUpdatedAt(product.getUpdatedAt());
 
         // Realationships
         if (product.getArtist() != null) {
             dto.setArtist(new ArtistDTO(
-                product.getArtist().getId(),
-                product.getArtist().getName(),
-                product.getArtist().getBio()
-            ));
+                    product.getArtist().getId(),
+                    product.getArtist().getName(),
+                    product.getArtist().getBio()));
         }
 
         if (product.getCategory() != null) {
             dto.setCategory(new CategoryDTO(
-                product.getCategory().getId(),
-                product.getCategory().getName()
-            ));
+                    product.getCategory().getId(),
+                    product.getCategory().getName()));
         }
 
         if (product.getAlbum() != null) {
             dto.setAlbum(new AlbumDTO(
-                product.getAlbum().getId(),
-                product.getAlbum().getName()
-            ));
+                    product.getAlbum().getId(),
+                    product.getAlbum().getName()));
         }
 
         // Images (optimized version -without the Bytes, just metadata + urls)
         if (product.getImages() != null && !product.getImages().isEmpty()) {
             List<ImageSummaryDTO> imageSummaries = product.getImages().stream()
-                .map(this::convertImageToSummaryDTO)
-                .collect(Collectors.toList());
+                    .map(this::convertImageToSummaryDTO)
+                    .collect(Collectors.toList());
             dto.setImages(imageSummaries);
         }
 
@@ -202,7 +211,8 @@ public class ProductService {
         return imageDTO;
     }
 
-    // New method: Conversion Images Entity → ImagesumMarydto (for productdto optimized)
+    // New method: Conversion Images Entity → ImagesumMarydto (for productdto
+    // optimized)
     private ImageSummaryDTO convertImageToSummaryDTO(com.vinylclub.catalog.entity.Images imageEntity) {
         ImageSummaryDTO summaryDTO = new ImageSummaryDTO();
         summaryDTO.setId(imageEntity.getId());
@@ -216,13 +226,11 @@ public class ProductService {
         product.setTitle(dto.getTitle());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
-        product.setQuantity(dto.getQuantity());
-        product.setReleaseYear(dto.getReleaseYear());
-        product.setUserId(dto.getUserId());
-        
+        product.setFormat(dto.getFormat());
+
         // Relations must be managed separately
         // (recovery from restitories)
-        
+
         return product;
     }
 }
