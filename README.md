@@ -12,6 +12,8 @@ VinylClub est une application de mise en relation entre particuliers qui souhaie
 ### Connectez-vous à PostgreSQL
 Se connecter en tant que postgres (utilisateur par défaut)
 psql -U postgres        # Sur Windows/macOS
+pour quitter
+\q
 
 ### Une fois connecté, créer le schémasql
 CREATE SCHEMA catalog
