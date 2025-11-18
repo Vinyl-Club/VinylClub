@@ -1,7 +1,7 @@
 package com.vinylclub.catalog.entity;
 
 
-enum ProductStatus {
+public enum ProductStatus {
     AVAILABLE,
     OUT_OF_STOCK
 }

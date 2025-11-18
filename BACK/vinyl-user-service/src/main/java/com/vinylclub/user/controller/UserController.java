@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import com.vinylclub.user.dto.ValidatePasswordRequest;
+
 
 
 @RestController
@@ -53,4 +56,31 @@ public class UserController {
     public UserDTO login(@RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
+
+    //  Validate a user's password
+    //  Post /USERS /VALIDATE-PASSWORD
+     
+    @PostMapping("/validate-password")
+    public ResponseEntity<Boolean> validatePassword(@RequestBody ValidatePasswordRequest request) {
+        try {
+            boolean isValid = userService.validatePassword(request.getEmail(), request.getPassword());
+            return ResponseEntity.ok(isValid);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+        try {
+            UserDTO user = userService.getUserByEmail(email);
+            if (user != null) {
+                return ResponseEntity.ok(user);
+            }
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+ 
+   }
 }

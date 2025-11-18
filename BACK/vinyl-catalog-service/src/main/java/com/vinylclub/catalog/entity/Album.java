@@ -1,6 +1,5 @@
 package com.vinylclub.catalog.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,7 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "albums")
+@Table(name = "albums", schema = "catalog")
 public class Album {
     /**
      * Primary key with auto-increment strategy
@@ -23,11 +22,6 @@ public class Album {
      */
     @Column(nullable = false, length = 100, unique = true)
     private String name;
-    
-
-    
-    
-
 
     // Getters and Setters
     public Long getId() {

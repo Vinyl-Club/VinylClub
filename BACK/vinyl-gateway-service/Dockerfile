@@ -6,7 +6,7 @@ WORKDIR /app
 COPY target/vinyl-gateway-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Exposer le port sur lequel le service s'exécute
-EXPOSE 8080
+EXPOSE 8090
 
 # Commande pour démarrer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]

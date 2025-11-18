@@ -22,7 +22,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name ="auth_id", nullable = false)
+    @Column(name ="auth_id", nullable = true)
     private String authId;
 
     @Column(nullable = false)
@@ -34,7 +34,7 @@ public class User {
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String phone;
 
     @Column(name = "created_at", nullable = true)
@@ -56,7 +56,7 @@ public class User {
         this.password = password;
     }
 
-    // getters et setters
+    // getters and setters
     public Long getId() {
         return id;
     }

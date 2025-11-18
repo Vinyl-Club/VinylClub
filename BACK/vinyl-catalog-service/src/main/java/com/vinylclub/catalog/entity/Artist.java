@@ -1,6 +1,5 @@
 package com.vinylclub.catalog.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,32 +8,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "artists")
+@Table(name = "artists", schema = "catalog") 
 public class Artist {
-    /**
-     * Primary key with auto-increment strategy
-     */
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Name of the artist
-     */
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
-    /**
-     * Bio of the artist
-     */
     @Column(nullable = true, length = 500)
-    // Correction ici: bio -> biography
     private String bio;
-    
 
-    
-    
+    // Builders
+    public Artist() {}
 
+    public Artist(String name) {
+        this.name = name;
+    }
 
     // Getters and Setters
     public Long getId() {
@@ -49,16 +41,17 @@ public class Artist {
         return name;
     }
 
-public void setName(String name) {
-    this.name = name;
-}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-public String getBio() {
-    return bio;
-}
-public void setBio(String bio) {
-    this.bio = bio;
-}
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 
     @Override
     public String toString() {

@@ -1,31 +1,20 @@
 package com.vinylclub.catalog.repository;
-import org.springframework.data.jpa.repository.JpaRepository; // Correction ici: vinylshop -> vinylclub
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.vinylclub.catalog.entity.Artist;
 
-/**
- * Repository interface for Artist entity
- * Extends JpaRepository to inherit standard CRUD operations
- */
 @Repository
 public interface ArtistRepository extends JpaRepository<Artist, Long> {
-        
-        /**
-         * Find an artist by its name
-         * 
-         * @param name The name of the artist to find
-         * @return The artist with the given name, or null if not found
-         */
-        Artist findByName(String name);
-        
-        /**
-         * Check if an artist with the given name exists
-         * 
-         * @param name The name to check
-         * @return true if the artist exists, false otherwise
-         */
-        boolean existsByName(String name);
     
+    Optional<Artist> findByNameIgnoreCase(String name);
+    
+    @Query("SELECT a FROM Artist a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Artist> searchByName(@Param("query") String query);
 }
-

@@ -3,89 +3,98 @@ package com.vinylclub.catalog.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.vinylclub.catalog.entity.Category;
-import com.vinylclub.catalog.repository.CategoryRepository;
+import com.vinylclub.catalog.dto.CategoryDTO;
+import com.vinylclub.catalog.dto.ProductDTO;
+import com.vinylclub.catalog.service.CategoryService;
 
-/**
- * REST Controller for handling Category-related HTTP requests.
- * Provides endpoints for creating and retrieving music categories.
- */
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/categories")
+// @CrossOrigin(origins = "*")
 public class CategoryController {
 
-    // Repository for database operations on categories
-    private final CategoryRepository categoryRepository;
-
-    /**
-     * Constructor with dependency injection for CategoryRepository.
-     * @param categoryRepository The repository for Category entities
-     */
     @Autowired
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    private CategoryService categoryService;
 
     /**
-     * Creates a new category.
-     * 
-     * @param category The category object from request body
-     * @return ResponseEntity with the created category and HTTP 201 status
-     */
-    @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        Category savedCategory = categoryRepository.save(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
-    }
-    
-    /**
-     * Retrieves all categories.
-     * 
-     * @return List of all categories
+     *Recover all categories
+     *Get /API /Categories
      */
     @GetMapping
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-    
-    /**
-     * Retrieves a category by its ID.
-     * 
-     * @param id The ID of the category to retrieve
-     * @return ResponseEntity with the category if found, or 404 status if not found
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        return categoryRepository.findById(id)
-                .map(category -> ResponseEntity.ok(category))
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+        List<CategoryDTO> categories = categoryService.getAllCategories();
+        return ResponseEntity.ok(categories);
     }
 
     /**
-     * Retrieves a category by its name.
-     * Note: This endpoint conflicts with the getCategoryById method 
-     * as they have the same path pattern. Spring won't be able to
-     * distinguish between them.
-     * 
-     * @param name The name of the category to retrieve
-     * @return ResponseEntity with the category if found, or 404 status if not found
+     *Recover a category by ID
+     *Get/API/Categories/1
      */
-    @GetMapping("/{name}")
-    public ResponseEntity<Category> getCategoryByName(@PathVariable String name) {
-        Category category = categoryRepository.findByName(name);
-        if (category != null) {
-            return ResponseEntity.ok(category);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
+        CategoryDTO category = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(category);
+    }
+
+    /**
+     *Recover products from a category
+     *Get/API/Categories/1/Products? Page = 0 & size = 12
+     */
+    @GetMapping("/{id}/products")
+    public ResponseEntity<Page<ProductDTO>> getProductsByCategory(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = categoryService.getProductsByCategory(id, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    /**
+     *Create a new category
+     *Post /API /Categories
+     */
+    @PostMapping
+    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
+        return ResponseEntity.ok(createdCategory);
+    }
+
+    /**
+     *Update a category
+     *Put/api/categories/1
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDTO> updateCategory(
+            @PathVariable Long id,
+            @Valid @RequestBody CategoryDTO categoryDTO) {
+        CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
+        return ResponseEntity.ok(updatedCategory);
+    }
+
+    /**
+     *Delete a category
+     *Delete/API/Categories/1
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategory(id);
+        return ResponseEntity.noContent().build();
     }
 }

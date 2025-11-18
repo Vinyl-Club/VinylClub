@@ -1,110 +1,151 @@
 package com.vinylclub.catalog.controller;
 
 import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.vinylclub.catalog.entity.Product;
+import com.vinylclub.catalog.dto.ProductDTO;
 import com.vinylclub.catalog.service.ProductService;
+import com.vinylclub.catalog.entity.ProductFormat;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")
+// @CrossOrigin(origins = "*")
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     /**
-     * Get all products */
+     * Home page -All products with pagination
+     * Get /API /Products? Page = 0 & size = 12
+     */
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getAllProducts(pageable);
+        return ResponseEntity.ok(products);
     }
 
     /**
-     * Get a product by its ID */
+     * Home page -Recent products/Vedottes
+     * Get/API/Products/Recent
+     */
+    @GetMapping("/recent")
+    public ResponseEntity<List<ProductDTO>> getRecentProducts(
+            @RequestParam(defaultValue = "8") int limit) {
+        List<ProductDTO> recentProducts = productService.getRecentProducts(limit);
+        return ResponseEntity.ok(recentProducts);
+    }
+
+    /**
+     * Product details -A specific product
+     * Get/API/Products/1
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        ProductDTO product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
     }
 
     /**
-     * Create a new product */
+     * Research -Search for products
+     * Get/API/Products/Search? Query = Rock & Page = 0 & size = 12
+     */
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductDTO>> searchProducts(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> results = productService.searchProducts(query, pageable);
+        return ResponseEntity.ok(results);
+    }
+
+    /**
+     * Filter -Products by category
+     * Get/API/Products/Category/1? Page = 0 & size = 12
+     */
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<ProductDTO>> getProductsByCategory(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getProductsByCategory(categoryId, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/price")
+    public ResponseEntity<Page<ProductDTO>> getProductsByPrice(
+            @RequestParam BigDecimal price,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getProductsByPrice(price, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/format")
+    public ResponseEntity<Page<ProductDTO>> getProductsByFormat(
+            @RequestParam ProductFormat format,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getProductsByFormat(format, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    /**
+     * Admin -Create a new product
+     * Post /API /Products
+     */
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productService.createProduct(product);
+    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        ProductDTO createdProduct = productService.createProduct(productDTO);
+        return ResponseEntity.ok(createdProduct);
     }
 
     /**
-     * Create multiple products */
-    @PostMapping("/batch")
-    public List<Product> createProducts(@RequestBody List<Product> products) {
-        return productService.createProducts(products);
-    }
-
-    /**
-     * Update an existing product */
+     * Admin -Update a product
+     * Put/API/Products/1
+     */
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
-        try {
-            Product updatedProduct = productService.updateProduct(id, productDetails);
-            return ResponseEntity.ok(updatedProduct);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ProductDTO> updateProduct(
+            @PathVariable Long id,
+            @Valid @RequestBody ProductDTO productDTO) {
+        ProductDTO updatedProduct = productService.updateProduct(id, productDTO);
+        return ResponseEntity.ok(updatedProduct);
     }
 
     /**
-     * Delete a product by its ID */
+     * Admin -Delete a product
+     * Delete/API/Products/1
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Find products by title containing the given substring (case-insensitive) */
-    @GetMapping("/search/title")
-    public List<Product> findProductsByTitleContaining(@RequestParam String titlePart) {
-        return productService.findProductsByTitleContaining(titlePart);
-    }
-
-    /**
-     * Find products by user ID */
-    @GetMapping("/search/user/{userId}")
-    public List<Product> findProductsByUserId(@PathVariable Long userId) {
-        return productService.findProductsByUserId(userId);
-    }
-
-    /**
-     * Find products by category ID */
-    @GetMapping("/search/category/{categoryId}")
-    public List<Product> findProductsByCategoryId(@PathVariable Long categoryId) {
-        return productService.findProductsByCategoryId(categoryId);
-    }
-
-    /**
-     * Find products by artist ID */
-    @GetMapping("/search/artist/{artistId}")
-    public List<Product> findProductsByArtistId(@PathVariable Long artistId) {
-        return productService.findProductsByArtistId(artistId);
-    }
-
-    /**
-     * Find products by album ID */
-    @GetMapping("/search/album/{albumId}")
-    public List<Product> findProductsByAlbumId(@PathVariable Long albumId) {
-        return productService.findProductsByAlbumId(albumId);
-    }
-
-    /**
-     * Find products by price range */
-    @GetMapping("/search/price")
-    public List<Product> findProductsByPriceRange(@RequestParam Double minPrice, @RequestParam Double maxPrice) {
-        return productService.findProductsByPriceRange(minPrice, maxPrice);
     }
 }
