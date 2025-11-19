@@ -99,7 +99,6 @@ public class ProductService {
         product.setTitle(productDTO.getTitle());
         product.setDescription(productDTO.getDescription());
         product.setPrice(productDTO.getPrice());
-        product.setFormat(productDTO.getFormat());
 
         // Enum management
         if (productDTO.getStatus() != null) {
@@ -110,6 +109,10 @@ public class ProductService {
 
         if (productDTO.getState() != null) {
             product.setState(ProductState.valueOf(productDTO.getState()));
+        }
+
+        if (productDTO.getFormat() != null) {
+            product.setFormat(ProductFormat.valueOf(productDTO.getFormat()));
         }
 
         // Relations -Recovery from restitories
@@ -147,7 +150,18 @@ public class ProductService {
         existingProduct.setTitle(productDTO.getTitle());
         existingProduct.setDescription(productDTO.getDescription());
         existingProduct.setPrice(productDTO.getPrice());
-        existingProduct.setFormat(productDTO.getFormat());
+
+        if (productDTO.getState() != null) {
+            existingProduct.setState(ProductState.valueOf(productDTO.getState().toUpperCase()));
+        }
+
+        if (productDTO.getStatus() != null) {
+            existingProduct.setStatus(ProductStatus.valueOf(productDTO.getStatus().toUpperCase()));
+        }
+
+        if (productDTO.getFormat() != null) {
+            existingProduct.setFormat(ProductFormat.valueOf(productDTO.getFormat().toUpperCase()));
+        }
 
         Product updatedProduct = productRepository.save(existingProduct);
         return convertToDTO(updatedProduct);
@@ -165,9 +179,9 @@ public class ProductService {
         dto.setTitle(product.getTitle());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
-        dto.setFormat(product.getFormat());
         dto.setStatus(product.getStatus() != null ? product.getStatus().toString() : null);
         dto.setState(product.getState() != null ? product.getState().toString() : null);
+        dto.setFormat(product.getFormat() != null ? product.getFormat().toString() : null);
         dto.setCreatedAt(product.getCreatedAt());
         dto.setUpdatedAt(product.getUpdatedAt());
 
@@ -226,10 +240,18 @@ public class ProductService {
         product.setTitle(dto.getTitle());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
-        product.setFormat(dto.getFormat());
 
-        // Relations must be managed separately
-        // (recovery from restitories)
+        if (dto.getStatus() != null) {
+            product.setStatus(ProductStatus.valueOf(dto.getStatus().toUpperCase()));
+        }
+
+        if (dto.getState() != null) {
+            product.setState(ProductState.valueOf(dto.getState().toUpperCase()));
+        }
+
+        if (dto.getFormat() != null) {
+            product.setFormat(ProductFormat.valueOf(dto.getFormat().toUpperCase()));
+        }
 
         return product;
     }
