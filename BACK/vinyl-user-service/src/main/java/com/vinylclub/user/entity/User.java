@@ -33,7 +33,7 @@ public class User {
 
     @Column(nullable = false)
     private String lastName;
-
+    
     @Column(nullable = true)
     private String phone;
 
