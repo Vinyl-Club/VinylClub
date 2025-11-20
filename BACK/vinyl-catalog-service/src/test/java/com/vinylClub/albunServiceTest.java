@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.mongodb.core.mapping.TextScore;
+
 
 import java.util.List;
 import java.util.Collections;
@@ -74,17 +74,23 @@ class AlbumServiceTest {
         verify(albumRepository, times(1)).findAll();
     }
 
-    @Testv
+    @Test
     public void TestCreateAlbum_shouldReturnDTO_whenAlbumIsCreated() {
-        AlbumDTO dto3 = new Album();
-        album.setId(3L);
-        album.setName("What Went Down");
+        AlbumDTO dto3 = new AlbumDTO(null, "What Went Down");
+        
+        Album savedEntituy = new Album();
+        savedEntituy.setId(3L);
+        savedEntituy.setName("What Went Down");
 
-        when(albumRepositorysave(any(Album.class))).thenAnswer(invocation -> {
-            Album savedAlbum = invocation.getArgument(0);
-            savedAlbum.setId(3L); // Simulate DB assigning an ID
-            return savedAlbum;
-        });
+        when(albumRepository.findByNameIgnoreCase("What Went Down")).thenReturn(Optional.empty());
+        when(albumRepository.save(any(Album.class))).thenReturn(savedEntituy);
 
+        AlbumDTO result = albumService.createAlbum(dto3);
+
+        assertEquals(3L, result.getId());
+        assertEquals("What Went Down", result.getName());
+        
+        verify(albumRepository).findByNameIgnoreCase("What Went Down");
+        verify(albumRepository).save(any(Album.class));
     }
 }
