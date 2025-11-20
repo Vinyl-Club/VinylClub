@@ -9,6 +9,15 @@ public class AdDetailsDTO {
     private ProductSummaryDTO product; // vient de client.dto.ProductDTO
     private UserSummaryDTO user; // vient de client.dto.UserSummaryDTO
 
+    public AdDetailsDTO() {
+    }
+
+    public AdDetailsDTO(Long id, ProductSummaryDTO product, LoUserSummaryDTOng user) {
+        this.id = id;
+        this.product = product;
+        this.user = user;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -22,7 +31,7 @@ public class AdDetailsDTO {
         return product;
     }
 
-    public void setProductId(ProductSummaryDTO product) {
+    public void setProduct(ProductSummaryDTO product) {
         this.product = product;
     }
 
@@ -30,7 +39,7 @@ public class AdDetailsDTO {
         return user;
     }
 
-    public void setUserId(UserSummaryDTO user) {
+    public void setUser(UserSummaryDTO user) {
         this.user = user;
     }
 

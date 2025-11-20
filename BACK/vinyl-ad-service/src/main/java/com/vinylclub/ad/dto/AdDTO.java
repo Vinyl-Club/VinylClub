@@ -5,6 +5,15 @@ public class AdDTO {
     private Long productid;
     private Long userid;
 
+    public AdDTO() {
+    }
+
+    public AdDTO(Long id, Long productid, Long userid) {
+        this.id = id;
+        this.productid = productid;
+        this.userid = userid;
+    }
+
     // Getters and Setters
     public Long getId() {
         return id;

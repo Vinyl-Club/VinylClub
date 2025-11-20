@@ -28,18 +28,21 @@ public class ProductSummaryDTO {
 
     // Builders
     public ProductSummaryDTO() {
-        }
+    }
 
     public ProductSummaryDTO(Long id, String title, String description, BigDecimal price,
-                ArtistAdDTO artist, CategoryAdDTO category, String format) {
-            this.id = id;
-            this.title = title;
-            this.description = description;
-            this.price = price;
-            this.artist = artist;
-            this.category = category;
-            this.format = format;
-        }
+            ArtistAdDTO artist, CategoryAdDTO category, AlbumAdDTO album, ImageSummaryDTO images, Timestamp createdAt, String format ) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.artist = artist;
+        this.category = category; 
+        this.album = album;
+        this.images = images;
+        this.createdAt = createdAt;
+        this.format = format;
+    }
 
     // Getters and Setters
     public Long getId() {
