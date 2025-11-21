@@ -12,7 +12,7 @@ public class AdDetailsDTO {
     public AdDetailsDTO() {
     }
 
-    public AdDetailsDTO(Long id, ProductSummaryDTO product, LoUserSummaryDTOng user) {
+    public AdDetailsDTO(Long id, ProductSummaryDTO product, UserSummaryDTO user) {
         this.id = id;
         this.product = product;
         this.user = user;

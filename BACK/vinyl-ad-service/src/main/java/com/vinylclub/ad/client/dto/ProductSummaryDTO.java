@@ -37,7 +37,7 @@ public class ProductSummaryDTO {
         this.description = description;
         this.price = price;
         this.artist = artist;
-        this.category = category; 
+        this.category = category;
         this.album = album;
         this.images = images;
         this.createdAt = createdAt;
