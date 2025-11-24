@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -46,9 +47,10 @@ public class ProductDerviceTest {
     @InjectMocks
     private ProductService productService;
 
-    //tester getAllProducts et getProductById
+    //tester getAllProducts et 
     @Test
     public void getAllProducts_shouldReturnPagedProductDTOs() {
+        // Given
         Product product1 = new Product();
         product1.setId(1l);
         product1.setTitle("Album One");
@@ -57,12 +59,7 @@ public class ProductDerviceTest {
         product1.setStatus(ProductStatus.AVAILABLE);
         product1.setState(ProductState.NEW);
         product1.setFormat(ProductFormat.T33);
-        product1.setArtist(new Artist());
-        product1.setCategory(new Category());
-        product1.setAlbum(new Album());
         
-    
-
         Product product2 = new Product();
         product2.setId(2l);
         product2.setTitle("Album Two");
@@ -71,9 +68,45 @@ public class ProductDerviceTest {
         product2.setStatus(ProductStatus.AVAILABLE);
         product2.setState(ProductState.NEW);
         product2.setFormat(ProductFormat.T45);
-        product2.setArtist(new Artist());
-        product2.setCategory(new Category());
-        product2.setAlbum(new Album());
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Product> productPage = new PageImpl<>(List.of(product1, product2), pageable, 2);
+
+        When(productRepository.findByStatus(productStatus.AVAILABLE,pageable)).thenReturn(productPage);
+
+        // When
+        Page<ProductDTO> result = productService.getAllProducts(pageable);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(2, result.getContent().size());
+        assertEquals(2, result.getTotalElements());
+
+        ProductDTO dto1 = result.getContent().get(0);
+        ProductDTO dto2 = result.getContent().get(1);
+
+        assertEquals(1l, dto1.getId());
+        assertEquals("Album One", dto1.getTitle());
+        assertEquals("First album description", dto1.getDescription());
+        assertEquals(new BigDecimal("19.99"), dto1.getPrice());
+        assertEquals("AVAILABLE", dto1.getStatus());
+        assertEquals("NEW", dto1.getState());
+        assertEquals("T33", dto1.getFormat());
+        
+        assertEquals(2l, dto2.getId());
+        assertEquals("Album Two", dto2.getTitle());
+        assertEquals("Second album description", dto2.getDescription());
+        assertEquals(new BigDecimal("24.99"), dto2.getPrice());
+        assertEquals("AVAILABLE", dto2.getStatus());
+        assertEquals("NEW", dto2.getState());
+        assertEquals("T45", dto2.getFormat());
+    
+        verify(productRepository, times(1)).findByStatus(ProductStatus.AVAILABLE, pageable);
+    }
+
+    //getProductById
+    @Test
+    public void getProductById_shouldReturnProductDTO_whenProductExists() {
         
     }
     //tester create/update/delete si existant
