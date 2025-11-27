@@ -30,12 +30,18 @@ import org.springframework.data.domain.PageImpl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductDerviceTest {
+public class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
@@ -47,7 +53,7 @@ public class ProductDerviceTest {
     @InjectMocks
     private ProductService productService;
 
-    //tester getAllProducts et 
+    //tester getAllProducts et
     @Test
     public void getAllProducts_shouldReturnPagedProductDTOs() {
         // Given
@@ -57,7 +63,7 @@ public class ProductDerviceTest {
         product1.setDescription("First album description");
         product1.setPrice(new BigDecimal("19.99"));
         product1.setStatus(ProductStatus.AVAILABLE);
-        product1.setState(ProductState.NEW);
+        product1.setState(ProductState.TRES_BON_ETAT);
         product1.setFormat(ProductFormat.T33);
         
         Product product2 = new Product();
@@ -66,13 +72,13 @@ public class ProductDerviceTest {
         product2.setDescription("Second album description");
         product2.setPrice(new BigDecimal("24.99"));
         product2.setStatus(ProductStatus.AVAILABLE);
-        product2.setState(ProductState.NEW);
+        product2.setState(ProductState.TRES_BON_ETAT);
         product2.setFormat(ProductFormat.T45);
 
         Pageable pageable = PageRequest.of(0, 10);
         Page<Product> productPage = new PageImpl<>(List.of(product1, product2), pageable, 2);
 
-        When(productRepository.findByStatus(productStatus.AVAILABLE,pageable)).thenReturn(productPage);
+        when(productRepository.findByStatus(ProductStatus.AVAILABLE,pageable)).thenReturn(productPage);
 
         // When
         Page<ProductDTO> result = productService.getAllProducts(pageable);
@@ -90,7 +96,7 @@ public class ProductDerviceTest {
         assertEquals("First album description", dto1.getDescription());
         assertEquals(new BigDecimal("19.99"), dto1.getPrice());
         assertEquals("AVAILABLE", dto1.getStatus());
-        assertEquals("NEW", dto1.getState());
+        assertEquals("TRES_BON_ETAT", dto1.getState());
         assertEquals("T33", dto1.getFormat());
         
         assertEquals(2l, dto2.getId());
@@ -98,7 +104,7 @@ public class ProductDerviceTest {
         assertEquals("Second album description", dto2.getDescription());
         assertEquals(new BigDecimal("24.99"), dto2.getPrice());
         assertEquals("AVAILABLE", dto2.getStatus());
-        assertEquals("NEW", dto2.getState());
+        assertEquals("TRES_BON_ETAT", dto2.getState());
         assertEquals("T45", dto2.getFormat());
     
         verify(productRepository, times(1)).findByStatus(ProductStatus.AVAILABLE, pageable);
@@ -107,8 +113,36 @@ public class ProductDerviceTest {
     //getProductById
     @Test
     public void getProductById_shouldReturnProductDTO_whenProductExists() {
-        
+        // Given
+        Product product = new Product();
+        product.setId(1L);
+        product.setTitle("Test Album");
+        product.setDescription("This is a test album.");
+        product.setPrice(new BigDecimal("29.99"));
+        product.setStatus(ProductStatus.AVAILABLE);
+        product.setState(ProductState.TRES_BON_ETAT);
+        product.setFormat(ProductFormat.T45);
+
+        // When
+        when(productRepository.findById(1L)).thenReturn(Optional.of(product));
+
+        ProductDTO result = productService.getProductById(1L);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(1L, result.getId());
+        assertEquals("Test Album", result.getTitle());
+        assertEquals("This is a test album.", result.getDescription());
+        assertEquals(new BigDecimal("29.99"), result.getPrice());
+        assertEquals("AVAILABLE", result.getStatus());
+        assertEquals("TRES_BON_ETAT", result.getState());
+        assertEquals("T45", result.getFormat());
+
+        verify(productRepository, times(1)).findById(1L);
+
     }
     //tester create/update/delete si existant
+
+    
     //tester les filtres/recherches
 }

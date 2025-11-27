@@ -13,7 +13,7 @@ public class ProductDTO {
     private BigDecimal price;
     private String status;
     private String state;
-    private ProductFormat  format;
+    private String format;
 
     // Relationships included
     private ArtistDTO artist;
@@ -29,14 +29,13 @@ public class ProductDTO {
     }
 
     public ProductDTO(Long id, String title, String description, BigDecimal price,
-            ArtistDTO artist, CategoryDTO category, ProductFormat  format) {
+            ArtistDTO artist, CategoryDTO category) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
         this.artist = artist;
         this.category = category;
-        this.format = format;
     }
 
     // Getters and Setters
@@ -136,11 +135,11 @@ public class ProductDTO {
         this.updatedAt = updatedAt;
     }
 
-    public ProductFormat getFormat() {
+    public String getFormat() {
         return format;
     }
 
-    public void setFormat(ProductFormat format) {
+    public void setFormat(String format) {
         this.format = format;
     }
 }
