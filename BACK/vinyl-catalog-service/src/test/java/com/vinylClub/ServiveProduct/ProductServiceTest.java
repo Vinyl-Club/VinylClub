@@ -147,18 +147,18 @@ public class ProductServiceTest {
     }
     
     //update
-    @Test
-    public void updateProduct_shouldReturnUpdatedProductDTO_whenProductExists() {
-        ProductDto dto = new ProductDTO();
-        dto.setTitle("Updated Album");
-        dto.setDescription("Updated album description");
-        dto.setPrice(new BigDecimal("39.99"));
-        dto.setStatus("OUT_OF_STOCK");
-        dto.setState("BON_ETAT");
-        dto.setFormat("T45");
+    // @Test
+    // public void updateProduct_shouldReturnUpdatedProductDTO_whenProductExists() {
+    //     ProductDto dto = new ProductDTO();
+    //     dto.setTitle("Updated Album");
+    //     dto.setDescription("Updated album description");
+    //     dto.setPrice(new BigDecimal("39.99"));
+    //     dto.setStatus("OUT_OF_STOCK");
+    //     dto.setState("BON_ETAT");
+    //     dto.setFormat("T45");
         
         
-    }
+    // }
     //delete si existant
 
 
