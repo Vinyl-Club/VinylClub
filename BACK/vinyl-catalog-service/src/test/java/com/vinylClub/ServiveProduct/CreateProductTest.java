@@ -168,4 +168,26 @@ public class CreateProductTest {
         verify(artistRepository, times(1)).findById(99L);
         verify(productRepository, times(0)).save(any(Product.class));
     }
+
+    @Test
+    public void createProduct_ShouldReturnRuntimeException_WhenProductFormatIsInvalid() {
+        ProductDTO dto4 = new ProductDTO();
+        dto4.setId(4L);
+        dto4.setTitle("New Album");
+        dto4.setDescription("Description");
+        dto4.setPrice(new BigDecimal("19.99"));
+        dto4.setStatus("AVAILABLE");
+        dto4.setState("TRES_BON_ETAT");
+        dto4.setFormat("33 tours");
+        dto4.setArtist(null);
+        dto4.setAlbum(null);
+        dto4.setCategory(null);
+
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> productService.createProduct(dto4)
+        );
+
+        verify(productRepository, never()).save(any(Product.class));
+    }
 }
