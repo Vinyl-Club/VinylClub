@@ -34,7 +34,7 @@ public class AdService {
     // Récupérer toutes les annonces avec pagination
     public Page<AdListDTO> getAllAds(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Ad> adsPage = adRepository.findAllAds(pageable);
+        Page<Ad> adsPage = adRepository.findAll(pageable);
 
         if (adsPage.isEmpty()) {
             throw new RuntimeException("Aucune annonce disponible.");
