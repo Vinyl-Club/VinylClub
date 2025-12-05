@@ -7,6 +7,7 @@ import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 
 @FeignClient(name = "catalog-service")
 public interface ProductClient {
+
     @GetMapping("/api/products/{id}")
-    ProductDTO getProductById(@PathVariable("id") Long id);
+    ProductSummaryDTO getProductById(@PathVariable("id") Long id);
 }

@@ -1,4 +1,3 @@
-
 package com.vinylclub.ad.client.dto;
 
 import java.math.BigDecimal;
@@ -6,8 +5,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class ProductSummaryDTO {
-
-    // import com.vinylclub.catalog.entity.ProductFormat;
 
     private Long id;
     private String title;
@@ -17,7 +14,7 @@ public class ProductSummaryDTO {
     private String state;
     private String format;
 
-    // Relationships included
+    // Relations
     private ArtistAdDTO artist;
     private CategoryAdDTO category;
     private AlbumAdDTO album;
@@ -26,12 +23,21 @@ public class ProductSummaryDTO {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    // Builders
     public ProductSummaryDTO() {
     }
 
-    public ProductSummaryDTO(Long id, String title, String description, BigDecimal price,
-            ArtistAdDTO artist, CategoryAdDTO category, AlbumAdDTO album, ImageSummaryDTO images, Timestamp createdAt, String format ) {
+    public ProductSummaryDTO(
+            Long id,
+            String title,
+            String description,
+            BigDecimal price,
+            ArtistAdDTO artist,
+            CategoryAdDTO category,
+            AlbumAdDTO album,
+            List<ImageSummaryDTO> images,
+            Timestamp createdAt,
+            String format
+    ) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -44,7 +50,8 @@ public class ProductSummaryDTO {
         this.format = format;
     }
 
-    // Getters and Setters
+    // Getters / Setters
+
     public Long getId() {
         return id;
     }
