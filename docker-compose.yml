@@ -56,6 +56,23 @@ services:
     networks:
       - vinyl-network
 
+
+      
+  # Ad service
+  vinyl-ad-service:
+    build: ./BACK/vinyl-ad-service
+    container_name: vinyl-ad-service
+    ports:
+      - "8087:8087"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+    depends_on:
+      - vinyl-discovery-service
+      - postgres-db
+    networks:
+      - vinyl-network
+
   # MongoDB database for favorites - SANS AUTHENTIFICATION
   mongo-db:
     image: mongo:7
@@ -143,7 +160,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_MULTIPLE_DATABASES=userdb,catalogdb
+      - POSTGRES_MULTIPLE_DATABASES=userdb,catalogdb,addb
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./docker-postgresql-multiple-databases.sh:/docker-entrypoint-initdb.d/docker-postgresql-multiple-databases.sh
