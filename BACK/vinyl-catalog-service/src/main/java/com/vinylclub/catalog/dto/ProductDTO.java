@@ -28,14 +28,13 @@ public class ProductDTO {
     }
 
     public ProductDTO(Long id, String title, String description, BigDecimal price,
-            ArtistDTO artist, CategoryDTO category, String format) {
+            ArtistDTO artist, CategoryDTO category) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
         this.artist = artist;
         this.category = category;
-        this.format = format;
     }
 
     // Getters and Setters
