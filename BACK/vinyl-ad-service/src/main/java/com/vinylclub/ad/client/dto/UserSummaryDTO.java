@@ -1,12 +1,12 @@
 package com.vinylclub.ad.client.dto;
 
-import java.sql.Timestamp;
-
 public class UserSummaryDTO {
 
     private Long id;
     private String firstName;
     private String lastName;
+
+    private AddressAdDTO address;
 
     public UserSummaryDTO() {
     }
@@ -15,8 +15,8 @@ public class UserSummaryDTO {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-
     }
+
     // Getters and Setters
 
     public Long getId() {
@@ -43,4 +43,12 @@ public class UserSummaryDTO {
         this.lastName = lastName;
     }
 
+
+    public AddressAdDTO getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressAdDTO address) {
+        this.address = address;
+    }
 }

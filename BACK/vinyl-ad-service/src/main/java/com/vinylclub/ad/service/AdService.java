@@ -1,5 +1,7 @@
 package com.vinylclub.ad.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,16 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.vinylclub.ad.entity.Ad;
-import com.vinylclub.ad.repository.AdRepository;
-import com.vinylclub.ad.dto.AdDTO;
-import com.vinylclub.ad.dto.AdDetailsDTO;
-import com.vinylclub.ad.dto.AdListDTO;
 import com.vinylclub.ad.client.ProductClient;
 import com.vinylclub.ad.client.UserClient;
 import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.dto.UserSummaryDTO;
-
+import com.vinylclub.ad.dto.AdDetailsDTO;
+import com.vinylclub.ad.dto.AdListDTO;
+import com.vinylclub.ad.entity.Ad;
+import com.vinylclub.ad.repository.AdRepository;
 
 @Service
 @Transactional
@@ -31,53 +31,56 @@ public class AdService {
     @Autowired
     private UserClient userClient;
 
-    //besoin de creer une methode pour tous les produits avec pagination
+    // Récupérer toutes les annonces avec pagination
     public Page<AdListDTO> getAllAds(int page, int size) {
-    Pageable pageable = PageRequest.of(page, size);
-    Page<Ad> adsPage = adRepository.findAllAds(pageable);
-    if (adsPage.isEmpty()) {
-        throw new RuntimeException("Aucune annonces disponible.");
-    }
-    return adsPage.map(ad -> {
-        ProductSummaryDTO product = productClient.getProductById(ad.getProductId());
-        UserSummaryDTO user = userClient.getUserById(ad.getUserId());
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Ad> adsPage = adRepository.findAllAds(pageable);
 
-        // Ici on extrait juste ce dont la home a besoin
-        String title = product.getTitle();
-        String artistName = product.getArtist().getName();
-        String categoryName = product.getCategory().getName();
-        BigDecimal price = product.getPrice();
-        String city = user.getAddress().getCity();
-        String country = user.getAddress().getCountry();
-
-        String imageUrl = null;
-        if (product.getImages() != null && !product.getImages().isEmpty()) {
-            imageUrl = "/api/images/" + product.getImages().get(0).getId();
+        if (adsPage.isEmpty()) {
+            throw new RuntimeException("Aucune annonce disponible.");
         }
-        
-        // On fabrique le DTO "card"
-        return new AdListDTO(
-            ad.getId(),
-            title,
-            artistName,
-            categoryName,
-            price,
-            city,
-            country,
-            imageUrl
-        );
-    });
-}
 
+        return adsPage.map(ad -> {
+            ProductSummaryDTO product = productClient.getProductById(ad.getProductId());
+            UserSummaryDTO user = userClient.getUserById(ad.getUserId());
 
-    //besoin de creer une methode pour un produit par son id
+           
+            String title = product.getTitle();
+            String artistName = (product.getArtist() != null) ? product.getArtist().getName() : null;
+            String categoryName = (product.getCategory() != null) ? product.getCategory().getName() : null;
+            BigDecimal price = product.getPrice();
+
+            String city = null;
+            if (user.getAddress() != null) {
+                city = user.getAddress().getCity();
+            }
+
+            String imageUrl = null;
+            if (product.getImages() != null && !product.getImages().isEmpty()) {
+                imageUrl = "/api/images/" + product.getImages().get(0).getId();
+            }
+
+            return new AdListDTO(
+                    ad.getId(),
+                    title,
+                    artistName,
+                    categoryName,
+                    price,
+                    city,
+                    imageUrl  
+            );
+        });
+    }
+
+    // Récupérer une annonce par son id (détails)
     public AdDetailsDTO getAdById(Long id) {
         Ad ad = adRepository.findAdById(id)
-            .orElseThrow(()  -> new RuntimeException("Annonce non trouvée."));
+                .orElseThrow(() -> new RuntimeException("Annonce non trouvée."));
+
         ProductSummaryDTO product = productClient.getProductById(ad.getProductId());
         UserSummaryDTO user = userClient.getUserById(ad.getUserId());
-        
-        AdDetailsDTO dto =  new AdDetailsDTO();
+
+        AdDetailsDTO dto = new AdDetailsDTO();
         dto.setId(ad.getId());
         dto.setUser(user);
         dto.setProduct(product);
