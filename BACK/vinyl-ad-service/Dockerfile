@@ -6,7 +6,7 @@ WORKDIR /app
 COPY target/vinyl-ad-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port on which the service runs
-EXPOSE 8086
+EXPOSE 8087
 
 # Order to start the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
