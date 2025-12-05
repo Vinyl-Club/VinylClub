@@ -1,11 +1,11 @@
-package com.vinylclub.catalog.dto;
+package com.vinylclub.ad.client.dto;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
-// import com.vinylclub.catalog.entity.ProductFormat;
 
-public class ProductDTO {
+public class ProductSummaryDTO {
+
     private Long id;
     private String title;
     private String description;
@@ -14,30 +14,44 @@ public class ProductDTO {
     private String state;
     private String format;
 
-    // Relationships included
-    private ArtistDTO artist;
-    private CategoryDTO category;
-    private AlbumDTO album;
+    // Relations
+    private ArtistAdDTO artist;
+    private CategoryAdDTO category;
+    private AlbumAdDTO album;
     private List<ImageSummaryDTO> images;
 
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
-    // Builders
-    public ProductDTO() {
+    public ProductSummaryDTO() {
     }
 
-    public ProductDTO(Long id, String title, String description, BigDecimal price,
-            ArtistDTO artist, CategoryDTO category) {
+    public ProductSummaryDTO(
+            Long id,
+            String title,
+            String description,
+            BigDecimal price,
+            ArtistAdDTO artist,
+            CategoryAdDTO category,
+            AlbumAdDTO album,
+            List<ImageSummaryDTO> images,
+            Timestamp createdAt,
+            String format
+    ) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.price = price;
         this.artist = artist;
         this.category = category;
+        this.album = album;
+        this.images = images;
+        this.createdAt = createdAt;
+        this.format = format;
     }
 
-    // Getters and Setters
+    // Getters / Setters
+
     public Long getId() {
         return id;
     }
@@ -86,27 +100,27 @@ public class ProductDTO {
         this.state = state;
     }
 
-    public ArtistDTO getArtist() {
+    public ArtistAdDTO getArtist() {
         return artist;
     }
 
-    public void setArtist(ArtistDTO artist) {
+    public void setArtist(ArtistAdDTO artist) {
         this.artist = artist;
     }
 
-    public CategoryDTO getCategory() {
+    public CategoryAdDTO getCategory() {
         return category;
     }
 
-    public void setCategory(CategoryDTO category) {
+    public void setCategory(CategoryAdDTO category) {
         this.category = category;
     }
 
-    public AlbumDTO getAlbum() {
+    public AlbumAdDTO getAlbum() {
         return album;
     }
 
-    public void setAlbum(AlbumDTO album) {
+    public void setAlbum(AlbumAdDTO album) {
         this.album = album;
     }
 

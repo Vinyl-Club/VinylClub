@@ -1,25 +1,22 @@
-package com.vinylclub.at.dto;
+package com.vinylclub.ad.client.dto;
 
-import java.sql.Timestamp;
-
-public class UserDTO {
+public class UserSummaryDTO {
 
     private Long id;
-    private String email;
     private String firstName;
     private String lastName;
-    private Timestamp updatedAt;
 
-    public UserDTO() {
+    private AddressAdDTO address;
+
+    public UserSummaryDTO() {
     }
 
-    public UserDTO(Long id, String email, String firstName, String lastName, Timestamp updatedAt) {
+    public UserSummaryDTO(Long id, String firstName, String lastName) {
         this.id = id;
-        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.updatedAt = updatedAt;
     }
+
     // Getters and Setters
 
     public Long getId() {
@@ -28,14 +25,6 @@ public class UserDTO {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstName() {
@@ -54,12 +43,12 @@ public class UserDTO {
         this.lastName = lastName;
     }
 
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
+
+    public AddressAdDTO getAddress() {
+        return address;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setAddress(AddressAdDTO address) {
+        this.address = address;
     }
-
 }

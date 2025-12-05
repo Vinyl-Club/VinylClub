@@ -1,4 +1,4 @@
-package com.vinylclub.at.entity;
+package com.vinylclub.ad.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,8 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ats", schema = "at")
-public class At {
+@Table(name = "ads", schema = "ad")
+public class Ad {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

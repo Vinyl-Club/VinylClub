@@ -15,6 +15,7 @@ psql -U postgres        # Sur Windows/macOS
 pour quitter
 \q
 
+
 ### Une fois connecté, créer le schémasql
 CREATE SCHEMA catalog
 CREATE SCHEMA user
@@ -28,8 +29,9 @@ GRANT ALL PRIVILEGES ON DATABASE vinyl_ecommerce TO vinyl_user
 ALTER USER vinyl_user WITH SUPERUSER
 
 Connectez-vous à la base de données
-sql\c catalogdb
-sql\c userdb
+sql\c catalogdb_dev
+sql\c userdb_dev
+sql\c addb_dev
 
 
 ## DOCKER
@@ -53,6 +55,10 @@ mvn clean package -DskipTests
 cd ..
 cd vinyl-favorites-service
 mvn clean package -DskipTests
+cd ..
+cd vinyl-ad-service
+mvn clean package -DskipTests
+cd ..
 
 Démarrez les conteneurs :
 
@@ -69,7 +75,7 @@ Consultez les journaux en cas de problème :
 
 docker-compose logs -f
 
-arrêter et nettoyer tous les services en cours : 
+arrêter et nettoyer tous les services en cours (ça peut tout supprimer): 
 
 docker-compose down -v
 docker system prune -a

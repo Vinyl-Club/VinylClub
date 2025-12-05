@@ -13,10 +13,10 @@
     </parent>
     
     <groupId>com.vinylclub</groupId>
-    <artifactId>vinyl-at-service</artifactId>
+    <artifactId>vinyl-ad-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>vinyl-at-service</name>
-    <description>At Service for Vinyl Shop</description>
+    <name>vinyl-ad-service</name>
+    <description>Ad Service for Vinyl Shop</description>
     
     <properties>
         <java.version>21</java.version>
@@ -70,12 +70,18 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Flyway for Database Migrations -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
         
         <!-- Activation Feign-->
-        <!-- <dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency> -->
+        </dependency>
 
         <!-- Test -->
         <dependency>
