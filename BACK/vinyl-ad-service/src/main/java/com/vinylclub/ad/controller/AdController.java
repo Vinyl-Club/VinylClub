@@ -34,4 +34,13 @@ public class AdController {
         AdDetailsDTO adDetails = adService.getAdById(id);
         return ResponseEntity.ok(adDetails);
     }
+
+    /*/
+    * 1 route post
+    * créer l'annonce
+    * appel a user client si ok
+    * appel product client
+    * appel a a ad service
+    * retour 200
+     */
 }

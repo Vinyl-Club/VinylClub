@@ -10,4 +10,8 @@ public interface ProductClient {
 
     @GetMapping("/api/products/{id}")
     ProductSummaryDTO getProductById(@PathVariable("id") Long id);
+
+    /*/
+    * post pour ajouter le produit
+     */
 }

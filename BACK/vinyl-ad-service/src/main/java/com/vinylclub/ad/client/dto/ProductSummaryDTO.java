@@ -35,8 +35,8 @@ public class ProductSummaryDTO {
             CategoryAdDTO category,
             AlbumAdDTO album,
             List<ImageSummaryDTO> images,
-            Timestamp createdAt,
-            String format
+            Timestamp createdAt
+            //String format
     ) {
         this.id = id;
         this.title = title;
@@ -47,7 +47,7 @@ public class ProductSummaryDTO {
         this.album = album;
         this.images = images;
         this.createdAt = createdAt;
-        this.format = format;
+        //this.format = format;
     }
 
     // Getters / Setters

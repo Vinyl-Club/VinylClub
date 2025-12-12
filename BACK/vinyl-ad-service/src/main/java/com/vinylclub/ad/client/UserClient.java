@@ -10,4 +10,7 @@ public interface UserClient {
 
     @GetMapping("/api/users/{id}")
     UserSummaryDTO getUserById(@PathVariable("id") Long id);
+
+    /*/ gestion d'erreur si user n'existe pas
+     */
 }
