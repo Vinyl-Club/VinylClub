@@ -31,7 +31,7 @@ public class AdService {
     @Autowired
     private UserClient userClient;
 
-    // Récupérer toutes les annonces avec pagination
+    // Retrieve all ads with pagination
     public Page<AdListDTO> getAllAds(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Ad> adsPage = adRepository.findAll(pageable);
@@ -72,7 +72,7 @@ public class AdService {
         });
     }
 
-    // Récupérer une annonce par son id (détails)
+    // Retrieve an ad by its id (details)
     public AdDetailsDTO getAdById(Long id) {
         Ad ad = adRepository.findAdById(id)
                 .orElseThrow(() -> new RuntimeException("Annonce non trouvée."));
@@ -87,4 +87,7 @@ public class AdService {
 
         return dto;
     }
+
+    //Création d'une annonce
+    public AdDetailsDTO 
 }

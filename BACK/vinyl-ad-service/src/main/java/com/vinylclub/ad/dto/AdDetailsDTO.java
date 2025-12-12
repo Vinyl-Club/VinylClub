@@ -5,9 +5,10 @@ import com.vinylclub.ad.client.dto.UserSummaryDTO;
 
 public class AdDetailsDTO {
 
-    private Long id; // id de l’annonce
-    private ProductSummaryDTO product; // vient de client.dto.ProductDTO
-    private UserSummaryDTO user; // vient de client.dto.UserSummaryDTO
+    private Long id; // ad id
+    private ProductSummaryDTO product; // comes from client.dto.ProductDTO
+    private UserSummaryDTO user; // comes from client.dto.UserSummaryDTO
+
 
     public AdDetailsDTO() {
     }
