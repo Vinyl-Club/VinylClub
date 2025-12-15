@@ -3,6 +3,8 @@ package com.vinylclub.ad.client.dto;
 import java.math.BigDecimal;
 
 public class CreateProductRequestDTO {
+
+    // DTO envoyer a catalog
     private String title;
     private String description;
     private BigDecimal price;
@@ -57,12 +59,11 @@ public class CreateProductRequestDTO {
         this.state = state;
     }
 
-       public String getFormat() {
+    public String getFormat() {
         return format;
     }
 
     public void setFormat(String format) {
         this.format = format;
     }
-
 }
