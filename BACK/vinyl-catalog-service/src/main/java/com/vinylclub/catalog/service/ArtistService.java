@@ -5,6 +5,7 @@ import com.vinylclub.catalog.dto.ProductDTO;
 import com.vinylclub.catalog.entity.Artist;
 import com.vinylclub.catalog.repository.ArtistRepository;
 import com.vinylclub.catalog.repository.ProductRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

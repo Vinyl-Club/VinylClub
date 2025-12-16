@@ -4,7 +4,7 @@ import com.vinylclub.ad.client.dto.CreateProductRequestDTO;
 
 public class CreateAdRequestDTO {
 
-    //DTO recu par la front
+    //DTO reçu par la front (CreateAdRequestDTO body envoyer du front)
     private Long userId; // TODO: revoyer un token JWT au lieu du userID
     private CreateProductRequestDTO product;
 
