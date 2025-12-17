@@ -26,7 +26,7 @@ import com.vinylclub.catalog.dto.ImageDTO;
 
 @RestController
 @RequestMapping("/api/images")
-// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 public class ImageController {
 
     @Autowired
@@ -85,22 +85,22 @@ public class ImageController {
      *Get Image -Recover an image by his ID
      *Get/API/Images/1
      */
-@GetMapping("/{imageId}")
-public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
-    try {
-        System.out.println("=== DEBUG: Récupération image ID: " + imageId + " ===");
+    @GetMapping("/{imageId}")
+    public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
+        try {
+            System.out.println("=== DEBUG: Récupération image ID: " + imageId + " ===");
         
-        Images image = imageService.getImageById(imageId);
+            Images image = imageService.getImageById(imageId);
         
-        if (image == null) {
-            System.out.println("DEBUG: Image null");
-            return ResponseEntity.notFound().build();
-        }
+            if (image == null) {
+                System.out.println("DEBUG: Image null");
+                return ResponseEntity.notFound().build();
+            }
         
-        byte[] imageBytes = image.getImage();
-        if (imageBytes == null) {
-            System.out.println("DEBUG: Image bytes null");
-            return ResponseEntity.notFound().build();
+            byte[] imageBytes = image.getImage();
+            if (imageBytes == null) {
+                System.out.println("DEBUG: Image bytes null");
+                return ResponseEntity.notFound().build();
         }
         
         System.out.println("DEBUG: Image trouvée, taille: " + imageBytes.length + " bytes");
@@ -126,8 +126,8 @@ public ResponseEntity<byte[]> getImage(@PathVariable Long imageId) {
      *Get/API/Images/Product/1
      */
     @GetMapping("/product/{productId}")
-public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long productId) {
- List<ImageDTO> images = imageService.getImageDTOsByProductId(productId);
+    public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long productId) {
+    List<ImageDTO> images = imageService.getImageDTOsByProductId(productId);
         return ResponseEntity.ok(images);
 }
 

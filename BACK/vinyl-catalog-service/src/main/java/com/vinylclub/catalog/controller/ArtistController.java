@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/artists")
-// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 public class ArtistController {
 
     @Autowired
