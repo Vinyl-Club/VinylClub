@@ -17,7 +17,7 @@ pour quitter
 
 
 ### Une fois connecté, créer le schémasql
-CREATE DATABASE catalogdb_dev
+CREATE DATABASE catalogdb_dev;
 sql\c catalogdb_dev
 CREATE SCHEMA catalog
 CREATE SCHEMA catalog

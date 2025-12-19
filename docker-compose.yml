@@ -47,6 +47,8 @@ services:
     container_name: vinyl-catalog-service
     ports:
       - "8081:8081"
+    env_file:
+      - .env
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/

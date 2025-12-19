@@ -17,6 +17,9 @@ import com.vinylclub.ad.dto.AdDetailsDTO;
 import com.vinylclub.ad.dto.AdListDTO;
 import com.vinylclub.ad.entity.Ad;
 import com.vinylclub.ad.repository.AdRepository;
+import com.vinylclub.ad.exception.ResourceNotFound
+
+import feign.FeignException;
 
 @Service
 @Transactional
@@ -31,6 +34,10 @@ public class AdService {
     @Autowired
     private UserClient userClient;
 
+    public AdService(UserClient userClient) {
+        this.userClient = userClient;
+    }
+
     // Retrieve all ads with pagination
     public Page<AdListDTO> getAllAds(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -44,7 +51,6 @@ public class AdService {
             ProductSummaryDTO product = productClient.getProductById(ad.getProductId());
             UserSummaryDTO user = userClient.getUserById(ad.getUserId());
 
-           
             String title = product.getTitle();
             String artistName = (product.getArtist() != null) ? product.getArtist().getName() : null;
             String categoryName = (product.getCategory() != null) ? product.getCategory().getName() : null;
@@ -67,7 +73,7 @@ public class AdService {
                     categoryName,
                     price,
                     city,
-                    imageUrl  
+                    imageUrl
             );
         });
     }
@@ -88,6 +94,27 @@ public class AdService {
         return dto;
     }
 
+    //vérifier que le user existe
+    public verifyUserExists(Long userId) {
+        try {
+            UserSummaryDTO user = userClient.getUserById(userId);
+
+            if(user == null || user.getId() == null){
+                throw new ExternalServiceException("Le service utilisateur renvoit une réponse invalide");
+            }
+        } catch (FeignException.NotFound e) {
+            throw new ResourceNotFound("L'utilisateur n'a pas été trouvé: " + userId);
+        } catch (FeignException e) {
+            throw new ExternalServiceException("Le service utilisateur est indisponible ou à échoué: " + e.getMessage(), e);
+        }
+    }
+
     //Création d'une annonce
-    public AdDetailsDTO 
+    public CreateAdRequestDTO createdAdd(CreateAdRequestDTO createAdRequestDTO) {
+        CreateProductRequestDTO createProductRequestDTO = new CreateAdRequestDTO();
+
+        createProductRequestDTO.setUserId(CreateAdRequestDTO.getUserId());
+            
+        
+    }
 }

@@ -40,7 +40,7 @@ public class AdController {
     * créer l'annonce
     * appel a user client si ok
     * appel product client
-    * appel a a ad service
+    * appel a ad service
     * retour 200
      */
 
