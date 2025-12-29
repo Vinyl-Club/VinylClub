@@ -1,6 +1,6 @@
 package com.vinylclub.ad.dto;
 
-import com.vinylclub.ad.client.dto.CreateProductRequestDTO;
+import com.vinylclub.ad.client.request.CreateProductRequestDTO;
 
 public class CreateAdRequestDTO {
 

@@ -9,15 +9,21 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import feign.RetryableException;
+
 import com.vinylclub.ad.client.ProductClient;
 import com.vinylclub.ad.client.UserClient;
+import com.vinylclub.ad.dto.CreateAdRequestDTO;
+import com.vinylclub.ad.dto.AdDTO;
+import com.vinylclub.ad.client.dto.ProductCreatedDTO;
 import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.dto.UserSummaryDTO;
 import com.vinylclub.ad.dto.AdDetailsDTO;
 import com.vinylclub.ad.dto.AdListDTO;
 import com.vinylclub.ad.entity.Ad;
 import com.vinylclub.ad.repository.AdRepository;
-import com.vinylclub.ad.exception.ResourceNotFound
+import com.vinylclub.ad.exception.ResourceNotFoundException;
+import com.vinylclub.ad.exception.ExternalServiceException;
 
 import feign.FeignException;
 
@@ -34,8 +40,9 @@ public class AdService {
     @Autowired
     private UserClient userClient;
 
-    public AdService(UserClient userClient) {
+    public AdService(UserClient userClient, ProductClient productClient) {
         this.userClient = userClient;
+        this.productClient = productClient;
     }
 
     // Retrieve all ads with pagination
@@ -95,7 +102,7 @@ public class AdService {
     }
 
     //vérifier que le user existe
-    public verifyUserExists(Long userId) {
+    public void verifyUserExists(Long userId) {
         try {
             UserSummaryDTO user = userClient.getUserById(userId);
 
@@ -103,18 +110,47 @@ public class AdService {
                 throw new ExternalServiceException("Le service utilisateur renvoit une réponse invalide");
             }
         } catch (FeignException.NotFound e) {
-            throw new ResourceNotFound("L'utilisateur n'a pas été trouvé: " + userId);
+            throw new ResourceNotFoundException("L'utilisateur n'a pas été trouvé: " + userId);
         } catch (FeignException e) {
             throw new ExternalServiceException("Le service utilisateur est indisponible ou à échoué: " + e.getMessage(), e);
         }
     }
 
     //Création d'une annonce
-    public CreateAdRequestDTO createdAdd(CreateAdRequestDTO createAdRequestDTO) {
-        CreateProductRequestDTO createProductRequestDTO = new CreateAdRequestDTO();
+        public AdDTO createdAdd(CreateAdRequestDTO request) {
+        if (request == null) throw new IllegalArgumentException("Il manque le body");
+        if (request.getUserId() == null) throw new IllegalArgumentException("Il manque l'id utilisateur");
+        if (request.getProduct() == null) throw new IllegalArgumentException("Il manque le produit");
 
-        createProductRequestDTO.setUserId(CreateAdRequestDTO.getUserId());
-            
-        
+        // 1) vérifier user
+        verifyUserExists(request.getUserId());
+
+        // 2) créer produit (catalog)
+        ProductCreatedDTO created;
+        try {
+            created = productClient.createProduct(request.getProduct());
+
+        } catch (RetryableException e) {
+            throw new ExternalServiceException("Service Catalog introuvable (timeout/réseau)", e);
+
+        } catch (FeignException e) {
+            throw new ExternalServiceException("Erreur du service Catalog (status " + e.status() + ")", e);
+        }
+
+        if (created == null || created.getId() == null) {
+            throw new ExternalServiceException("Le service Catalog retourne un productId null");
+        }
+
+        Long productId = created.getId();
+
+        // 3) sauvegarder ad (table ads: id, userId, productId)
+        Ad ad = new Ad();
+        ad.setUserId(request.getUserId());
+        ad.setProductId(productId); // ✅ important
+
+        Ad saved = adRepository.save(ad);
+
+        // 4) réponse (on réutilise ton AdDTO)
+        return new AdDTO(saved.getId(), productId, request.getUserId());
     }
 }

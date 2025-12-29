@@ -8,10 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.vinylclub.ad.dto.AdDetailsDTO;
 import com.vinylclub.ad.dto.AdListDTO;
+import com.vinylclub.ad.dto.AdDTO;
+import com.vinylclub.ad.dto.CreateAdRequestDTO;
+import com.vinylclub.ad.client.request.CreateProductRequestDTO;
+import com.vinylclub.ad.client.dto.ProductCreatedDTO;
 import com.vinylclub.ad.service.AdService;
+
 
 @RestController
 @RequestMapping("/api/ad")
@@ -34,6 +41,13 @@ public class AdController {
         AdDetailsDTO adDetails = adService.getAdById(id);
         return ResponseEntity.ok(adDetails);
     }
+
+    @PostMapping
+    public ResponseEntity<AdDTO> createdAdd(@RequestBody CreateAdRequestDTO request) {
+        AdDTO createdAdd = adService.createdAdd(request);
+        return ResponseEntity.ok(createdAdd);
+    }
+    
 
     /*/
     * 1 route post

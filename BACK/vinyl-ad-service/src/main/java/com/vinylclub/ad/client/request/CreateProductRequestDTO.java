@@ -1,6 +1,7 @@
-package com.vinylclub.ad.client.dto;
+package com.vinylclub.ad.client.request;
 
 import java.math.BigDecimal;
+import com.vinylclub.ad.client.request.IdDTO;
 
 public class CreateProductRequestDTO {
 
@@ -65,5 +66,29 @@ public class CreateProductRequestDTO {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public IdDTO getArtist() {
+        return artist;
+    }
+
+    public void setArtist(IdDTO artist) {
+        this.artist = artist;
+    }
+
+    public IdDTO getCategory() {
+        return category;
+    }
+
+    public void setCategory(IdDTO category) {
+        this.category = category;
+    }
+
+    public IdDTO getAlbum() {
+        return album;
+    }
+
+    public void setAlbum(IdDTO album) {
+        this.album = album;
     }
 }

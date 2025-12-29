@@ -1,4 +1,4 @@
-package com.vinylclub.ad.client.dto;
+package com.vinylclub.ad.client.request;
 
 public class IdDTO {
     // DTO générique pour les catégories, l'album, les artistes
