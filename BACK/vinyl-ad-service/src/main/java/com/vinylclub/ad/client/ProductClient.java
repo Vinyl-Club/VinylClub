@@ -10,14 +10,20 @@ import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.request.CreateProductRequestDTO;
 import com.vinylclub.ad.client.dto.ProductCreatedDTO;
 
+import org.springframework.web.bind.annotation.PutMapping;
+
 @FeignClient(name = "vinyl-catalog-service")
 public interface ProductClient {
 
-    //Product creation
+    // Product creation
     @PostMapping("/api/products")
     ProductCreatedDTO createProduct(@RequestBody CreateProductRequestDTO dto);
 
-    //Collect the products
+    // Collect the products
     @GetMapping("/api/products/{id}")
     ProductSummaryDTO getProductById(@PathVariable("id") Long id);
+
+    // Product update (update the product linked to the ad)
+    @PutMapping("/api/products/{id}")
+    ProductSummaryDTO updateProduct(@PathVariable("id") Long id, @RequestBody CreateProductRequestDTO dto);
 }

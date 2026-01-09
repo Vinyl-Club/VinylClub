@@ -20,10 +20,13 @@ import com.vinylclub.ad.dto.AdDTO;
 import com.vinylclub.ad.dto.AdDetailsDTO;
 import com.vinylclub.ad.dto.AdListDTO;
 import com.vinylclub.ad.dto.CreateAdRequestDTO;
+import com.vinylclub.ad.client.request.CreateProductRequestDTO;
+
 import com.vinylclub.ad.entity.Ad;
 import com.vinylclub.ad.exception.ExternalServiceException;
 import com.vinylclub.ad.exception.ResourceNotFoundException;
 import com.vinylclub.ad.repository.AdRepository;
+
 
 import feign.FeignException;
 import feign.RetryableException;
@@ -82,23 +85,22 @@ public class AdService {
 
             // Home = tolérant : si un microservice est indisponible, on dégrade la card
             ProductSummaryDTO product = callExternalOrNull(
-                    () -> productClient.getProductById(ad.getProductId())
-            );
+                    () -> productClient.getProductById(ad.getProductId()));
 
-            // Ici on n'utilise pas vraiment "user" pour la home, mais on garde la logique si besoin plus tard
+            // Ici on n'utilise pas vraiment "user" pour la home, mais on garde la logique
+            // si besoin plus tard
             UserSummaryDTO user = callExternalOrNull(
-                    () -> userClient.getUserById(ad.getUserId())
-            );
+                    () -> userClient.getUserById(ad.getUserId()));
 
             String title = (product != null) ? product.getTitle() : "[Produit indisponible]";
             String artistName = (product != null && product.getArtist() != null) ? product.getArtist().getName() : null;
-            String categoryName = (product != null && product.getCategory() != null) ? product.getCategory().getName() : null;
+            String categoryName = (product != null && product.getCategory() != null) ? product.getCategory().getName()
+                    : null;
             BigDecimal price = (product != null) ? product.getPrice() : null;
 
             String city = null;
             List<AddressAdDTO> addresses = callExternalOrNull(
-                    () -> userClient.getAddressesByUserId(ad.getUserId())
-            );
+                    () -> userClient.getAddressesByUserId(ad.getUserId()));
             if (addresses != null && !addresses.isEmpty()) {
                 city = addresses.get(0).getCity();
             }
@@ -115,8 +117,7 @@ public class AdService {
                     categoryName,
                     price,
                     city,
-                    imageUrl
-            );
+                    imageUrl);
         });
     }
 
@@ -132,10 +133,10 @@ public class AdService {
         UserSummaryDTO user = callExternal("user-service",
                 () -> userClient.getUserById(ad.getUserId()));
 
-        // Adresse = tolérant : si ça échoue, la ville reste null mais la page détails peut s'afficher
+        // Adresse = tolérant : si ça échoue, la ville reste null mais la page détails
+        // peut s'afficher
         List<AddressAdDTO> addresses = callExternalOrNull(
-                () -> userClient.getAddressesByUserId(ad.getUserId())
-        );
+                () -> userClient.getAddressesByUserId(ad.getUserId()));
         if (addresses != null && !addresses.isEmpty()) {
             // on met la première adresse dans user.address
             user.setAddress(addresses.get(0));
@@ -149,7 +150,7 @@ public class AdService {
         return dto;
     }
 
-    //check that the user exists
+    // check that the user exists
     public void verifyUserExists(Long userId) {
         UserSummaryDTO user = callExternal("user-service",
                 () -> userClient.getUserById(userId));
@@ -159,11 +160,14 @@ public class AdService {
         }
     }
 
-    //Creating an ad
+    // Creating an ad
     public AdDTO createdAdd(CreateAdRequestDTO request) {
-        if (request == null) throw new IllegalArgumentException("Il manque le body");
-        if (request.getUserId() == null) throw new IllegalArgumentException("Il manque l'id utilisateur");
-        if (request.getProduct() == null) throw new IllegalArgumentException("Il manque le produit");
+        if (request == null)
+            throw new IllegalArgumentException("Il manque le body");
+        if (request.getUserId() == null)
+            throw new IllegalArgumentException("Il manque l'id utilisateur");
+        if (request.getProduct() == null)
+            throw new IllegalArgumentException("Il manque le produit");
 
         // 1) check user
         verifyUserExists(request.getUserId());
@@ -187,5 +191,41 @@ public class AdService {
 
         // 4) answer (we reuse your AdDTO)
         return new AdDTO(saved.getId(), productId, request.getUserId());
+    }
+
+    // Update the product of an ad
+    public AdDetailsDTO updateAdProduct(Long adId, CreateProductRequestDTO productUpdate) {
+
+        if (adId == null)
+            throw new IllegalArgumentException("Il manque l'id de l'annonce");
+        if (productUpdate == null)
+            throw new IllegalArgumentException("Il manque le produit");
+
+        // 1) récupérer l'annonce
+        Ad ad = adRepository.findAdById(adId)
+                .orElseThrow(() -> new ResourceNotFoundException("Annonce non trouvée: " + adId));
+
+        // 2) update produit dans catalog avec productId
+        ProductSummaryDTO updatedProduct = callExternal("catalog-service",
+                () -> productClient.updateProduct(ad.getProductId(), productUpdate));
+
+        // 3) récupérer user (détails)
+        UserSummaryDTO user = callExternal("user-service",
+                () -> userClient.getUserById(ad.getUserId()));
+
+        // 4) récupérer l'adresse (tolérant)
+        List<AddressAdDTO> addresses = callExternalOrNull(
+                () -> userClient.getAddressesByUserId(ad.getUserId()));
+        if (addresses != null && !addresses.isEmpty()) {
+            user.setAddress(addresses.get(0));
+        }
+
+        // 5) réponse détails
+        AdDetailsDTO dto = new AdDetailsDTO();
+        dto.setId(ad.getId());
+        dto.setUser(user);
+        dto.setProduct(updatedProduct);
+
+        return dto;
     }
 }
