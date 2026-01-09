@@ -1,4 +1,3 @@
-
 package com.vinylclub.catalog.controller;
 
 import java.util.List;

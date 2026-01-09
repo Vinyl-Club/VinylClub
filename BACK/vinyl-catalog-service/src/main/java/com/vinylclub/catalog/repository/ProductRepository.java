@@ -30,9 +30,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId")
     Page<Product> findByCategoryId(@Param("categoryId") Long categoryId, Pageable pageable);
 
-    // Filtrage par artiste
+    // Filtering by artistS
     @Query("SELECT p FROM Product p WHERE p.artist.id = :artistId")
     Page<Product> findByArtistId(@Param("artistId") Long artistId, Pageable pageable);
+
+    // Filtering by albums
+    @Query("SELECT p FROM Product p WHERE p.album.id = :albumId")
+    Page<Product> findByAlbumId(@Param("albumId") Long albumId, Pageable pageable);
 
     // Products available only
     Page<Product> findByStatus(ProductStatus status, Pageable pageable);

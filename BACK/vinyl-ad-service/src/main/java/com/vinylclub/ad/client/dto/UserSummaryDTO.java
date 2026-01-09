@@ -5,16 +5,16 @@ public class UserSummaryDTO {
     private Long id;
     private String firstName;
     private String lastName;
-
     private AddressAdDTO address;
 
     public UserSummaryDTO() {
     }
 
-    public UserSummaryDTO(Long id, String firstName, String lastName) {
+    public UserSummaryDTO(Long id, String firstName, String lastName, AddressAdDTO address) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.address = address;
     }
 
     // Getters and Setters

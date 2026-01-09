@@ -2,16 +2,16 @@ package com.vinylclub.ad.dto;
 
 public class AdDTO {
     private Long id;
-    private Long productid;
-    private Long userid;
+    private Long productId;
+    private Long userId;
 
     public AdDTO() {
     }
 
-    public AdDTO(Long id, Long productid, Long userid) {
+    public AdDTO(Long id, Long productId, Long userId) {
         this.id = id;
-        this.productid = productid;
-        this.userid = userid;
+        this.productId = productId;
+        this.userId = userId;
     }
 
     // Getters and Setters
@@ -24,19 +24,18 @@ public class AdDTO {
     }
 
     public Long getProductId() {
-        return productid;
+        return productId;
     }
 
-    public void setProductId(Long productid) {
-        this.productid = productid;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public Long getUserId() {
-        return userid;
+        return userId;
     }
 
-    public void setUserId(Long userid) {
-        this.userid = userid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
-
 }

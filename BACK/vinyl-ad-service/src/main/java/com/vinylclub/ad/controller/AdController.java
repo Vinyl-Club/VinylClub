@@ -8,13 +8,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.vinylclub.ad.dto.AdDetailsDTO;
 import com.vinylclub.ad.dto.AdListDTO;
+import com.vinylclub.ad.dto.AdDTO;
+import com.vinylclub.ad.dto.CreateAdRequestDTO;
+import com.vinylclub.ad.client.request.CreateProductRequestDTO;
+import com.vinylclub.ad.client.dto.ProductCreatedDTO;
 import com.vinylclub.ad.service.AdService;
+
 
 @RestController
 @RequestMapping("/api/ad")
+// @CrossOrigin(origins = "*")
 public class AdController {
 
     @Autowired
@@ -35,12 +44,19 @@ public class AdController {
         return ResponseEntity.ok(adDetails);
     }
 
+    @PostMapping
+    public ResponseEntity<AdDTO> createdAdd(@RequestBody CreateAdRequestDTO request) {
+        AdDTO createdAdd = adService.createdAdd(request);
+        return ResponseEntity.ok(createdAdd);
+    }
+    
+
     /*/
     * 1 route post
     * créer l'annonce
     * appel a user client si ok
     * appel product client
-    * appel a a ad service
+    * appel a ad service
     * retour 200
      */
 

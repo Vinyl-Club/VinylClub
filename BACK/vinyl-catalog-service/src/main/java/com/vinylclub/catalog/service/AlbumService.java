@@ -6,10 +6,13 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.vinylclub.catalog.dto.AlbumDTO;
 import com.vinylclub.catalog.entity.Album;
 import com.vinylclub.catalog.repository.AlbumRepository;
+import com.vinylclub.catalog.repository.ProductRepository;
 
 @Service
 @Transactional
@@ -17,6 +20,12 @@ public class AlbumService {
 
     @Autowired
     private AlbumRepository albumRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private ProductService productService;
 
     /**
      *Recover all albums
@@ -35,6 +44,16 @@ public class AlbumService {
         Album album = albumRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Album not found with id: " + id));
         return convertToDTO(album);
+    }
+
+    /**
+     *Search albums by name
+     */
+    public List<AlbumDTO> searchAlbums(String query) {
+        List<Album> albums = albumRepository.searchByName(query);
+        return albums.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     /**

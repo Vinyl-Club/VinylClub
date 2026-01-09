@@ -16,12 +16,12 @@ public class AdListDTO {
     public AdListDTO() {}
 
     public AdListDTO(Long id,
-                     String title,
-                     String artistName,
-                     String categoryName,
-                     BigDecimal price,
-                     String city,
-                     String imageUrl) {
+                    String title,
+                    String artistName,
+                    String categoryName,
+                    BigDecimal price,
+                    String city,
+                    String imageUrl) {
 
         this.id = id;
         this.title = title;

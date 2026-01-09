@@ -3,9 +3,14 @@ package com.vinylclub.ad.client;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.vinylclub.ad.client.dto.ProductSummaryDTO;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "catalog-service")
+import com.vinylclub.ad.client.dto.ProductSummaryDTO;
+import com.vinylclub.ad.client.request.CreateProductRequestDTO;
+import com.vinylclub.ad.client.dto.ProductCreatedDTO;
+
+@FeignClient(name = "vinyl-catalog-service")
 public interface ProductClient {
 
     //Product creation
