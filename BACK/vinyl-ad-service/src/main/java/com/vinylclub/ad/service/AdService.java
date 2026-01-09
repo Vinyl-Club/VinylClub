@@ -2,52 +2,70 @@ package com.vinylclub.ad.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Supplier;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import feign.RetryableException;
-
 import com.vinylclub.ad.client.ProductClient;
 import com.vinylclub.ad.client.UserClient;
-import com.vinylclub.ad.dto.CreateAdRequestDTO;
-import com.vinylclub.ad.dto.AdDTO;
+import com.vinylclub.ad.client.dto.AddressAdDTO;
 import com.vinylclub.ad.client.dto.ProductCreatedDTO;
 import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.dto.UserSummaryDTO;
-import com.vinylclub.ad.client.dto.AddressAdDTO;
+import com.vinylclub.ad.dto.AdDTO;
 import com.vinylclub.ad.dto.AdDetailsDTO;
 import com.vinylclub.ad.dto.AdListDTO;
+import com.vinylclub.ad.dto.CreateAdRequestDTO;
 import com.vinylclub.ad.entity.Ad;
-import com.vinylclub.ad.repository.AdRepository;
-import com.vinylclub.ad.exception.ResourceNotFoundException;
 import com.vinylclub.ad.exception.ExternalServiceException;
+import com.vinylclub.ad.exception.ResourceNotFoundException;
+import com.vinylclub.ad.repository.AdRepository;
 
 import feign.FeignException;
+import feign.RetryableException;
 
 @Service
 @Transactional
 public class AdService {
 
-    @Autowired
-    private AdRepository adRepository;
+    private final AdRepository adRepository;
+    private final ProductClient productClient;
+    private final UserClient userClient;
 
-    @Autowired
-    private ProductClient productClient;
-
-    @Autowired
-    private UserClient userClient;
-
-    // @Autowired
-    // private AddressClient addressClient;
-
-    public AdService(UserClient userClient, ProductClient productClient) {
+    // Constructeur (sans Lombok) : injection propre et testable
+    public AdService(AdRepository adRepository, UserClient userClient, ProductClient productClient) {
+        this.adRepository = adRepository;
         this.userClient = userClient;
         this.productClient = productClient;
+    }
+
+    // --- Helpers simples pour centraliser la gestion d'erreurs Feign ---
+
+    private <T> T callExternal(String serviceName, Supplier<T> call) {
+        try {
+            return call.get();
+
+        } catch (FeignException.NotFound e) {
+            throw new ResourceNotFoundException(serviceName + " : ressource introuvable");
+
+        } catch (RetryableException e) {
+            throw new ExternalServiceException(serviceName + " indisponible (timeout/réseau)", e);
+
+        } catch (FeignException e) {
+            throw new ExternalServiceException(serviceName + " erreur (status " + e.status() + ")", e);
+        }
+    }
+
+    private <T> T callExternalOrNull(Supplier<T> call) {
+        try {
+            return call.get();
+        } catch (Exception e) {
+            return null; // mode tolérant
+        }
     }
 
     // Retrieve all ads with pagination
@@ -55,27 +73,38 @@ public class AdService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Ad> adsPage = adRepository.findAll(pageable);
 
+        // Une liste vide n'est pas une erreur -> on renvoie une page vide
         if (adsPage.isEmpty()) {
-            throw new RuntimeException("Aucune annonce disponible.");
+            return Page.empty(pageable);
         }
 
         return adsPage.map(ad -> {
-            ProductSummaryDTO product = productClient.getProductById(ad.getProductId());
-            UserSummaryDTO user = userClient.getUserById(ad.getUserId());
 
-            String title = product.getTitle();
-            String artistName = (product.getArtist() != null) ? product.getArtist().getName() : null;
-            String categoryName = (product.getCategory() != null) ? product.getCategory().getName() : null;
-            BigDecimal price = product.getPrice();
+            // Home = tolérant : si un microservice est indisponible, on dégrade la card
+            ProductSummaryDTO product = callExternalOrNull(
+                    () -> productClient.getProductById(ad.getProductId())
+            );
+
+            // Ici on n'utilise pas vraiment "user" pour la home, mais on garde la logique si besoin plus tard
+            UserSummaryDTO user = callExternalOrNull(
+                    () -> userClient.getUserById(ad.getUserId())
+            );
+
+            String title = (product != null) ? product.getTitle() : "[Produit indisponible]";
+            String artistName = (product != null && product.getArtist() != null) ? product.getArtist().getName() : null;
+            String categoryName = (product != null && product.getCategory() != null) ? product.getCategory().getName() : null;
+            BigDecimal price = (product != null) ? product.getPrice() : null;
 
             String city = null;
-            var addresses = userClient.getAddressesByUserId(ad.getUserId());
+            List<AddressAdDTO> addresses = callExternalOrNull(
+                    () -> userClient.getAddressesByUserId(ad.getUserId())
+            );
             if (addresses != null && !addresses.isEmpty()) {
-                city = addresses.get(0).getCity(); // première adresse (ou "principale" si tu ajoutes une notion)
+                city = addresses.get(0).getCity();
             }
 
             String imageUrl = null;
-            if (product.getImages() != null && !product.getImages().isEmpty()) {
+            if (product != null && product.getImages() != null && !product.getImages().isEmpty()) {
                 imageUrl = "/api/images/" + product.getImages().get(0).getId();
             }
 
@@ -94,12 +123,19 @@ public class AdService {
     // Retrieve an ad by its id (details)
     public AdDetailsDTO getAdById(Long id) {
         Ad ad = adRepository.findAdById(id)
-                .orElseThrow(() -> new RuntimeException("Annonce non trouvée."));
+                .orElseThrow(() -> new ResourceNotFoundException("Annonce non trouvée: " + id));
 
-        ProductSummaryDTO product = productClient.getProductById(ad.getProductId());
-        UserSummaryDTO user = userClient.getUserById(ad.getUserId());
+        // Détails = strict : si user/catalog sont indisponibles -> 503
+        ProductSummaryDTO product = callExternal("catalog-service",
+                () -> productClient.getProductById(ad.getProductId()));
 
-        List<AddressAdDTO> addresses = userClient.getAddressesByUserId(ad.getUserId());
+        UserSummaryDTO user = callExternal("user-service",
+                () -> userClient.getUserById(ad.getUserId()));
+
+        // Adresse = tolérant : si ça échoue, la ville reste null mais la page détails peut s'afficher
+        List<AddressAdDTO> addresses = callExternalOrNull(
+                () -> userClient.getAddressesByUserId(ad.getUserId())
+        );
         if (addresses != null && !addresses.isEmpty()) {
             // on met la première adresse dans user.address
             user.setAddress(addresses.get(0));
@@ -113,41 +149,28 @@ public class AdService {
         return dto;
     }
 
-    //vérifier que le user existe
+    //check that the user exists
     public void verifyUserExists(Long userId) {
-        try {
-            UserSummaryDTO user = userClient.getUserById(userId);
+        UserSummaryDTO user = callExternal("user-service",
+                () -> userClient.getUserById(userId));
 
-            if(user == null || user.getId() == null){
-                throw new ExternalServiceException("Le service utilisateur renvoit une réponse invalide");
-            }
-        } catch (FeignException.NotFound e) {
-            throw new ResourceNotFoundException("L'utilisateur n'a pas été trouvé: " + userId);
-        } catch (FeignException e) {
-            throw new ExternalServiceException("Le service utilisateur est indisponible ou à échoué: " + e.getMessage(), e);
+        if (user == null || user.getId() == null) {
+            throw new ExternalServiceException("Le service utilisateur renvoit une réponse invalide");
         }
     }
 
-    //Création d'une annonce
-        public AdDTO createdAdd(CreateAdRequestDTO request) {
+    //Creating an ad
+    public AdDTO createdAdd(CreateAdRequestDTO request) {
         if (request == null) throw new IllegalArgumentException("Il manque le body");
         if (request.getUserId() == null) throw new IllegalArgumentException("Il manque l'id utilisateur");
         if (request.getProduct() == null) throw new IllegalArgumentException("Il manque le produit");
 
-        // 1) vérifier user
+        // 1) check user
         verifyUserExists(request.getUserId());
 
-        // 2) créer produit (catalog)
-        ProductCreatedDTO created;
-        try {
-            created = productClient.createProduct(request.getProduct());
-
-        } catch (RetryableException e) {
-            throw new ExternalServiceException("Service Catalog introuvable (timeout/réseau)", e);
-
-        } catch (FeignException e) {
-            throw new ExternalServiceException("Erreur du service Catalog (status " + e.status() + ")", e);
-        }
+        // 2) create product (catalog)
+        ProductCreatedDTO created = callExternal("catalog-service",
+                () -> productClient.createProduct(request.getProduct()));
 
         if (created == null || created.getId() == null) {
             throw new ExternalServiceException("Le service Catalog retourne un productId null");
@@ -158,11 +181,11 @@ public class AdService {
         // 3) sauvegarder ad (table ads: id, userId, productId)
         Ad ad = new Ad();
         ad.setUserId(request.getUserId());
-        ad.setProductId(productId); // ✅ important
+        ad.setProductId(productId);
 
         Ad saved = adRepository.save(ad);
 
-        // 4) réponse (on réutilise ton AdDTO)
+        // 4) answer (we reuse your AdDTO)
         return new AdDTO(saved.getId(), productId, request.getUserId());
     }
 }
