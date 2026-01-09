@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/albums")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class AlbumController {
 
     @Autowired

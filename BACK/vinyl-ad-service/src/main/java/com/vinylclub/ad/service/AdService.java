@@ -1,6 +1,7 @@
 package com.vinylclub.ad.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import com.vinylclub.ad.dto.AdDTO;
 import com.vinylclub.ad.client.dto.ProductCreatedDTO;
 import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.dto.UserSummaryDTO;
+import com.vinylclub.ad.client.dto.AddressAdDTO;
 import com.vinylclub.ad.dto.AdDetailsDTO;
 import com.vinylclub.ad.dto.AdListDTO;
 import com.vinylclub.ad.entity.Ad;
@@ -39,6 +41,9 @@ public class AdService {
 
     @Autowired
     private UserClient userClient;
+
+    // @Autowired
+    // private AddressClient addressClient;
 
     public AdService(UserClient userClient, ProductClient productClient) {
         this.userClient = userClient;
@@ -64,8 +69,9 @@ public class AdService {
             BigDecimal price = product.getPrice();
 
             String city = null;
-            if (user.getAddress() != null) {
-                city = user.getAddress().getCity();
+            var addresses = userClient.getAddressesByUserId(ad.getUserId());
+            if (addresses != null && !addresses.isEmpty()) {
+                city = addresses.get(0).getCity(); // première adresse (ou "principale" si tu ajoutes une notion)
             }
 
             String imageUrl = null;
@@ -92,6 +98,12 @@ public class AdService {
 
         ProductSummaryDTO product = productClient.getProductById(ad.getProductId());
         UserSummaryDTO user = userClient.getUserById(ad.getUserId());
+
+        List<AddressAdDTO> addresses = userClient.getAddressesByUserId(ad.getUserId());
+        if (addresses != null && !addresses.isEmpty()) {
+            // on met la première adresse dans user.address
+            user.setAddress(addresses.get(0));
+        }
 
         AdDetailsDTO dto = new AdDetailsDTO();
         dto.setId(ad.getId());

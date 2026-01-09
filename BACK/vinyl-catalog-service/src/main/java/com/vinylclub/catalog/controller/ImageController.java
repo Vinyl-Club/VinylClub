@@ -26,7 +26,7 @@ import com.vinylclub.catalog.dto.ImageDTO;
 
 @RestController
 @RequestMapping("/api/images")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
 public class ImageController {
 
     @Autowired

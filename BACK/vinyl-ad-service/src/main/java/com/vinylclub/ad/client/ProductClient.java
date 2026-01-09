@@ -10,7 +10,7 @@ import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.request.CreateProductRequestDTO;
 import com.vinylclub.ad.client.dto.ProductCreatedDTO;
 
-@FeignClient(name = "catalog-service")
+@FeignClient(name = "vinyl-catalog-service")
 public interface ProductClient {
 
     //Product creation

@@ -38,5 +38,4 @@ public class AdDTO {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-
 }

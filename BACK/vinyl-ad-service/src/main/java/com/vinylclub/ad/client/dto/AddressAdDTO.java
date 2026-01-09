@@ -4,16 +4,15 @@ public class AddressAdDTO {
 
     private Long id;
     private String city;
-    private UserSummaryDTO user; // Add user field
+    // private UserSummaryDTO user; // Add user field
 
     // Constructors
 
     public AddressAdDTO() {}
 
-    public AddressAdDTO(Long id, String city, UserSummaryDTO user) {
+    public AddressAdDTO(Long id, String city) {
         this.id = id;
         this.city = city;
-        this.user = user;
     }
 
     // Getters and setters
@@ -31,13 +30,5 @@ public class AddressAdDTO {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public UserSummaryDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserSummaryDTO user) {
-        this.user = user;
     }
 }
