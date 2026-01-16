@@ -32,13 +32,13 @@ jobs:
           cache-dependency-path: FRONT-WEB/vinyl-club/package-lock.json
 
       - name: Install
-        working-directory: FRONT-WEB
+        working-directory: FRONT-WEB/vinyl-club
         run: npm ci
 
       - name: Test
-        working-directory: FRONT-WEB
+        working-directory: FRONT-WEB/vinyl-club
         run: npm test --if-present -- --ci
 
       - name: Build
-        working-directory: FRONT-WEB
+        working-directory: FRONT-WEB/vinyl-club
         run: npm run build --if-present
