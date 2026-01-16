@@ -13,6 +13,7 @@ pnpm dev
 # or
 bun dev
 
+npm install next@15.5.9
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

@@ -15,4 +15,4 @@ export interface Product {
     state: string;
     userId: number;
     images: ProductImage[];
-    }
+    } 
