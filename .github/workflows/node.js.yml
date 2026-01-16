@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-          cache-dependency-path: FRONT-WEB/package-lock.json
+          cache-dependency-path: FRONT-WEB/vinyl-club/package-lock.json
 
       - name: Install
         working-directory: FRONT-WEB
