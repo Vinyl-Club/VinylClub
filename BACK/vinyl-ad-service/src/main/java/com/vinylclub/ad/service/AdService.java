@@ -27,7 +27,6 @@ import com.vinylclub.ad.exception.ExternalServiceException;
 import com.vinylclub.ad.exception.ResourceNotFoundException;
 import com.vinylclub.ad.repository.AdRepository;
 
-
 import feign.FeignException;
 import feign.RetryableException;
 
@@ -228,4 +227,18 @@ public class AdService {
 
         return dto;
     }
+
+    // Delete an ad by its id
+    public void deleteAdById(Long id) {
+        if (id == null)
+            throw new IllegalArgumentException("Il manque l'id de l'annonce");
+
+        Ad ad = adRepository.findAdById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Annonce non trouvée: " + id));
+
+        callExternal("catalog-service", () -> productClient.deleteProduct(ad.getProductId()));
+
+        adRepository.delete(ad);
+    }
+
 }
