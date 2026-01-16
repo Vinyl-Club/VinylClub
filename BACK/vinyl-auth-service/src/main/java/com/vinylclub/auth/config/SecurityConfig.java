@@ -26,7 +26,7 @@ public class SecurityConfig {
         return new RestTemplate();
     }
 
-   @Bean
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         System.out.println("🔧 SECURITY CONFIG LOADED!"); // ← Log de debug
@@ -35,9 +35,11 @@ public class SecurityConfig {
         System.out.println("🌐 RestTemplate bean created: " + restTemplate().getClass().getSimpleName());
         System.out.println("🚀 Security filter chain configured successfully!");
 
-        // HTTP security configuration
+        // HTTP security configuration(pas de cookie de session, auth que en bearer, reponse JSON uniquement)
         http
             .csrf(csrf -> csrf.disable())
+            .httpBasic(b -> b.disable())
+            .formLogin(f -> f.disable())
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/auth/login", "/auth/register", "/auth/refresh", "/auth/validate", "/auth/logout", "/auth/me", "/auth/health").permitAll()
                 .anyRequest().authenticated()

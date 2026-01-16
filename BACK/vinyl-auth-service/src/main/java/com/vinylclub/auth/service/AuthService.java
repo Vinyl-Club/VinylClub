@@ -6,7 +6,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
@@ -23,12 +22,9 @@ public class AuthService {
     private JwtService jwtService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private RestTemplate restTemplate;
 
-    private final String userServiceBaseUrl = "http://VINYL-USER-SERVICE/api/users";
+    private final String userServiceBaseUrl = "http://vinyl-user-service/api/users";
 
     /**
      *User authentication
