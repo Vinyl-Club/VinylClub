@@ -56,8 +56,6 @@ public class AdController {
         return ResponseEntity.ok(createdAdd);
     }
 
-
-
     // Update the product of an ad
     @PutMapping("/{id}")
     public ResponseEntity<AdDetailsDTO> updateAd(
@@ -66,6 +64,12 @@ public class AdController {
 
         AdDetailsDTO updated = adService.updateAdProduct(id, productUpdate);
         return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAdById(@PathVariable Long id) {
+        adService.deleteAdById(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
