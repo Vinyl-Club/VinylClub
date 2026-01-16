@@ -2,9 +2,13 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: ["develop"]
   pull_request:
-    branches: [ "develop" ]
+    branches: ["develop"]
+
+concurrency:
+  group: maven-back-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-test:
@@ -17,8 +21,8 @@ jobs:
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          java-version: "21"
+          distribution: "temurin"
           cache: maven
 
       - name: List files in BACK
@@ -26,7 +30,7 @@ jobs:
 
       - name: Build & Test all services
         run: |
-          set -e
+          set -euo pipefail
 
           SERVICES=(
             vinyl-discovery-service
@@ -65,94 +69,3 @@ jobs:
           path: |
             BACK/**/target/surefire-reports/**
           if-no-files-found: ignore
-
-      # # --- Discovery service ---
-      # - name: Verify pom.xml in vinyl-discovery-service
-      #   run: |
-      #     if [ ! -f BACK/vinyl-discovery-service/pom.xml ]; then
-      #       echo "pom.xml not found in vinyl-discovery-service!"
-      #       exit 1
-      #     fi
-
-      # - name: Build vinyl-discovery-service
-      #   run: |
-      #     cd BACK/vinyl-discovery-service
-      #     mvn -B clean package --file pom.xml
-
-      # # --- Auth service ---
-      # - name: Verify pom.xml in vinyl-auth-service
-      #   run: |
-      #     if [ ! -f BACK/vinyl-auth-service/pom.xml ]; then
-      #       echo "pom.xml not found in vinyl-auth-service!"
-      #       exit 1
-      #     fi
-
-      # - name: Build vinyl-auth-service
-      #   run: |
-      #     cd BACK/vinyl-auth-service
-      #     mvn -B clean package --file pom.xml
-
-      # # --- User service ---
-      # - name: Verify pom.xml in vinyl-user-service
-      #   run: |
-      #     if [ ! -f BACK/vinyl-user-service/pom.xml ]; then
-      #       echo "pom.xml not found in vinyl-user-service!"
-      #       exit 1
-      #     fi
-
-      # - name: Build vinyl-user-service
-      #   run: |
-      #     cd BACK/vinyl-user-service
-      #     mvn -B clean package --file pom.xml
-
-      # # --- Catalog service ---
-      # - name: Verify pom.xml in vinyl-catalog-service
-      #   run: |
-      #     if [ ! -f BACK/vinyl-catalog-service/pom.xml ]; then
-      #       echo "pom.xml not found in vinyl-catalog-service!"
-      #       exit 1
-      #     fi
-
-      # - name: Build vinyl-catalog-service
-      #   run: |
-      #     cd BACK/vinyl-catalog-service
-      #     mvn -B clean package --file pom.xml
-
-      # # --- Favorites service ---
-      # - name: Verify pom.xml in vinyl-favorites-service
-      #   run: |
-      #     if [ ! -f BACK/vinyl-favorites-service/pom.xml ]; then
-      #       echo "pom.xml not found in vinyl-favorites-service!"
-      #       exit 1
-      #     fi
-
-      # - name: Build vinyl-favorites-service
-      #   run: |
-      #     cd BACK/vinyl-favorites-service
-      #     mvn -B clean package --file pom.xml
-
-      # # --- Gateway service ---
-      # - name: Verify pom.xml in vinyl-gateway-service
-      #   run: |
-      #     if [ ! -f BACK/vinyl-gateway-service/pom.xml ]; then
-      #       echo "pom.xml not found in vinyl-gateway-service!"
-      #       exit 1
-      #     fi
-
-      # - name: Build vinyl-gateway-service
-      #   run: |
-      #     cd BACK/vinyl-gateway-service
-      #     mvn -B clean package --file pom.xml
-
-      #   # --- Ad service ---
-      # - name: Verify pom.xml in vinyl-ad-service
-      #   run: |
-      #     if [ ! -f BACK/vinyl-ad-service/pom.xml ]; then
-      #       echo "pom.xml not found in vinyl-ad-service!"
-      #       exit 1
-      #     fi
-
-      # - name: Build vinyl-ad-service
-      #   run: |
-      #     cd BACK/vinyl-ad-service
-      #     mvn -B clean package --file pom.xml
