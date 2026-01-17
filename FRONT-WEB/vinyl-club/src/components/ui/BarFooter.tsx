@@ -28,7 +28,7 @@ export default function BarFooter() {
                 <h2>Vos questions</h2>
                 <ul>
                     <li><Link href="/faq">Questions / Réponses</Link></li>
-                    <li><Link href="/cgu">Conditions générales d'utilisation</Link></li>
+                    <li><Link href="/cgu">Conditions générales d&apos;utilisation</Link></li>
                     <li><Link href="/cgv">Conditions générales de vente</Link></li>
                 </ul>
             </nav>
