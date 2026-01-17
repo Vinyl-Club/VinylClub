@@ -1,3 +1,3 @@
 export default function PublicLayout() {
-  return null
+    return null
 }
