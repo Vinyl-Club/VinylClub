@@ -35,6 +35,10 @@ jobs:
         working-directory: FRONT-WEB/vinyl-club
         run: npm ci
 
+      - name: Create .env.local for CI
+        working-directory: FRONT-WEB/vinyl-club
+        run: echo "NEXT_PUBLIC_API_BASE=http://localhost:8080" > .env.local
+
       - name: Test
         working-directory: FRONT-WEB/vinyl-club
         run: npm test --if-present -- --ci
