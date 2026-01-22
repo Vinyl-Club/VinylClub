@@ -35,7 +35,7 @@ import java.math.BigDecimal;
 
 @ExtendWith(MockitoExtension.class)
 public class DeleteProductTest {
-    
+
     @Mock
     private ProductRepository productRepository;
     @Mock
@@ -63,8 +63,27 @@ public class DeleteProductTest {
         product.setState(ProductState.TRES_BON_ETAT);
         product.setFormat(ProductFormat.T33);
 
+        when(productRepository.findById(id)).thenReturn(Optional.of(product));
+
         productService.deleteProduct(id);
 
+        verify(productRepository, times(1)).findById(id);
         verify(productRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    public void deleteProduct_ShouldDeleteProduct_whenProductNotFound() {
+        Long id = 2L;
+
+        when(productRepository.findById(id)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            productService.deleteProduct(id);
+        });
+
+        assertEquals("Product not found with id: " + id, exception.getMessage());
+
+        verify(productRepository, times(1)).findById(id);
+        verify(productRepository, times(0)).deleteById(id);
     }
 }
