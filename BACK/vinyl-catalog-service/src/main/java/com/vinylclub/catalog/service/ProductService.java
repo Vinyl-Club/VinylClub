@@ -82,6 +82,12 @@ public class ProductService {
         return products.map(this::convertToDTO);
     }
 
+    // Filter by state
+    public Page<ProductDTO> getProductsByState(ProductState state, Pageable pageable) {
+        Page<Product> products = productRepository.findByState(state, pageable);
+        return products.map(this::convertToDTO);
+    }
+
     // Recent products (for home page)
     public List<ProductDTO> getRecentProducts(int limit) {
         Pageable pageable = PageRequest.of(0, limit);

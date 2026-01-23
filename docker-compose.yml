@@ -14,8 +14,8 @@ services:
   vinyl-auth-service:
     build: ./BACK/vinyl-auth-service
     container_name: vinyl-auth-service
-    ports:
-      - "8083:8083"
+    expose:
+      - "8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -30,8 +30,8 @@ services:
   vinyl-user-service:
     build: ./BACK/vinyl-user-service
     container_name: vinyl-user-service
-    ports:
-      - "8082:8082"
+    expose:
+      - "8082"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -45,8 +45,8 @@ services:
   vinyl-catalog-service:
     build: ./BACK/vinyl-catalog-service
     container_name: vinyl-catalog-service
-    ports:
-      - "8081:8081"
+    expose:
+      - "8081"
     # env_file:
     #   - .env
     environment:
@@ -64,8 +64,8 @@ services:
   vinyl-ad-service:
     build: ./BACK/vinyl-ad-service
     container_name: vinyl-ad-service
-    ports:
-      - "8087:8087"
+    expose:
+      - "8087"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
@@ -118,8 +118,8 @@ services:
       context: ./BACK/vinyl-favorites-service
       dockerfile: Dockerfile
     container_name: vinyl-favorites-service
-    ports:
-      - "8084:8084"
+    expose:
+      - "8084"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       # FORCER la désactivation par variables d'environnement

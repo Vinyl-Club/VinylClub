@@ -10,32 +10,32 @@ import org.springframework.context.annotation.Profile;
 @Profile("!docker")
 public class RouteConfig {
     // Constants
-    public static final String VINYL_SERVICE_URL = "lb://vinyl-service";
-    public static final String VINYL_SERVICE_ROUTE = "/vinyl/**";
-    public static final String VINYL_SERVICE_PATH = "/vinyl";
+        public static final String VINYL_SERVICE_URL = "lb://vinyl-service";
+        public static final String VINYL_SERVICE_ROUTE = "/vinyl/**";
+        public static final String VINYL_SERVICE_PATH = "/vinyl";
 
-    public static final String USER_SERVICE_URL = "lb://vinyl-user-service";
-    public static final String USER_SERVICE_ROUTE = "/api/users/**";
-    public static final String USER_SERVICE_PATH = "/api/users";
+        public static final String USER_SERVICE_URL = "lb://vinyl-user-service";
+        public static final String USER_SERVICE_ROUTE = "/api/users/**";
+        public static final String USER_SERVICE_PATH = "/api/users";
 
-    public static final String CATALOG_SERVICE_URL = "lb://vinyl-catalog-service";
-    public static final String CATALOG_SERVICE_ROUTE = "/api/catalog/**";
-    public static final String CATALOG_SERVICE_PATH = "/api/catalog";
+        public static final String CATALOG_SERVICE_URL = "lb://vinyl-catalog-service";
+        public static final String CATALOG_SERVICE_ROUTE = "/api/catalog/**";
+        public static final String CATALOG_SERVICE_PATH = "/api/catalog";
 
-    public static final String AUTH_SERVICE_URL = "lb://vinyl-auth-service";
-    public static final String AUTH_SERVICE_PATH = "/auth";
-    public static final String AUTH_SERVICE_ROUTE = "/auth/**";
+        public static final String AUTH_SERVICE_URL = "lb://vinyl-auth-service";
+        public static final String AUTH_SERVICE_PATH = "/auth";
+        public static final String AUTH_SERVICE_ROUTE = "/auth/**";
 
-    public static final String FAVORITES_PATH = "/api/favorites";
-    public static final String FAVORITES_ROUTE = "/api/favorites/**";
-    public static final String FAVORITES_SERVICE_URL = "lb://vinyl-favorites-service";
+        public static final String FAVORITES_PATH = "/api/favorites";
+        public static final String FAVORITES_ROUTE = "/api/favorites/**";
+        public static final String FAVORITES_SERVICE_URL = "lb://vinyl-favorites-service";
 
-    public static final String AD_SERVICE_URL = "lb://vinyl-ad-service";
-    public static final String AD_SERVICE_ROUTE = "/api/ads/**";
-    public static final String AD_SERVICE_PATH = "/api/ads";
+        public static final String AD_SERVICE_URL = "lb://vinyl-ad-service";
+        public static final String AD_SERVICE_ROUTE = "/api/ads/**";
+        public static final String AD_SERVICE_PATH = "/api/ads";
 
-    @Bean
-    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
+        @Bean
+        public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 .route("catalog-service", r -> r
                         .path(CATALOG_SERVICE_ROUTE)
@@ -57,5 +57,5 @@ public class RouteConfig {
                         .uri(AD_SERVICE_URL))
 
                 .build();
-    }
+        }
 }

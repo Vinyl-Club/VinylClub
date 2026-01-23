@@ -150,26 +150,26 @@ public class AdService {
     }
 
     // check that the user exists
-    public void verifyUserExists(Long userId) {
-        UserSummaryDTO user = callExternal("user-service",
-                () -> userClient.getUserById(userId));
+    // public void verifyUserExists(Long userId) {
+    //     UserSummaryDTO user = callExternal("user-service",
+    //             () -> userClient.getUserById(userId));
 
-        if (user == null || user.getId() == null) {
-            throw new ExternalServiceException("Le service utilisateur renvoit une réponse invalide");
-        }
-    }
+    //     if (user == null || user.getId() == null) {
+    //         throw new ExternalServiceException("Le service utilisateur renvoit une réponse invalide");
+    //     }
+    // }
 
     // Creating an ad
-    public AdDTO createdAdd(CreateAdRequestDTO request) {
+    public AdDTO createdAdd(Long userId, CreateAdRequestDTO request) {
         if (request == null)
             throw new IllegalArgumentException("Il manque le body");
-        if (request.getUserId() == null)
+        if (userId == null)
             throw new IllegalArgumentException("Il manque l'id utilisateur");
         if (request.getProduct() == null)
             throw new IllegalArgumentException("Il manque le produit");
 
         // 1) check user
-        verifyUserExists(request.getUserId());
+        // verifyUserExists(request.getUserId());
 
         // 2) create product (catalog)
         ProductCreatedDTO created = callExternal("catalog-service",
@@ -183,7 +183,7 @@ public class AdService {
 
         // 3) sauvegarder ad (table ads: id, userId, productId)
         Ad ad = new Ad();
-        ad.setUserId(request.getUserId());
+        ad.setUserId(userId);
         ad.setProductId(productId);
 
         Ad saved = adRepository.save(ad);

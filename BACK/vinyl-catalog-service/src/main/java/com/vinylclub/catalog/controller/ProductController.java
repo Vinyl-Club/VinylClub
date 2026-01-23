@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vinylclub.catalog.dto.ProductDTO;
 import com.vinylclub.catalog.service.ProductService;
 import com.vinylclub.catalog.entity.ProductFormat;
+import com.vinylclub.catalog.entity.ProductState;
+
 
 import jakarta.validation.Valid;
 
@@ -114,6 +116,17 @@ public class ProductController {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductDTO> products = productService.getProductsByFormat(format, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/state")
+    public ResponseEntity<Page<ProductDTO>> getProductsByState(
+            @RequestParam ProductState state,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getProductsByState(state, pageable);
         return ResponseEntity.ok(products);
     }
 

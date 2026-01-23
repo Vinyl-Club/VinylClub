@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.vinylclub.ad.dto.AdDetailsDTO;
@@ -51,9 +52,11 @@ public class AdController {
     }
 
     @PostMapping
-    public ResponseEntity<AdDTO> createdAdd(@RequestBody CreateAdRequestDTO request) {
-        AdDTO createdAdd = adService.createdAdd(request);
-        return ResponseEntity.ok(createdAdd);
+    public ResponseEntity<AdDTO> createdAdd(
+        @RequestHeader("X-User-Id") Long userId,
+        @RequestBody CreateAdRequestDTO request
+    ) {
+        return ResponseEntity.ok(adService.createAd(userId, dto));
     }
 
     // Update the product of an ad
