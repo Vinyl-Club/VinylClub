@@ -35,6 +35,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.data.domain.PageRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -91,5 +92,22 @@ public class UpdateProductTest {
 
         verify(productRepository).findById(1L);
         verify(productRepository).save(any(Product.class));
+    }
+
+    @Test
+    public void updatedProduct_shouldReturnRunTimeException_whereProductNotFound(){
+        Long id = 2L;
+
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setId(id);
+        productDTO.setTitle("Good Album");
+
+        when(productRepository.findById(id)).thenReturn(Optional.empty());
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            productService.updateProduct(id, productDTO);
+        });
+        assertEquals("Product not found with id: " + id, exception.getMessage());
+
+        verify(productRepository, times(1)).findById(id);
     }
 }

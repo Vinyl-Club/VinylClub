@@ -57,7 +57,6 @@ public class CreateProductTest {
     @InjectMocks
     private ProductService productService;
 
-     //testing create
     @Test
     public void createProduct_shouldReturnProductDTO_whenProductIsCreated() {
 

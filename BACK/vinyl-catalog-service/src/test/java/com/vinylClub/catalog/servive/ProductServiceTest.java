@@ -57,7 +57,7 @@ public class ProductServiceTest {
     @InjectMocks
     private ProductService productService;
 
-    //testing getAllProducts 
+    //testing getAllProducts
     @Test
     public void getAllProducts_shouldReturnPagedProductDTOs() {
         // Given
