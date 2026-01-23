@@ -44,4 +44,6 @@ public class AdDetailsDTO {
         this.user = user;
     }
 
+
+    
 }
