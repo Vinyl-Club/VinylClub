@@ -88,14 +88,14 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
             String token = authHeader.substring(7);
             
             if (!jwtService.validateAccessToken(token)) {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.status(401).build();
             }
             
             // Recover user information
             UserDTO user = authService.getUserFromToken(token);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(401).build();
         }
     }
 
