@@ -26,9 +26,9 @@ import com.vinylclub.ad.service.AdService;
 import jakarta.validation.Valid;
 
 /**
- *Ads REST controller.
- *-GET: public roads (list + details)
- *-POST/PUT/DELETE: protected routes (userId retrieved via the X-User-Id header injected by the gateway)
+ * Ads REST controller.
+ * -GET: public roads (list + details)
+ * -POST/PUT/DELETE: protected routes (userId retrieved via the X-User-Id header injected by the gateway)
  */
 @RestController
 @RequestMapping("/api/ad")
@@ -42,8 +42,8 @@ public class AdController {
     }
 
     /**
-     *Paginated list of announcements (home).
-     *GET /api/ad?page=0&size=12
+     * Paginated list of announcements (home).
+     * GET /api/ad?page=0&amp;size=12
      */
     @GetMapping
     public ResponseEntity<Page<AdListDTO>> getAds(
@@ -55,8 +55,8 @@ public class AdController {
     }
 
     /**
-     *Details of an announcement.
-     *GET /api/ad/{id}
+     * Details of an announcement.
+     * GET /api/ad/{id}
      */
     @GetMapping("/{id}")
     public ResponseEntity<AdDetailsDTO> getAdById(@PathVariable Long id) {
@@ -65,8 +65,8 @@ public class AdController {
     }
 
     /**
-     *Creation of an announcement (authenticated user).
-     *POST /api/ad
+     * Creation of an announcement (authenticated user).
+     * POST /api/ad
      */
     @PostMapping
     public ResponseEntity<AdDTO> createdAd(
@@ -77,8 +77,8 @@ public class AdController {
     }
 
     /**
-     *Updated product linked to an ad (authenticated user + owner).
-     *PUT /api/ad/{id}
+     * Updated product linked to an ad (authenticated user + owner).
+     * PUT /api/ad/{id}
      */
     @PutMapping("/{id}")
     public ResponseEntity<AdDetailsDTO> updateAd(
@@ -91,8 +91,8 @@ public class AdController {
     }
 
     /**
-     *Deletion of an ad (authenticated user + owner).
-     *DELETE /api/ad/{id}
+     * Deletion of an ad (authenticated user + owner).
+     * DELETE /api/ad/{id}
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAdById(

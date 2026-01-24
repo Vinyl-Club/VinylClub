@@ -1,7 +1,7 @@
 package com.vinylclub.ad.client.dto;
 
 /**
- *An artist's "summary" DTO (used in ProductSummaryDTO).
+ * An artist's "summary" DTO (used in ProductSummaryDTO).
  */
 public class ArtistAdDTO {
 

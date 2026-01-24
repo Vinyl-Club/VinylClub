@@ -1,8 +1,8 @@
 package com.vinylclub.ad.client.dto;
 
 /**
- *DTO retrieved from vinyl-user-service for address.
- *Here we only keep the information useful for display (eg: city).
+ * DTO retrieved from vinyl-user-service for address.
+ * Here we only keep the information useful for display (eg: city).
  */
 public class AddressAdDTO {
 

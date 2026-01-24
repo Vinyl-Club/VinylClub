@@ -1,8 +1,8 @@
 package com.vinylclub.ad.dto;
 
 /**
- *"Simple" DTO to confirm the creation of an ad.
- *Contains ad id and related ids (product + user).
+ * Simple" DTO to confirm the creation of an ad.
+ * Contains ad id and related ids (product + user).
  */
 public class AdDTO {
     private Long id;

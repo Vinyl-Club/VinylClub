@@ -5,8 +5,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- *DTO retrieved from vinyl-catalog-service (product information for display).
- *Used in the list and details of an announcement.
+ * DTO retrieved from vinyl-catalog-service (product information for display).
+ * Used in the list and details of an announcement.
  */
 public class ProductSummaryDTO {
 

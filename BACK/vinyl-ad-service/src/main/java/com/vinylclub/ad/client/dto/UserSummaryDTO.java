@@ -1,8 +1,8 @@
 package com.vinylclub.ad.client.dto;
 
 /**
- *DTO retrieved from vinyl-user-service (user info for display).
- *The address is optional (often added via a second call).
+ * DTO retrieved from vinyl-user-service (user info for display).
+ * The address is optional (often added via a second call).
  */
 public class UserSummaryDTO {
 

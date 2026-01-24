@@ -9,20 +9,20 @@ import java.time.Instant;
 import java.util.Map;
 
 /**
- *Global exception handler for the API.
- *Allows you to return clean and consistent JSON responses.
+ * Global exception handler for the API.
+ * Allows you to return clean and consistent JSON responses.
  *
- *Common format:
- *-timestamp
- *-status
- *-error
- *-message
+ * Common format:
+ * -timestamp
+ * -status
+ * -error
+ * -message
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
-     *404: resource not found (in base or via external service)
+     * 404: resource not found (in base or via external service)
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     *503: external service unavailable or error during an inter-service call
+     * 503: external service unavailable or error during an inter-service call
      */
     @ExceptionHandler(ExternalServiceException.class)
     public ResponseEntity<?> handleExternalService(ExternalServiceException ex) {
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     *403: user authenticated but not authorized (not owner, etc.)
+     * 403: user authenticated but not authorized (not owner, etc.)
      */
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<?> handleForbiddenService(ForbiddenException ex) {
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     *400: invalid request (missing param, incomplete body, etc.)
+     * 400: invalid request (missing param, incomplete body, etc.)
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleBadRequest(IllegalArgumentException ex) {

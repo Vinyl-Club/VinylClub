@@ -3,8 +3,8 @@ package com.vinylclub.ad.dto;
 import java.math.BigDecimal;
 
 /**
- *DTO used to display the list of announcements (cards on the home).
- *“Light” data: title, artist, price, city, image.
+ * DTO used to display the list of announcements (cards on the home).
+ * “Light” data: title, artist, price, city, image.
  */
 public class AdListDTO {
 

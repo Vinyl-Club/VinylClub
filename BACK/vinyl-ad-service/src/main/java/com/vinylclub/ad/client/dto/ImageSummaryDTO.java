@@ -1,8 +1,8 @@
 package com.vinylclub.ad.client.dto;
 
 /**
- *"Light" DTO for a product image (without bytes).
- *Allows you to construct a URL to retrieve the full image.
+ * Light" DTO for a product image (without bytes).
+ * Allows you to construct a URL to retrieve the full image.
  */
 public class ImageSummaryDTO {
     private Long id;

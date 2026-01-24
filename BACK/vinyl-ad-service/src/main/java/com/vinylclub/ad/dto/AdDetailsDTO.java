@@ -4,8 +4,8 @@ import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.dto.UserSummaryDTO;
 
 /**
- *DTO used to display the details of an ad.
- *Aggregates the announcement + product information (catalog) + user information (user-service).
+ * DTO used to display the details of an ad.
+ * Aggregates the announcement + product information (catalog) + user information (user-service).
  */
 public class AdDetailsDTO {
 
