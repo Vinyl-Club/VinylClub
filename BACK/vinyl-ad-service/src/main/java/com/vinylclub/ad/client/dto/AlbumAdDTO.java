@@ -1,5 +1,8 @@
 package com.vinylclub.ad.client.dto;
 
+/**
+ *DTO "summary" of an album (used in ProductSummaryDTO).
+ */
 public class AlbumAdDTO {
 
     private Long id;

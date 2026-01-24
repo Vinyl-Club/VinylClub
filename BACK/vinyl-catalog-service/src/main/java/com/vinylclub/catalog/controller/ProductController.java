@@ -97,6 +97,14 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    /**
+     * Filter products by price
+     * @param price
+     * @param page
+     * @param size
+     * @return
+     */
+
     @GetMapping("/price")
     public ResponseEntity<Page<ProductDTO>> getProductsByPrice(
             @RequestParam BigDecimal price,
@@ -108,6 +116,13 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    /**
+     * Filter products by format
+     * @param format
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/format")
     public ResponseEntity<Page<ProductDTO>> getProductsByFormat(
             @RequestParam ProductFormat format,
@@ -119,6 +134,13 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    /**
+     * Filter products by state
+     * @param state
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/state")
     public ResponseEntity<Page<ProductDTO>> getProductsByState(
             @RequestParam ProductState state,

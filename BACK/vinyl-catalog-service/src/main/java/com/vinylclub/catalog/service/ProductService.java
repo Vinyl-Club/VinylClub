@@ -96,7 +96,7 @@ public class ProductService {
     }
 
     /**
-     * Create product (for admin)
+     *Create product (for an authenticated user)
      */
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product product = new Product();
@@ -148,7 +148,9 @@ public class ProductService {
         return convertToDTO(savedProduct);
     }
 
-    // Update product
+    /**
+     *Update product (for an authenticated user)
+     */
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
@@ -176,7 +178,9 @@ public class ProductService {
         return convertToDTO(updatedProduct);
     }
 
-    // Delete product
+    /**
+     *Delete product (for an authenticated user)
+     */
     public void deleteProduct(Long id) {
         productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));

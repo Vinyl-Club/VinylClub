@@ -3,9 +3,13 @@ package com.vinylclub.ad.client.request;
 import java.math.BigDecimal;
 import com.vinylclub.ad.client.request.IdDTO;
 
+
+/**
+ *DTO sent to vinyl-catalog-service to create or update a product.
+ *It contains the product fields + references (id) to artist/category/album.
+ */
 public class CreateProductRequestDTO {
 
-    // DTO envoyer a catalog
     private String title;
     private String description;
     private BigDecimal price;

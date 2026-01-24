@@ -25,6 +25,11 @@ import com.vinylclub.ad.service.AdService;
 
 import jakarta.validation.Valid;
 
+/**
+ *Ads REST controller.
+ *-GET: public roads (list + details)
+ *-POST/PUT/DELETE: protected routes (userId retrieved via the X-User-Id header injected by the gateway)
+ */
 @RestController
 @RequestMapping("/api/ad")
 // @CrossOrigin(origins = "*")
@@ -36,6 +41,10 @@ public class AdController {
         this.adService = adService;
     }
 
+    /**
+     *Paginated list of announcements (home).
+     *GET /api/ad?page=0&size=12
+     */
     @GetMapping
     public ResponseEntity<Page<AdListDTO>> getAds(
             @RequestParam(defaultValue = "0") int page,
@@ -45,34 +54,52 @@ public class AdController {
         return ResponseEntity.ok(ads);
     }
 
+    /**
+     *Details of an announcement.
+     *GET /api/ad/{id}
+     */
     @GetMapping("/{id}")
     public ResponseEntity<AdDetailsDTO> getAdById(@PathVariable Long id) {
         AdDetailsDTO adDetails = adService.getAdById(id);
         return ResponseEntity.ok(adDetails);
     }
 
+    /**
+     *Creation of an announcement (authenticated user).
+     *POST /api/ad
+     */
     @PostMapping
-    public ResponseEntity<AdDTO> createdAdd(
+    public ResponseEntity<AdDTO> createdAd(
         @RequestHeader("X-User-Id") Long userId,
         @RequestBody CreateAdRequestDTO request
     ) {
-        return ResponseEntity.ok(adService.createAd(userId, dto));
+        return ResponseEntity.ok(adService.createdAd(userId, request));
     }
 
-    // Update the product of an ad
+    /**
+     *Updated product linked to an ad (authenticated user + owner).
+     *PUT /api/ad/{id}
+     */
     @PutMapping("/{id}")
     public ResponseEntity<AdDetailsDTO> updateAd(
+            @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long id,
             @Valid @RequestBody CreateProductRequestDTO productUpdate) {
 
-        AdDetailsDTO updated = adService.updateAdProduct(id, productUpdate);
+        AdDetailsDTO updated = adService.updateAdProduct(userId, id, productUpdate);
         return ResponseEntity.ok(updated);
     }
 
+    /**
+     *Deletion of an ad (authenticated user + owner).
+     *DELETE /api/ad/{id}
+     */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAdById(@PathVariable Long id) {
-        adService.deleteAdById(id);
+    public ResponseEntity<Void> deleteAdById(
+            @RequestHeader("X-User-Id") Long userId,
+            @PathVariable Long id) {
+
+        adService.deleteAdById(userId, id);
         return ResponseEntity.noContent().build();
     }
-
 }

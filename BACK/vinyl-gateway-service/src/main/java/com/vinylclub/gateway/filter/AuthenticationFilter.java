@@ -88,12 +88,12 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         // Catalogue / annonces visibles sans login (GET uniquement)
         if (method == HttpMethod.GET) {
-            if (path.startsWith("/api/ad/")) return true;
-            if (path.startsWith("/api/products/")) return true;
-            if (path.startsWith("/api/albums/")) return true;
-            if (path.startsWith("/api/artists/")) return true;
-            if (path.startsWith("/api/category/")) return true;
-            if (path.startsWith("/api/images/")) return true;
+            if (path.equals("/api/ad") || path.startsWith("/api/ad/")) return true;
+            if (path.equals("/api/products") || path.startsWith("/api/products/")) return true;
+            if (path.equals("/api/albums") || path.startsWith("/api/albums/")) return true;
+            if (path.equals("/api/artists") || path.startsWith("/api/artists/")) return true;
+            if (path.equals("/api/category") || path.startsWith("/api/category/")) return true;
+            if (path.equals("/api/images") || path.startsWith("/api/images/")) return true;
 
             // recherche / filtres si c’est du GET
             // if (path.startsWith("/api/search/")) return true; // si tu as ça
