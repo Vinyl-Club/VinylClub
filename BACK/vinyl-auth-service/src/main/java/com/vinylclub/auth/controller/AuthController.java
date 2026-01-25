@@ -13,6 +13,7 @@ import com.vinylclub.auth.dto.LoginRequest;
 import com.vinylclub.auth.dto.LoginResponse;
 import com.vinylclub.auth.dto.RefreshTokenRequest;
 import com.vinylclub.auth.dto.UserDTO;
+import com.vinylclub.auth.dto.RegisterRequest;
 import com.vinylclub.auth.service.AuthService;
 import com.vinylclub.auth.service.JwtService;
 
@@ -111,6 +112,20 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
             // Optional: Blacklister the token
             return ResponseEntity.ok().build();
         } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    /**
+     * Register
+     * Post /auth/register
+     */
+    @PostMapping("/register")
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+        try {
+            LoginResponse response = authService.register(request);
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
     }

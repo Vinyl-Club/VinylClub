@@ -94,18 +94,11 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             if (path.equals("/api/artists") || path.startsWith("/api/artists/")) return true;
             if (path.equals("/api/category") || path.startsWith("/api/category/")) return true;
             if (path.equals("/api/images") || path.startsWith("/api/images/")) return true;
-
-            // recherche / filtres si c’est du GET
-            // if (path.startsWith("/api/search/")) return true; // si tu as ça
-            // if (path.startsWith("/api/price/")) return true;
-            // if (path.startsWith("/api/format/")) return true;
-            // if (path.startsWith("/api/state/")) return true;
-            // if (path.startsWith("/api/search/")) return true;
+            if (path.equals("/api/favorites") || path.startsWith("/api/favorites/")) return true;
         }
 
         return false;
     }
-
 
     private String extractUserId(JsonNode json) {
         if (json == null) return null;
