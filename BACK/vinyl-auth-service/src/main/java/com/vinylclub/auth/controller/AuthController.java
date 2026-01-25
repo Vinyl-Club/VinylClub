@@ -34,7 +34,7 @@ public class AuthController {
      *Login -User authentication
      *Post /Auth /Login
      */
-   @PostMapping("/login")
+    @PostMapping("/login")
 public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
     System.out.println("========================================");
     System.out.println("🚀 LOGIN REQUEST RECEIVED!");

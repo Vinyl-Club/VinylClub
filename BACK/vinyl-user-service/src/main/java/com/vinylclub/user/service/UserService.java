@@ -33,7 +33,6 @@ public class UserService {
         }).toList(); // Convert List<User> to List<UserDTO>
     }
     
-   
     public UserDTO getUserById(Long id) {
             User user = userRepository.findById(id).orElse(null);
             if (user != null) {
@@ -60,7 +59,6 @@ public class UserService {
         return user; // Return the created user
         
     }
-
 
     // Update user details
 
@@ -92,7 +90,7 @@ public class UserService {
             user.getLastName(),
             user.getPhone(),
             user.getUpdatedAt()
-        );  
+        );
     }
 
     //find user by email
@@ -118,14 +116,14 @@ public class UserService {
     }
 
 
-    // public boolean validatePassword(String email, String rawPassword) {
-    //     User user = userRepository.findByEmail(email).orElse(null);
-    //     if (user != null) {
-    //         return passwordEncoder.matches(rawPassword, user.getPassword());
-    //     }
-    //     return false;
-    // }
-private UserDTO convertToDTO(User user) {
+    public boolean validatePassword(String email, String rawPassword) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user != null) {
+            return passwordEncoder.matches(rawPassword, user.getPassword());
+        }
+        return false;
+    }
+    private UserDTO convertToDTO(User user) {
         return new UserDTO(
             user.getId(),
             user.getEmail(),
@@ -135,5 +133,4 @@ private UserDTO convertToDTO(User user) {
             user.getCreatedAt()
         );
     }
- 
 }

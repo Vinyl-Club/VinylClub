@@ -52,23 +52,22 @@ public class UserController {
         userService.deleteUser(id);
     }
 
-    // @PostMapping("/login")
-    // public UserDTO login(@RequestBody LoginRequest loginRequest) {
-    //     return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-    // }
+    @PostMapping("/login")
+    public UserDTO login(@RequestBody LoginRequest loginRequest) {
+        return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+    }
 
     //  Validate a user's password
     //  Post /USERS /VALIDATE-PASSWORD
-     
-    // @PostMapping("/validate-password")
-    // public ResponseEntity<Boolean> validatePassword(@RequestBody ValidatePasswordRequest request) {
-    //     try {
-    //         boolean isValid = userService.validatePassword(request.getEmail(), request.getPassword());
-    //         return ResponseEntity.ok(isValid);
-    //     } catch (Exception e) {
-    //         return ResponseEntity.ok(false);
-    //     }
-    // }
+    @PostMapping("/validate-password")
+    public ResponseEntity<Boolean> validatePassword(@RequestBody ValidatePasswordRequest request) {
+        try {
+            boolean isValid = userService.validatePassword(request.getEmail(), request.getPassword());
+            return ResponseEntity.ok(isValid);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
@@ -81,6 +80,5 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
- 
-   }
+    }
 }
