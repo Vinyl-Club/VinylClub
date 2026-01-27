@@ -108,6 +108,7 @@ public class AddressService {
                 address.getUser().getFirstName(),
                 address.getUser().getLastName(),
                 address.getUser().getPhone(),
+                address.getUser().getRole(),
                 address.getUser().getUpdatedAt()
             );
         }
