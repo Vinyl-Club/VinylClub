@@ -11,6 +11,7 @@ import com.vinylclub.user.entity.User;
 import com.vinylclub.user.entity.UserRole;
 import com.vinylclub.user.repository.UserRepository;
 import com.vinylclub.user.dto.UserDTO;
+import com.vinylclub.user.dto.UserPublicDTO;
 
 @Service
 public class UserService {
@@ -37,14 +38,24 @@ public class UserService {
     }
     
     public UserDTO getUserById(Long id) {
-            User user = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
             if (user != null) {
                 return convertToDTO(user);
             }
-            return null;
-        }
+        return null;
+    }
 
-    
+    public UserPublicDTO getPublicUserById(Long id) {
+        UserDTO user = getUserById(id);
+        if (user == null) return null;
+
+        return new UserPublicDTO(
+            user.getId(),
+            user.getFirstName(),
+            user.getLastName()
+        );
+    }
+
     public User createUser(User user) {
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);

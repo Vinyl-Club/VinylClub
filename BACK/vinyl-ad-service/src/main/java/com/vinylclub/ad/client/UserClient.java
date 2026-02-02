@@ -15,12 +15,16 @@ import com.vinylclub.ad.client.dto.AddressAdDTO;
 @FeignClient(name = "vinyl-user-service")
 public interface UserClient {
 
-    @GetMapping("/api/users/{id}")
+    @GetMapping("/api/users/public/{id}")
     UserSummaryDTO getUserById(@PathVariable("id") Long id);
 
-    @GetMapping("/api/addresses/{id}")
-    AddressAdDTO getAddressById(@PathVariable("id") Long id);
+    // @GetMapping("/api/addresses/{id}")
+    // AddressAdDTO getAddressById(@PathVariable("id") Long id);
 
     @GetMapping("/api/addresses/users/{userId}")
     java.util.List<AddressAdDTO> getAddressesByUserId(@PathVariable("userId") Long userId);
+
+    @GetMapping("/api/addresses/public/users/{userId}/city")
+    String getMainCityByUserId(@PathVariable("userId") Long userId);
+
 }

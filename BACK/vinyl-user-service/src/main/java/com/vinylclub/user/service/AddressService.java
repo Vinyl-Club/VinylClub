@@ -122,14 +122,20 @@ public class AddressService {
         );
     }
 
-public List<AddressDTO> getAddressesByUserId(Long userId) {
-    Optional<Address> addressOpt = addressRepository.findByUserId(userId);
-    
-    return addressOpt
-        .map(address -> List.of(address))  // Convert to the list if present
-        .orElse(Collections.emptyList())   // Empty list if absent
-        .stream()
-        .map(this::convertToDTO)
-        .toList();
-}
+    public List<AddressDTO> getAddressesByUserId(Long userId) {
+        Optional<Address> addressOpt = addressRepository.findByUserId(userId);
+        
+        return addressOpt
+            .map(address -> List.of(address))  // Convert to the list if present
+            .orElse(Collections.emptyList())   // Empty list if absent
+            .stream()
+            .map(this::convertToDTO)
+            .toList();
+    }
+
+    public Optional<String> getMainCityByUserId(Long userId) {
+        return addressRepository.findFirstByUser_Id(userId)
+                .map(Address::getCity)
+                .filter(city -> city != null && !city.isBlank());
+    }
 }

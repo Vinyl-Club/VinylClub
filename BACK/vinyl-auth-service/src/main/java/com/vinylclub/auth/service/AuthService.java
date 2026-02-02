@@ -45,7 +45,7 @@ public class AuthService {
         }
 
         // 3. Generate tokens
-        String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail());
+        String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail(), user.getRole());
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());
 
         // 4. Turn the answer
@@ -74,7 +74,7 @@ public class AuthService {
             }
 
             // Generate new tokens
-            String newAccessToken = jwtService.generateAccessToken(userId, email);
+            String newAccessToken = jwtService.generateAccessToken(userId, email, user.getRole());
             String newRefreshToken = jwtService.generateRefreshToken(userId, email);
 
             return new LoginResponse(
@@ -122,7 +122,21 @@ public class AuthService {
     private UserDTO getUserById(Long userId) {
         try {
             String url = userServiceBaseUrl + "/" + userId;
-            ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
+            System.out.println("1: " + url);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-User-Id", String.valueOf(userId)); // <-- IMPORTANT
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<UserDTO> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                UserDTO.class
+            );
+
+            System.out.println("2");
             return response.getBody();
         } catch (Exception e) {
             System.out.println("❌ Error fetching user by ID: " + e.getMessage());
@@ -145,7 +159,7 @@ public class AuthService {
         }
 
         // 3) générer tokens
-        String accessToken = jwtService.generateAccessToken(created.getId(), created.getEmail());
+        String accessToken = jwtService.generateAccessToken(created.getId(), created.getEmail(), created.getRole());
         String refreshToken = jwtService.generateRefreshToken(created.getId(), created.getEmail());
 
         // 4) retourner comme login
@@ -154,6 +168,7 @@ public class AuthService {
         user.setEmail(created.getEmail());
         user.setFirstName(created.getFirstName());
         user.setLastName(created.getLastName());
+        user.setRole(created.getRole());
         user.setCreatedAt(created.getCreatedAt()); // si tu l’as
 
         return new LoginResponse(
@@ -210,6 +225,7 @@ public class AuthService {
         private String email;
         private String firstName;
         private String lastName;
+        private String role;
         private java.sql.Timestamp createdAt;
 
         public Long getId() { return id; }
@@ -220,6 +236,8 @@ public class AuthService {
         public void setFirstName(String firstName) { this.firstName = firstName; }
         public String getLastName() { return lastName; }
         public void setLastName(String lastName) { this.lastName = lastName; }
+        public String getRole() { return role; }
+        public void setRole(String role) { this.role = role; }
         public java.sql.Timestamp getCreatedAt() { return createdAt; }
         public void setCreatedAt(java.sql.Timestamp createdAt) { this.createdAt = createdAt; }
     }
@@ -239,9 +257,9 @@ public class AuthService {
             
             HttpEntity<ValidatePasswordRequest> entity = new HttpEntity<>(request, headers);
             ResponseEntity<Boolean> response = restTemplate.exchange(
-                url, 
-                HttpMethod.POST, 
-                entity, 
+                url,
+                HttpMethod.POST,
+                entity,
                 Boolean.class
             );
             

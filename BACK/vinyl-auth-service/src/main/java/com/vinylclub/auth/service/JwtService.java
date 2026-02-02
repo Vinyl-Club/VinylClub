@@ -35,10 +35,11 @@ public class JwtService {
     /**
      *Grinds an access token
      */
-    public String generateAccessToken(Long userId, String email) {
+    public String generateAccessToken(Long userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("email", email);
+        claims.put("role", role);
         claims.put("type", "access");
         
         return createToken(claims, email, accessTokenExpiration);
@@ -70,6 +71,12 @@ public class JwtService {
                 .setExpiration(expiryDate)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public String getRoleFromToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        Object role = claims.get("role");
+        return role != null ? role.toString() : null;
     }
 
     /**

@@ -84,7 +84,13 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         // Toujours public
         if (path.startsWith("/auth/") || path.startsWith("/actuator/")) return true;
-        if (method == HttpMethod.OPTIONS) return true; // CORS
+        if (method == HttpMethod.OPTIONS) return true;
+
+        // USER-SERVICE : endpoints nécessaires (publics via gateway)
+        if (path.equals("/api/users") && method == HttpMethod.POST) return true;
+        if (path.equals("/api/users/validate-password") && method == HttpMethod.POST) return true;
+        if (path.startsWith("/api/users/email/") && method == HttpMethod.GET) return true;
+        if (path.startsWith("/api/users/public/")) return true;
 
         // Catalogue / annonces visibles sans login (GET uniquement)
         if (method == HttpMethod.GET) {
@@ -92,11 +98,12 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             if (path.equals("/api/products") || path.startsWith("/api/products/")) return true;
             if (path.equals("/api/albums") || path.startsWith("/api/albums/")) return true;
             if (path.equals("/api/artists") || path.startsWith("/api/artists/")) return true;
-            if (path.equals("/api/category") || path.startsWith("/api/category/")) return true;
+            if (path.equals("/api/categories") || path.startsWith("/api/categories/")) return true;
             if (path.equals("/api/images") || path.startsWith("/api/images/")) return true;
-            if (path.equals("/api/favorites") || path.startsWith("/api/favorites/")) return true;
-        }
 
+            // ✅ ville publique
+            if (path.startsWith("/api/addresses/public/users/") && path.endsWith("/city")) return true;
+        }
         return false;
     }
 

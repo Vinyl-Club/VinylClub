@@ -31,8 +31,8 @@ public class RouteConfig {
         public static final String FAVORITES_SERVICE_URL = "lb://vinyl-favorites-service";
 
         public static final String AD_SERVICE_URL = "lb://vinyl-ad-service";
-        public static final String AD_SERVICE_ROUTE = "/api/ads/**";
-        public static final String AD_SERVICE_PATH = "/api/ads";
+        public static final String AD_SERVICE_ROUTE = "/api/ad/**";
+        public static final String AD_SERVICE_PATH = "/api/ad";
 
         @Bean
         public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {

@@ -19,6 +19,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-auth-service
     depends_on:
       - vinyl-discovery-service
       - vinyl-user-service
@@ -35,6 +37,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-user-service
     depends_on:
       - vinyl-discovery-service
       - postgres-db
@@ -52,6 +56,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-catalog-service
     depends_on:
       - vinyl-discovery-service
       - postgres-db
@@ -69,6 +75,8 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-ad-service
     depends_on:
       - vinyl-discovery-service
       - postgres-db
@@ -128,6 +136,10 @@ services:
       - SPRING_CONFIG_IMPORT=
       - SPRING_CLOUD_CONFIG_FAIL_FAST=false
       - SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED=false
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-favorites-service
     depends_on:
       mongo-db:
         condition: service_healthy
@@ -138,12 +150,14 @@ services:
   # Gateway service
   vinyl-gateway-service:
     build: ./BACK/vinyl-gateway-service
-    container_name: gateway-service
+    container_name: vinyl-gateway-service
     ports:
       - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-gateway-service
     depends_on:
       - vinyl-discovery-service
       - vinyl-user-service

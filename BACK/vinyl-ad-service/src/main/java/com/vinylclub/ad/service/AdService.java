@@ -77,12 +77,7 @@ public class AdService {
             String categoryName = (product != null && product.getCategory() != null) ? product.getCategory().getName() : null;
             BigDecimal price = (product != null) ? product.getPrice() : null;
 
-            String city = null;
-            List<AddressAdDTO> addresses = external.callExternalOrNull(
-                    () -> userClient.getAddressesByUserId(ad.getUserId()));
-            if (addresses != null && !addresses.isEmpty()) {
-                city = addresses.get(0).getCity();
-            }
+            String city = external.callExternalOrNull(() -> userClient.getMainCityByUserId(ad.getUserId()));
 
             String imageUrl = null;
             if (product != null && product.getImages() != null && !product.getImages().isEmpty()) {
@@ -118,10 +113,11 @@ public class AdService {
                 () -> userClient.getUserById(ad.getUserId()));
 
         // Address = tolerant
-        List<AddressAdDTO> addresses = external.callExternalOrNull(
-                () -> userClient.getAddressesByUserId(ad.getUserId()));
-        if (addresses != null && !addresses.isEmpty()) {
-            user.setAddress(addresses.get(0));
+        String city = external.callExternalOrNull(() -> userClient.getMainCityByUserId(ad.getUserId()));
+        if (city != null) {
+            AddressAdDTO addr = new AddressAdDTO();
+            addr.setCity(city);
+            user.setAddress(addr);
         }
 
         AdDetailsDTO dto = new AdDetailsDTO();
