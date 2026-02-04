@@ -9,10 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "favorites")
 @CompoundIndex(def = "{'userId': 1, 'productId': 1}", unique = true)
 public class Favorite {
-   
+
     @Id
     private String id;
-    private String userId;
+    private Long userId;
     private String productId;
     private LocalDateTime createdAt; // Final withdrawn to avoid serialization problems
     
@@ -20,7 +20,7 @@ public class Favorite {
         this.createdAt = LocalDateTime.now();
     }
     
-    public Favorite(String userId, String productId) {
+    public Favorite(Long userId, String productId) {
         this.userId = userId;
         this.productId = productId;
         this.createdAt = LocalDateTime.now();
@@ -35,18 +35,18 @@ public class Favorite {
         this.id = id;
     }
     
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
     
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
     
     public String getProductId() {
         return productId;
     }
-   
+
     public void setProductId(String productId) {
         this.productId = productId;
     }
