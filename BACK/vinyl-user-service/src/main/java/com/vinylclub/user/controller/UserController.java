@@ -8,6 +8,7 @@ import com.vinylclub.user.entity.User;
 import com.vinylclub.user.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -22,6 +23,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Value("${internal.service.secret}")
+    private String internalSecret;
+
     // (DEV) Tu peux laisser public au début
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -31,11 +35,20 @@ public class UserController {
     // Protection: un user ne peut lire que lui-même
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(
-            @RequestHeader("X-User-Id") Long requesterId,
+            @RequestHeader(value = "X-User-Id", required = false) Long requesterId,
+            @RequestHeader(value = "X-Internal-Call", required = false) String internalCall,
             @PathVariable Long id
     ) {
-        if (!id.equals(requesterId)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        boolean isInternal = internalSecret != null && internalSecret.equals(internalCall);
+
+        // appel normal (via gateway) => doit être self-only
+        if (!isInternal) {
+            if (requesterId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            if (!id.equals(requesterId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }
 
         UserDTO user = userService.getUserById(id);
@@ -44,6 +57,7 @@ public class UserController {
         }
         return ResponseEntity.ok(user);
     }
+
 
     @GetMapping("/public/{id}")
     public ResponseEntity<UserPublicDTO> getUserPublicById(@PathVariable Long id) {
@@ -99,7 +113,15 @@ public class UserController {
     }
 
     @PostMapping("/validate-password")
-    public ResponseEntity<Boolean> validatePassword(@RequestBody ValidatePasswordRequest request) {
+    public ResponseEntity<Boolean> validatePassword(
+            @RequestHeader(value = "X-Internal-Call", required = false) String internalCall,
+            @RequestBody ValidatePasswordRequest request
+    ) {
+        boolean isInternal = internalSecret != null && internalSecret.equals(internalCall);
+        if (!isInternal) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             boolean isValid = userService.validatePassword(request.getEmail(), request.getPassword());
             return ResponseEntity.ok(isValid);
@@ -109,7 +131,15 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(
+            @RequestHeader(value = "X-Internal-Call", required = false) String internalCall,
+            @PathVariable String email
+    ) {
+        boolean isInternal = internalSecret != null && internalSecret.equals(internalCall);
+        if (!isInternal) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             UserDTO user = userService.getUserByEmail(email);
             return (user != null) ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
@@ -117,6 +147,4 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
-
-    
 }

@@ -17,6 +17,8 @@ services:
     expose:
       - "8083"
     environment:
+      - JWT_SECRET=myVinylClubSecretKeyThatShouldBeLongEnoughForSecurity123456789
+      - INTERNAL_SERVICE_SECRET=vinyl-internal-secret-CHANGE-ME
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
@@ -35,6 +37,7 @@ services:
     expose:
       - "8082"
     environment:
+      - INTERNAL_SERVICE_SECRET=vinyl-internal-secret-CHANGE-ME
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
@@ -129,7 +132,6 @@ services:
     expose:
       - "8084"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
       # FORCER la désactivation par variables d'environnement
       - SPRING_CLOUD_CONFIG_ENABLED=false
       - SPRING_CLOUD_CONFIG_IMPORT_CHECK_ENABLED=false

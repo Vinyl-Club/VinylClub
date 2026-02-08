@@ -26,6 +26,9 @@ public class AuthService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Value("${internal.service.secret}")
+    private String internalSecret;
+
     private final String userServiceBaseUrl = "http://vinyl-user-service/api/users";
 
     /**
@@ -106,15 +109,26 @@ public class AuthService {
     private UserDTO getUserByEmail(String email) {
         try {
             String url = userServiceBaseUrl + "/email/" + email;
-            System.out.println("Calling URL: " + url); // Log to check the URL called
-            ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
-            System.out.println("Response: " + response.getBody()); // Log to check the answer received
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-Internal-Call", internalSecret);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<UserDTO> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    UserDTO.class
+            );
+
             return response.getBody();
         } catch (Exception e) {
-            System.out.println("Error fetching user: " + e.getMessage()); // Log to check the errors
+            System.out.println("Error fetching user: " + e.getMessage());
             return null;
         }
     }
+
 
     /**
      *Recover User by ID from Uservice
@@ -125,7 +139,7 @@ public class AuthService {
             System.out.println("1: " + url);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-User-Id", String.valueOf(userId)); // <-- IMPORTANT
+            headers.set("X-Internal-Call", internalSecret); // <-- IMPORTANT
 
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
@@ -135,8 +149,6 @@ public class AuthService {
                 entity,
                 UserDTO.class
             );
-
-            System.out.println("2");
             return response.getBody();
         } catch (Exception e) {
             System.out.println("❌ Error fetching user by ID: " + e.getMessage());
@@ -254,6 +266,7 @@ public class AuthService {
             String url = userServiceBaseUrl + "/validate-password";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
+            headers.set("X-Internal-Call", internalSecret);
             
             HttpEntity<ValidatePasswordRequest> entity = new HttpEntity<>(request, headers);
             ResponseEntity<Boolean> response = restTemplate.exchange(

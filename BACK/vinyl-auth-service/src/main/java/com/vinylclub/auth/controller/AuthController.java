@@ -13,6 +13,7 @@ import com.vinylclub.auth.dto.LoginRequest;
 import com.vinylclub.auth.dto.LoginResponse;
 import com.vinylclub.auth.dto.RefreshTokenRequest;
 import com.vinylclub.auth.dto.UserDTO;
+import com.vinylclub.auth.dto.TokenValidationResponse;
 import com.vinylclub.auth.dto.RegisterRequest;
 import com.vinylclub.auth.service.AuthService;
 import com.vinylclub.auth.service.JwtService;
@@ -35,23 +36,23 @@ public class AuthController {
      *Post /Auth /Login
      */
     @PostMapping("/login")
-public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
-    System.out.println("========================================");
-    System.out.println("🚀 LOGIN REQUEST RECEIVED!");
-    System.out.println("📧 Email: " + (loginRequest != null ? loginRequest.getEmail() : "NULL REQUEST"));
-    System.out.println("🔑 Password: " + (loginRequest != null && loginRequest.getPassword() != null ? "***PROVIDED***" : "NULL"));
-    System.out.println("========================================");
-    
-    try {
-        LoginResponse response = authService.login(loginRequest);
-        System.out.println("✅ Login successful for: " + loginRequest.getEmail());
-        return ResponseEntity.ok(response);
-    } catch (RuntimeException e) {
-        System.out.println("❌ Login failed: " + e.getMessage());
-        e.printStackTrace();
-        return ResponseEntity.badRequest().build();
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        System.out.println("========================================");
+        System.out.println("🚀 LOGIN REQUEST RECEIVED!");
+        System.out.println("📧 Email: " + (loginRequest != null ? loginRequest.getEmail() : "NULL REQUEST"));
+        System.out.println("🔑 Password: " + (loginRequest != null && loginRequest.getPassword() != null ? "***PROVIDED***" : "NULL"));
+        System.out.println("========================================");
+        
+        try {
+            LoginResponse response = authService.login(loginRequest);
+            System.out.println("✅ Login successful for: " + loginRequest.getEmail());
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            System.out.println("❌ Login failed: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
-}
 
     /**
      * REFRESH TOKEN - Token renewal
@@ -80,25 +81,36 @@ public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest logi
      * GET /auth/validate
      */
     @GetMapping("/validate")
-    public ResponseEntity<UserDTO> validateToken(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<TokenValidationResponse> validateToken(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
         try {
+            // Pas de token => 401 (plus standard que 400)
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                return ResponseEntity.badRequest().build();
+                return ResponseEntity.status(401).build();
             }
-            
+
             String token = authHeader.substring(7);
-            
+
+            // Vérifie: signature + expiration + type=access
             if (!jwtService.validateAccessToken(token)) {
                 return ResponseEntity.status(401).build();
             }
-            
-            // Recover user information
-            UserDTO user = authService.getUserFromToken(token);
-            return ResponseEntity.ok(user);
+
+            Long userId = jwtService.getUserIdFromToken(token);
+            String role = jwtService.getRoleFromToken(token); // peut être null si token ancien
+
+            if (userId == null) {
+                return ResponseEntity.status(401).build();
+            }
+
+            return ResponseEntity.ok(new TokenValidationResponse(userId, role));
+
         } catch (Exception e) {
             return ResponseEntity.status(401).build();
         }
     }
+
 
     /**
      *Logout -Disconnection (optional with JWT)
