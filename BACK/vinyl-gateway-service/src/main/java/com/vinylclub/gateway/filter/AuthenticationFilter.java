@@ -53,7 +53,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
                 .uri("/auth/validate")
                 .header(HttpHeaders.AUTHORIZATION, authHeader)
                 .retrieve()
-                .onStatus(status -> status.value() == 400 || status.value() == 401,
+                .onStatus(status -> status == HttpStatus.UNAUTHORIZED || status == HttpStatus.FORBIDDEN,
                         resp -> Mono.error(new InvalidTokenException()))
                 .onStatus(HttpStatusCode::is5xxServerError,
                         resp -> Mono.error(new AuthServiceDownException()))
