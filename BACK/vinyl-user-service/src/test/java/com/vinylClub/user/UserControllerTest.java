@@ -29,12 +29,12 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
-
     @Test
     void getAllUsers_returns200() throws Exception {
         when(userService.getAllUsers()).thenReturn(java.util.List.of());
 
-        mockMvc.perform(get("/api/users"))
+        mockMvc.perform(get("/api/users")
+                        .header("X-User-Role", "ADMIN"))
                 .andExpect(status().isOk());
     }
 
