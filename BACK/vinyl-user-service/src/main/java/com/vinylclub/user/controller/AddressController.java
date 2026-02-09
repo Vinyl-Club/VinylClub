@@ -19,9 +19,15 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
+    //Acces en admin
     @GetMapping
-    public List<AddressDTO> getAllAddress() {
-        return addressService.getAllAddress();
+    public ResponseEntity<List<AddressDTO>> getAllAddress(
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        if (role == null || !role.equalsIgnoreCase("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(addressService.getAllAddress());
     }
 
     @GetMapping("/{id}")

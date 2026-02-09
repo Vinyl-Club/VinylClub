@@ -18,10 +18,32 @@ import com.vinylclub.gateway.security.SecurityRules;
 
 import reactor.core.publisher.Mono;
 
+/**
+ * Global authentication & authorization filter for the API Gateway.
+ *
+ * Responsibilities:
+ * - Decide if a route is PUBLIC / AUTH / ADMIN
+ * - Validate JWT tokens via auth-service
+ * - Enforce role-based access (ADMIN)
+ * - Inject trusted headers (X-User-Id, X-User-Role) for downstream services
+ *
+ * IMPORTANT:
+ * - Clients can NEVER set X-User-Id / X-User-Role themselves
+ * - Only the gateway is allowed to inject these headers
+ */
 @Component
 public class AuthenticationFilter implements GlobalFilter, Ordered {
 
+    /**
+     * WebClient used to call auth-service (/auth/validate).
+     * LoadBalanced => resolves "vinyl-auth-service" via Eureka.
+     */
     private final WebClient webClient;
+
+    /**
+     * Centralized security rules loaded from application.properties.
+     * Replaces hardcoded "if soup".
+     */
     private final SecurityRules securityRules;
 
     public AuthenticationFilter(@LoadBalanced WebClient.Builder builder, SecurityRules securityRules) {
@@ -29,18 +51,32 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         this.securityRules = securityRules;
     }
 
+    /**
+     * Filter priority.
+     * Negative value => executed very early in the gateway chain.
+     */
     @Override
     public int getOrder() {
         return -100;
     }
 
+    /**
+     * Main gateway filter logic.
+     *
+     * Flow:
+     * 1) Check if route is PUBLIC
+     * 2) If protected => require Authorization header
+     * 3) Validate token with auth-service
+     * 4) Enforce ADMIN role if required
+     * 5) Inject trusted headers for downstream services
+     */
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
 
         String path = exchange.getRequest().getURI().getPath();
         HttpMethod method = exchange.getRequest().getMethod();
 
-        // 1) Public routes => bypass JWT
+        // 1) Public routes => bypass JWT validation completely
         if (securityRules.match(path, method) == SecurityRules.Access.PUBLIC) {
             return chain.filter(exchange);
         }
@@ -53,68 +89,118 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
 
         // 3) Validate token with auth-service
         return webClient.get()
-                .uri("/auth/validate")
-                .header(HttpHeaders.AUTHORIZATION, authHeader)
-                .retrieve()
-                .onStatus(status -> status == HttpStatus.UNAUTHORIZED || status == HttpStatus.FORBIDDEN,
-                        resp -> Mono.error(new InvalidTokenException()))
-                .onStatus(HttpStatusCode::is5xxServerError,
-                        resp -> Mono.error(new AuthServiceDownException()))
-                .bodyToMono(JsonNode.class)
-                .flatMap(json -> {
-                    String userId = extractUserId(json);
-                    String role = extractRole(json);
+            .uri("/auth/validate")
+            .header(HttpHeaders.AUTHORIZATION, authHeader)
+            .retrieve()
+            // Token invalid or expired
+            .onStatus(
+                status -> status == HttpStatus.UNAUTHORIZED || status == HttpStatus.FORBIDDEN,
+                resp -> Mono.error(new InvalidTokenException())
+            )
+            // Auth-service down or internal error
+            .onStatus(
+                HttpStatusCode::is5xxServerError,
+                resp -> Mono.error(new AuthServiceDownException())
+            )
+            .bodyToMono(JsonNode.class)
+            .flatMap(json -> {
 
-                    if (userId == null || userId.isBlank()) {
-                        return unauthorized(exchange);
+                // Extract trusted identity from auth-service response
+                String userId = extractUserId(json);
+                String role = extractRole(json);
+
+                // No userId => invalid token
+                if (userId == null || userId.isBlank()) {
+                    return unauthorized(exchange);
+                }
+
+                // 4) Role-based access control (ADMIN routes)
+                SecurityRules.Access access = securityRules.match(path, method);
+
+                if (access == SecurityRules.Access.ADMIN) {
+                    if (role == null || !role.equalsIgnoreCase("ADMIN")) {
+                        return forbidden(exchange);
                     }
+                }
 
-                    // 4) Inject headers for downstream services (overwrite any client values)
-                    ServerWebExchange mutated = exchange.mutate()
-                            .request(r -> r.headers(h -> {
-                                h.remove("X-User-Id");
-                                h.remove("X-User-Role");
+                // 5) Inject headers for downstream services (overwrite any client values)
+                ServerWebExchange mutated = exchange.mutate()
+                    .request(r -> r.headers(h -> {
+                        // Remove any spoofed headers from client
+                        h.remove("X-User-Id");
+                        h.remove("X-User-Role");
 
-                                h.add("X-User-Id", userId);
+                        // Inject trusted values from auth-service
+                        h.add("X-User-Id", userId);
 
-                                if (role != null && !role.isBlank()) {
-                                    h.add("X-User-Role", role);
-                                }
-                            }))
-                            .build();
+                        if (role != null && !role.isBlank()) {
+                            h.add("X-User-Role", role);
+                        }
+                    }))
+                    .build();
 
-                    return chain.filter(mutated);
-                })
-                .onErrorResume(InvalidTokenException.class, e -> unauthorized(exchange))
-                .onErrorResume(AuthServiceDownException.class, e -> serviceUnavailable(exchange))
-                .onErrorResume(WebClientRequestException.class, e -> serviceUnavailable(exchange));
+                return chain.filter(mutated);
+            })
+            // Token invalid
+            .onErrorResume(InvalidTokenException.class, e -> unauthorized(exchange))
+            // Auth-service unavailable
+            .onErrorResume(AuthServiceDownException.class, e -> serviceUnavailable(exchange))
+            // Network / connection error
+            .onErrorResume(WebClientRequestException.class, e -> serviceUnavailable(exchange));
     }
 
+    /**
+     * Extract userId from auth-service response.
+     * Supports legacy format (id) and current format (userId).
+     */
     private String extractUserId(JsonNode json) {
         if (json == null) return null;
-        // compat ancien format
-        if (json.hasNonNull("id")) return json.get("id").asText();
-        // nouveau format (auth-service renvoie { userId, role })
+        if (json.hasNonNull("id")) return json.get("id").asText();       // legacy
         if (json.hasNonNull("userId")) return json.get("userId").asText();
         return null;
     }
 
+    /**
+     * Extract user role from auth-service response.
+     */
     private String extractRole(JsonNode json) {
         if (json == null) return null;
         if (json.hasNonNull("role")) return json.get("role").asText();
         return null;
     }
 
+    /**
+     * 401 Unauthorized:
+     * - Missing token
+     * - Invalid token
+     * - Expired token
+     */
     private Mono<Void> unauthorized(ServerWebExchange exchange) {
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         return exchange.getResponse().setComplete();
     }
 
+    /**
+     * 403 Forbidden:
+     * - Valid token
+     * - Insufficient privileges (e.g. USER accessing ADMIN route)
+     */
+    private Mono<Void> forbidden(ServerWebExchange exchange) {
+        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+        return exchange.getResponse().setComplete();
+    }
+
+    /**
+     * 503 Service Unavailable:
+     * - auth-service down
+     * - network failure
+     */
     private Mono<Void> serviceUnavailable(ServerWebExchange exchange) {
         exchange.getResponse().setStatusCode(HttpStatus.SERVICE_UNAVAILABLE);
         return exchange.getResponse().setComplete();
     }
 
+    // Internal marker exceptions for flow control
     static class InvalidTokenException extends RuntimeException {}
     static class AuthServiceDownException extends RuntimeException {}
 }

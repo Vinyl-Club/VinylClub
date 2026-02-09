@@ -26,9 +26,14 @@ public class UserController {
     @Value("${internal.service.secret}")
     private String internalSecret;
 
-    // (DEV) Tu peux laisser public au début
+    // Acces en admin
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers(
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        if (role == null || !role.equalsIgnoreCase("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
