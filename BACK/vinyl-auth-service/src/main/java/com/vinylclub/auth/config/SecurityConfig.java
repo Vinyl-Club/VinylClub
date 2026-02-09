@@ -41,7 +41,15 @@ public class SecurityConfig {
             .httpBasic(b -> b.disable())
             .formLogin(f -> f.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/auth/login", "/auth/register", "/auth/refresh", "/auth/validate", "/auth/logout", "/auth/me", "/auth/health").permitAll()
+                .requestMatchers(
+                    "/auth/login", 
+                    "/auth/register", 
+                    "/auth/refresh", 
+                    "/auth/validate", 
+                    "/auth/health",
+                    "/auth/me",
+                    "/auth/logout"
+                ).permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session

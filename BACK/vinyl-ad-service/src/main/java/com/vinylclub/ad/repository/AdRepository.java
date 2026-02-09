@@ -13,9 +13,9 @@ import com.vinylclub.ad.entity.Ad;
 @Repository
 public interface AdRepository extends JpaRepository<Ad, Long> {
     
-    // rechercher tous les produits avec pagination
-    Page<Ad> findAll(Pageable pageable);
+    // search all products with pagination
+    // Page<Ad> findAll(Pageable pageable);
 
-    // rechercher un produit par son id
+    // search for a product by its id
     Optional<Ad> findAdById(@Param("id") Long id);
 }

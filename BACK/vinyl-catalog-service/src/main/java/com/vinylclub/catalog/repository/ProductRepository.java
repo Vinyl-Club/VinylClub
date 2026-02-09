@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 import com.vinylclub.catalog.entity.Product;
 import com.vinylclub.catalog.entity.ProductStatus;
 import com.vinylclub.catalog.entity.ProductFormat;
+import com.vinylclub.catalog.entity.ProductState;
+
 
 
 
@@ -52,7 +54,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     // filter by format
     Page<Product> findByFormat(ProductFormat format, Pageable pageable);
 
+    // Filter by price
     @Query("SELECT p FROM Product p WHERE p.price = :price ORDER BY p.price ASC")
     Page<Product> findByPrice(@Param("price") BigDecimal price, Pageable pageable);
+
+    // Filter by state
+    Page<Product> findByState(ProductState state, Pageable pageable);
 
 }

@@ -81,6 +81,7 @@ public class ArtistService {
 
         Artist artist = convertToEntity(artistDTO);
         Artist savedArtist = artistRepository.save(artist);
+        System.out.println(">>> SAVED ARTIST id=" + savedArtist.getId());
         return convertToDTO(savedArtist);
     }
 

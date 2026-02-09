@@ -40,7 +40,7 @@ sql\c addb_dev
 ## DOCKER
 Compilez chaque service :
 
-cd back
+cd BACK
 cd vinyl-discovery-service
 mvn clean package -DskipTests
 cd ..

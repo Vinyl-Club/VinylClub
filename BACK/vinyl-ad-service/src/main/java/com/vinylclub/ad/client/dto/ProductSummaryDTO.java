@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
+/**
+ * DTO retrieved from vinyl-catalog-service (product information for display).
+ * Used in the list and details of an announcement.
+ */
 public class ProductSummaryDTO {
 
     private Long id;
@@ -47,7 +51,6 @@ public class ProductSummaryDTO {
         this.album = album;
         this.images = images;
         this.createdAt = createdAt;
-        //this.format = format;
     }
 
     // Getters / Setters

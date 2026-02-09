@@ -82,6 +82,7 @@ public class ArtistController {
      */
     @PostMapping
     public ResponseEntity<ArtistDTO> createArtist(@Valid @RequestBody ArtistDTO artistDTO) {
+        System.out.println(">>> CREATE ARTIST hit: " + artistDTO.getName());
         ArtistDTO createdArtist = artistService.createArtist(artistDTO);
         return ResponseEntity.ok(createdArtist);
     }

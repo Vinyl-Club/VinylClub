@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.test.context.TestPropertySource;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false) 
+@TestPropertySource(properties = "internal.service.secret=test-secret")
 
 public class UserControllerTest {
 
@@ -27,12 +29,12 @@ public class UserControllerTest {
 
     @MockBean
     private UserService userService;
-
     @Test
     void getAllUsers_returns200() throws Exception {
         when(userService.getAllUsers()).thenReturn(java.util.List.of());
 
-        mockMvc.perform(get("/api/users"))
+        mockMvc.perform(get("/api/users")
+                        .header("X-User-Role", "ADMIN"))
                 .andExpect(status().isOk());
     }
 
@@ -42,6 +44,7 @@ public class UserControllerTest {
                 .thenThrow(new RuntimeException("boom"));
 
         mockMvc.perform(post("/api/users/validate-password")
+                        .header("X-Internal-Call", "test-secret") 
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"a@b.com\",\"password\":\"pw\"}"))
                 .andExpect(status().isOk())

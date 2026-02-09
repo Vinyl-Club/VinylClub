@@ -13,6 +13,8 @@ import org.springframework.web.client.RestTemplate;
 import com.vinylclub.auth.dto.LoginRequest;
 import com.vinylclub.auth.dto.LoginResponse;
 import com.vinylclub.auth.dto.UserDTO;
+import com.vinylclub.auth.dto.RegisterRequest;
+
 
 @Service
 // @CrossOrigin(origins = {"http://localhost:8090"})
@@ -23,6 +25,9 @@ public class AuthService {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${internal.service.secret}")
+    private String internalSecret;
 
     private final String userServiceBaseUrl = "http://vinyl-user-service/api/users";
 
@@ -43,7 +48,7 @@ public class AuthService {
         }
 
         // 3. Generate tokens
-        String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail());
+        String accessToken = jwtService.generateAccessToken(user.getId(), user.getEmail(), user.getRole());
         String refreshToken = jwtService.generateRefreshToken(user.getId(), user.getEmail());
 
         // 4. Turn the answer
@@ -72,7 +77,7 @@ public class AuthService {
             }
 
             // Generate new tokens
-            String newAccessToken = jwtService.generateAccessToken(userId, email);
+            String newAccessToken = jwtService.generateAccessToken(userId, email, user.getRole());
             String newRefreshToken = jwtService.generateRefreshToken(userId, email);
 
             return new LoginResponse(
@@ -102,17 +107,28 @@ public class AuthService {
      *Recover user by email from user-service
      */
     private UserDTO getUserByEmail(String email) {
-    try {
-        String url = userServiceBaseUrl + "/email/" + email;
-        System.out.println("Calling URL: " + url); // Log to check the URL called
-        ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
-        System.out.println("Response: " + response.getBody()); // Log to check the answer received
-        return response.getBody();
-    } catch (Exception e) {
-        System.out.println("Error fetching user: " + e.getMessage()); // Log to check the errors
-        return null;
+        try {
+            String url = userServiceBaseUrl + "/email/" + email;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-Internal-Call", internalSecret);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<UserDTO> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    UserDTO.class
+            );
+
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println("Error fetching user: " + e.getMessage());
+            return null;
+        }
     }
-}
+
 
     /**
      *Recover User by ID from Uservice
@@ -120,13 +136,124 @@ public class AuthService {
     private UserDTO getUserById(Long userId) {
         try {
             String url = userServiceBaseUrl + "/" + userId;
-            ResponseEntity<UserDTO> response = restTemplate.getForEntity(url, UserDTO.class);
+            System.out.println("1: " + url);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-Internal-Call", internalSecret); // <-- IMPORTANT
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<UserDTO> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                UserDTO.class
+            );
             return response.getBody();
         } catch (Exception e) {
             System.out.println("❌ Error fetching user by ID: " + e.getMessage());
             return null;
         }
     }
+
+    public LoginResponse register(RegisterRequest req) {
+
+        // 1) (Optionnel mais conseillé) vérifier si email existe déjà
+        UserDTO existing = getUserByEmail(req.getEmail());
+        if (existing != null) {
+            throw new RuntimeException("Email already used");
+        }
+
+        // 2) appeler user-service pour créer l’utilisateur
+        UserCreatedResponse created = createUserInUserService(req);
+        if (created == null || created.getId() == null) {
+            throw new RuntimeException("User creation failed");
+        }
+
+        // 3) générer tokens
+        String accessToken = jwtService.generateAccessToken(created.getId(), created.getEmail(), created.getRole());
+        String refreshToken = jwtService.generateRefreshToken(created.getId(), created.getEmail());
+
+        // 4) retourner comme login
+        UserDTO user = new UserDTO();
+        user.setId(created.getId());
+        user.setEmail(created.getEmail());
+        user.setFirstName(created.getFirstName());
+        user.setLastName(created.getLastName());
+        user.setRole(created.getRole());
+        user.setCreatedAt(created.getCreatedAt()); // si tu l’as
+
+        return new LoginResponse(
+            accessToken,
+            refreshToken,
+            jwtService.getAccessTokenExpirationInSeconds(),
+            user
+        );
+    }
+
+    private UserCreatedResponse createUserInUserService(RegisterRequest req) {
+        try {
+            String url = userServiceBaseUrl; // "http://vinyl-user-service/api/users"
+
+            // Le user-service attend un User (entité). On lui envoie le minimum.
+            CreateUserBody body = new CreateUserBody();
+            body.setEmail(req.getEmail());
+            body.setPassword(req.getPassword());
+            body.setFirstName(req.getFirstName());
+            body.setLastName(req.getLastName());
+            body.setPhone(req.getPhone());
+
+            ResponseEntity<UserCreatedResponse> response =
+                    restTemplate.postForEntity(url, body, UserCreatedResponse.class);
+
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println("❌ Error creating user: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private static class CreateUserBody {
+        private String email;
+        private String password;
+        private String firstName;
+        private String lastName;
+        private String phone;
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+        public String getFirstName() { return firstName; }
+        public void setFirstName(String firstName) { this.firstName = firstName; }
+        public String getLastName() { return lastName; }
+        public void setLastName(String lastName) { this.lastName = lastName; }
+        public String getPhone() { return phone; }
+        public void setPhone(String phone) { this.phone = phone; }
+    }
+
+    private static class UserCreatedResponse {
+        private Long id;
+        private String email;
+        private String firstName;
+        private String lastName;
+        private String role;
+        private java.sql.Timestamp createdAt;
+
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getFirstName() { return firstName; }
+        public void setFirstName(String firstName) { this.firstName = firstName; }
+        public String getLastName() { return lastName; }
+        public void setLastName(String lastName) { this.lastName = lastName; }
+        public String getRole() { return role; }
+        public void setRole(String role) { this.role = role; }
+        public java.sql.Timestamp getCreatedAt() { return createdAt; }
+        public void setCreatedAt(java.sql.Timestamp createdAt) { this.createdAt = createdAt; }
+    }
+
 
     /**
      *Validate the password via user-service
@@ -139,12 +266,13 @@ public class AuthService {
             String url = userServiceBaseUrl + "/validate-password";
             HttpHeaders headers = new HttpHeaders();
             headers.set("Content-Type", "application/json");
+            headers.set("X-Internal-Call", internalSecret);
             
             HttpEntity<ValidatePasswordRequest> entity = new HttpEntity<>(request, headers);
             ResponseEntity<Boolean> response = restTemplate.exchange(
-                url, 
-                HttpMethod.POST, 
-                entity, 
+                url,
+                HttpMethod.POST,
+                entity,
                 Boolean.class
             );
             
