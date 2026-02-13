@@ -3,6 +3,10 @@ package com.vinylclub.ad.dto;
 import com.vinylclub.ad.client.dto.ProductSummaryDTO;
 import com.vinylclub.ad.client.dto.UserSummaryDTO;
 
+/**
+ * DTO used to display the details of an ad.
+ * Aggregates the announcement + product information (catalog) + user information (user-service).
+ */
 public class AdDetailsDTO {
 
     private Long id; // ad id
@@ -43,5 +47,4 @@ public class AdDetailsDTO {
     public void setUser(UserSummaryDTO user) {
         this.user = user;
     }
-
 }

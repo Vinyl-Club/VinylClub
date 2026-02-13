@@ -97,6 +97,20 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+            <!-- JavaDoc (ne bloque pas le build sur warnings / doclint) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <!-- évite que la génération échoue à cause des warnings -->
+                    <failOnError>false</failOnError>
+                    <!-- désactive les contrôles stricts (souvent pénibles sur DTO/getters) -->
+                    <doclint>none</doclint>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

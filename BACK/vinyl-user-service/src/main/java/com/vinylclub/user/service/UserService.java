@@ -1,14 +1,17 @@
 package com.vinylclub.user.service;
 
-
 import java.util.List;
 import java.sql.Timestamp;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.vinylclub.user.entity.User;
+import com.vinylclub.user.entity.UserRole;
 import com.vinylclub.user.repository.UserRepository;
 import com.vinylclub.user.dto.UserDTO;
+import com.vinylclub.user.dto.UserPublicDTO;
 
 @Service
 public class UserService {
@@ -28,37 +31,43 @@ public class UserService {
             user.getFirstName(),
             user.getLastName(),
             user.getPhone(),
+            user.getRole(),
             user.getUpdatedAt()
             );
         }).toList(); // Convert List<User> to List<UserDTO>
     }
     
-   
     public UserDTO getUserById(Long id) {
-            User user = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
             if (user != null) {
                 return convertToDTO(user);
             }
-            return null;
-        }
+        return null;
+    }
 
-    
+    public UserPublicDTO getPublicUserById(Long id) {
+        UserDTO user = getUserById(id);
+        if (user == null) return null;
+
+        return new UserPublicDTO(
+            user.getId(),
+            user.getFirstName(),
+            user.getLastName()
+        );
+    }
+
     public User createUser(User user) {
-        // Implement the logic to create a new user
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        
-        user.setFirstName(user.getFirstName()); // Set the first name
-        user.setLastName(user.getLastName()); // Set the last name
-        user.setEmail(user.getEmail()); // Set the email
-        user.setPhone(user.getPhone()); // Set the phone number
-        user.setAuthId(user.getAuthId()); // Set the auth ID
-        user.setCreatedAt(new Timestamp(System.currentTimeMillis())); // Set the created timestamp
-        user.setUpdatedAt(new Timestamp(System.currentTimeMillis())); // Set the updated timestamp
-        
-        userRepository.save(user); // Save the user to the database
-        return user; // Return the created user
-        
+
+        user.setRole(UserRole.USER);
+
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        user.setCreatedAt(now);
+        user.setUpdatedAt(now);
+
+        userRepository.save(user);
+        return user;
     }
 
 
@@ -66,7 +75,7 @@ public class UserService {
 
     public User updateUser(Long id, User userDetails) {
         User existingUser = userRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+            .orElseThrow(() -> new RuntimeException("User not found"));
         
         existingUser.setFirstName(userDetails.getFirstName());
         existingUser.setLastName(userDetails.getLastName());
@@ -78,12 +87,12 @@ public class UserService {
     }
     
     public UserDTO login(String email, String rawPassword) {
-    User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-    if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-        throw new RuntimeException("incorrect password");
-    }
+        if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
+            throw new RuntimeException("incorrect password");
+        }
 
         return new UserDTO(
             user.getId(),
@@ -91,8 +100,9 @@ public class UserService {
             user.getFirstName(),
             user.getLastName(),
             user.getPhone(),
+            user.getRole(),
             user.getUpdatedAt()
-        );  
+        );
     }
 
     //find user by email
@@ -106,6 +116,7 @@ public class UserService {
             user.getFirstName(),
             user.getLastName(),
             user.getPhone(),
+            user.getRole(),
             user.getUpdatedAt()
         );
     }
@@ -125,15 +136,15 @@ public class UserService {
         }
         return false;
     }
-private UserDTO convertToDTO(User user) {
+    private UserDTO convertToDTO(User user) {
         return new UserDTO(
             user.getId(),
             user.getEmail(),
             user.getFirstName(),
             user.getLastName(),
             user.getPhone(),
-            user.getCreatedAt()
+            user.getRole(),
+            user.getUpdatedAt()
         );
     }
- 
 }
