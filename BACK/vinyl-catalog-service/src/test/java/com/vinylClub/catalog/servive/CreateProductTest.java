@@ -57,9 +57,16 @@ public class CreateProductTest {
     @InjectMocks
     private ProductService productService;
 
+
+    /**
+     * Tests unitaires de la méthode CreateProduct du ProductService
+     * Cas de tests :
+     * produit crée
+     * produit status null / Artiste non trouvé / format invalide
+     */
     @Test
     public void createProduct_shouldReturnProductDTO_whenProductIsCreated() {
-
+        // préparartion des données
         ProductDTO dto = new ProductDTO();
         dto.setId(1L);
         dto.setTitle("New Album");
