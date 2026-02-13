@@ -29,11 +29,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.Optional;
 
 @Testcontainers
 @ActiveProfiles("test")
@@ -207,6 +211,46 @@ class AdControllerIT {
                 .content(json)
         )    
             .andExpect(status().isForbidden());
+
+        verifyNoInteractions(productClient);
+        verifyNoInteractions(userClient);
+    }
+
+    @Test
+    void delete_api_ad_shouldDeleteProduct_whenOwner() throws Exception {
+        Ad ad = new Ad();
+        ad.setUserId(6L);
+        ad.setProductId(20L);
+        ad = adRepository.save(ad);
+
+        // Optionnel (mock void)
+        doNothing().when(productClient).deleteProduct(20L);
+
+        mockMvc.perform(
+                delete("/api/ad/{id}", ad.getId())
+                    .header("X-User-Id", "6")
+        )
+        .andExpect(status().isNoContent());
+
+        assertThat(adRepository.findAdById(ad.getId())).isEmpty();
+        verify(productClient, times(1)).deleteProduct(20L);
+    }
+
+    @Test
+    void delete_api_ad_shouldDeleteProduct_whenNotOwner() throws Exception{
+        Ad ad = new Ad();
+        ad.setUserId(6L);
+        ad.setProductId(20L);
+        ad = adRepository.save(ad);
+
+        // Optionnel (mock void)
+        doNothing().when(productClient).deleteProduct(20L);
+
+        mockMvc.perform(
+                delete("/api/ad/{id}", ad.getId())
+                    .header("X-User-Id", "10")
+        )
+        .andExpect(status().isForbidden());
 
         verifyNoInteractions(productClient);
         verifyNoInteractions(userClient);
