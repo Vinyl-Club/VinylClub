@@ -2,12 +2,12 @@ name: Front Web CI
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["develop", "main"]
     paths:
       - "FRONT-WEB/**"
       - ".github/workflows/node.js.yml"
   pull_request:
-    branches: ["develop"]
+    branches: ["develop", "main"]
     paths:
       - "FRONT-WEB/**"
       - ".github/workflows/node.js.yml"
