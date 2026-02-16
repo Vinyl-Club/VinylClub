@@ -1,6 +1,6 @@
 'use client';
-import TopBar from '../ui/TopBar';
-import FilterBar from '../ui/FilterBar';
+import TopBar from '../ui/Header/TopBar';
+import FilterBar from '../ui/Header/FilterBar';
 
 export default function Header() {
     return (
@@ -8,6 +8,6 @@ export default function Header() {
         <TopBar />
         <FilterBar />
         </header>
-        // TEST POUR LA CI IL FAUT LE SUPPRIMER !!!!!!!!
+        
     );
 }

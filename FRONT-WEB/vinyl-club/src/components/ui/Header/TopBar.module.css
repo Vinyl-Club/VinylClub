@@ -21,20 +21,11 @@
   object-position: left center;
 }
 
-.search{
+.searchWrap{
   min-width: 0;
-  width: clamp(240px, 40vw, 480px);
-  justify-self: end;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  background: #fff;
-  border-radius: 999px;
-  border: 1px solid #e5e5e5;
-  box-shadow: 0 6px 10px rgb(0 0 0 / 0.3);
-  overflow: hidden;
+  display: flex;
+  justify-content: flex-end; /* ou end si tu veux à droite */
 }
-.input{ outline:none; padding:8px 12px; border:0; min-width:0; }
-.searchBtn{ border:0; background:transparent; cursor:pointer; padding:0 10px; }
 
 /* ===== BURGER */
 .burger{

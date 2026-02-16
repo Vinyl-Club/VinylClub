@@ -9,10 +9,8 @@ export interface Product {
     title: string;
     description: string;
     price: number;          // BigDecimal côté Java → number côté TS
-    quantity: number;
-    releaseYear: number;
     status: string;
     state: string;
-    userId: number;
+    format: string;
     images: ProductImage[];
     } 
