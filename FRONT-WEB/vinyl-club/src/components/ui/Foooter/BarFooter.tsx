@@ -7,7 +7,7 @@ export default function BarFooter() {
         <footer className={styles.footerContainer}>
         <div className={styles.contactBar}>
             <section aria-labelledby="footer-contact" className={styles.contactInfo}>
-                <h2>Nous contacter</h2>
+                <h2 id="footer-contact">Nous contacter</h2>
                 <address>
                     <p>
                     <a href="mailto:VinylClub@gmail.com">VinylClub@gmail.com</a>
@@ -16,7 +16,7 @@ export default function BarFooter() {
             </section>
 
             <section aria-labelledby="footer-about" className={styles.aboutUs}>
-                <h2>À propos de VynilClub</h2>
+                <h2 id="footer-about">À propos de VinylClub</h2>
                 <ul>
                     <li>
                     <Link href="/a-propos">Qui sommes-nous&nbsp;?</Link>
@@ -25,7 +25,7 @@ export default function BarFooter() {
             </section>
 
             <nav aria-labelledby="footer-questions" className={styles.questions}>
-                <h2>Vos questions</h2>
+                <h2 id="footer-questions">Vos questions</h2>
                 <ul>
                     <li><Link href="/faq">Questions / Réponses</Link></li>
                     <li><Link href="/cgu">Conditions générales d&apos;utilisation</Link></li>
@@ -36,7 +36,7 @@ export default function BarFooter() {
 
         <div className={styles.legalBar}>
             <div className={styles.copyRight}>
-            <small>VYNILCLUB — TOUS DROITS RESERVES</small>
+            <small> {new Date().getFullYear()} VINYLCLUB — TOUS DROITS RESERVES</small>
             </div>
 
             <nav aria-label="Liens légaux" className={styles.legalLinks}>

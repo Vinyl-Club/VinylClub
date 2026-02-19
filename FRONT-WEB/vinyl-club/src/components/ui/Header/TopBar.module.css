@@ -1,14 +1,25 @@
+/* ============================= */
+/*            TOPBAR            */
+/* ============================= */
+
 .topbar{
   --bar-h: 80px;
+
   height: var(--bar-h);
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto; /* logo | search | menu */
   align-items: center;
   gap: 16px;
+
   padding: 8px 24px;
   background: #8AA39F;
   position: relative;
 }
+
+
+/* ============================= */
+/*            LOGO              */
+/* ============================= */
 
 .logoBox{
   height: calc(var(--bar-h) - 10px);
@@ -16,29 +27,56 @@
   position: relative;
   overflow: hidden;
 }
+
 .logoImg{ 
   object-fit: contain;
   object-position: left center;
 }
 
+
+/* ============================= */
+/*         SEARCH BAR           */
+/* ============================= */
+
 .searchWrap{
   min-width: 0;
   display: flex;
-  justify-content: flex-end; /* ou end si tu veux à droite */
+  justify-content: flex-end;
 }
 
-/* ===== BURGER */
+
+/* ============================= */
+/*         MENU WRAPPER         */
+/* ============================= */
+
+.menuWrap{
+  justify-self: end;
+  position: relative; /* base pour le menu déroulant */
+  display: inline-flex;
+  align-items: center;
+}
+
+
+/* ============================= */
+/*         BURGER BUTTON        */
+/* ============================= */
+
 .burger{
   width: 40px;
   height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+
   background: transparent;
   border: 0;
   padding: 0;
   cursor: pointer;
+
+  position: relative;
+  z-index: 60; /* au-dessus du menu */
 }
+
 .bar{
   position: relative;
   display: block;
@@ -48,6 +86,7 @@
   border-radius: 999px;
   transition: background .2s ease;
 }
+
 .bar::before,
 .bar::after{
   content: "";
@@ -57,94 +96,130 @@
   height: 4px;
   background: #111;
   border-radius: 999px;
-  transition: transform .2s ease, top .2s ease,
-  opacity .2s ease;
+  transition: transform .2s ease, top .2s ease, opacity .2s ease;
 }
+
 .bar::before{
   top: -8px;
 }
+
 .bar::after{
-  top:  8px;
+  top: 8px;
 }
+
+/* animation croix */
 
 .burger.open .bar{
   background: transparent;
 }
+
 .burger.open .bar::before{
   top: 0;
   transform: rotate(45deg);
 }
+
 .burger.open .bar::after {
   top: 0;
   transform: rotate(-45deg);
 }
 
-/* classe “vide” pour CSS Modules (styles.open existe) */
-.open{}
-/* ===== MENU (panneau mobile) */
+
+/* ============================= */
+/*          MENU PANEL          */
+/* ============================= */
 
 .links{
-  
   position: absolute;
-  right: 0;
-  top: var(--bar-h);
+  top: 120%;          /* sous le bouton */
+  right: -24px;
+
+  margin-top: 8px;
+
   background: #8AA39F;
   color: #111;
-  padding: 12px 16px;
+
+  padding: 12px;
   list-style: none;
-  margin: 0;
+  margin-left: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 
-  
-  transform: translateX(16px);
+  width: clamp(180px, 18vw, 260px);
+  max-width: 360px;
+  height: auto;
+
+  transform: translateY(-10px);
   opacity: 0;
   pointer-events: none;
-  transition: transform .2s ease,
-  opacity .2s ease;
+
+  transition: transform .2s ease, opacity .2s ease;
+
   box-shadow: -12px 12px 24px rgba(0,0,0,.12);
   z-index: 50;
+}
 
-  
-  width: min(26vw, 360px);
-  height: 400px;
-} 
+/* état ouvert */
 
-/* état ouvert → visible (desktop + mobile) */
 .links.open{
-  transform: translateX(0);
+  transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
 }
-@media (max-width: 768px){
-  .links{
-    width: min(78vw, 320px);
-  }
-  .links.open{
-    transform: translateX(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
 
-  .item { margin: 0; }
-  .link {
-    color: #111;
-    text-decoration: none;
-    font-size: 18px;
-    line-height: 1.2;
+
+/* ============================= */
+/*            LINKS             */
+/* ============================= */
+
+.item{
+  margin: 0;
+}
+
+.link{
+  color: #111;
+  text-decoration: none;
+  font-size: 19px;
+  line-height: 1.4;
+}
+
+
+/* ============================= */
+/*       ACCESSIBILITÉ          */
+/* ============================= */
+
+.link:focus-visible,
+.burger:focus-visible {
+  outline: 3px solid #111;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+
+/* ============================= */
+/*         RESPONSIVE           */
+/* ============================= */
+
+@media (max-width: 768px){
+
+  .links{
+    width: clamp(160px, 60vw, 220px);
   }
 
   .burger{
     width: 48px;
     height: 40px;
   }
+
   .bar,
   .bar::before,
   .bar::after{
     width: 32px;
     height: 5px;
   }
+
   .bar::before{ top: -10px; }
-  .bar::after { top:  10px; }
+  .bar::after { top: 10px; }
+
 }

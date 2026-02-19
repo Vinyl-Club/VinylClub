@@ -15,7 +15,7 @@
     height: auto;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    align-items: top;
+    align-items: start;
     padding: 20px 60px 20px;
 }
 
@@ -82,7 +82,7 @@
 /* Copyright centré */
 .copyRight {
     flex: 1;
-    text-align: end;
+    text-align: right;
 }
 .copyRight small {
     font-size: 1em;
@@ -92,9 +92,9 @@
 
 /* Mentions légales à droite */
 .legalLinks {
-    margin-right: start;
+    /* margin-right: start; */
     list-style: none;
-    padding: 0;
+    /* padding: 0; */
     margin: 0;
     display: inline;
     padding: 0 60px;
@@ -146,3 +146,4 @@
         text-align: center; /* en mobile, tout centré */
     }
 }
+

@@ -10,7 +10,7 @@ export default function SearchBar() {
       aria-label="Rechercher"
       onSubmit={(e) => e.preventDefault()}
     >
-      <input className={styles.input} type="search" placeholder="Barre de Recherche" />
+      <input className={styles.input} type="search" placeholder="Rechercher" />
       <button className={styles.searchBtn} type="submit" aria-label="Bouton Rechercher">
         <Search size={22} strokeWidth={3} />
       </button>
