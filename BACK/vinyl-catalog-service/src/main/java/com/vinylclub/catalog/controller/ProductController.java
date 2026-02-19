@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vinylclub.catalog.dto.ProductDTO;
 import com.vinylclub.catalog.service.ProductService;
 import com.vinylclub.catalog.entity.ProductFormat;
+import com.vinylclub.catalog.entity.ProductState;
+
 
 import jakarta.validation.Valid;
 
@@ -95,6 +97,14 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    /**
+     * Filter products by price
+     * @param price
+     * @param page
+     * @param size
+     * @return
+     */
+
     @GetMapping("/price")
     public ResponseEntity<Page<ProductDTO>> getProductsByPrice(
             @RequestParam BigDecimal price,
@@ -106,6 +116,13 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    /**
+     * Filter products by format
+     * @param format
+     * @param page
+     * @param size
+     * @return
+     */
     @GetMapping("/format")
     public ResponseEntity<Page<ProductDTO>> getProductsByFormat(
             @RequestParam ProductFormat format,
@@ -114,6 +131,24 @@ public class ProductController {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductDTO> products = productService.getProductsByFormat(format, pageable);
+        return ResponseEntity.ok(products);
+    }
+
+    /**
+     * Filter products by state
+     * @param state
+     * @param page
+     * @param size
+     * @return
+     */
+    @GetMapping("/state")
+    public ResponseEntity<Page<ProductDTO>> getProductsByState(
+            @RequestParam ProductState state,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductDTO> products = productService.getProductsByState(state, pageable);
         return ResponseEntity.ok(products);
     }
 

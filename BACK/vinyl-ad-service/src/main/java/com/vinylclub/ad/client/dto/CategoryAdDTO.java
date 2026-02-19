@@ -1,5 +1,8 @@
 package com.vinylclub.ad.client.dto;
 
+/**
+ * DTO "summary" of a category (used in ProductSummaryDTO).
+ */
 public class CategoryAdDTO {
     private Long id;
     private String name;

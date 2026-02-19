@@ -1,7 +1,11 @@
 package com.vinylclub.ad.client.request;
 
+/**
+ *Small generic DTO that only carries an id.
+ *Used to reference artist/category/album when calling the catalog.
+ */
 public class IdDTO {
-    // DTO générique pour les catégories, l'album, les artistes
+    
     private Long id;
 
     public IdDTO() {}
