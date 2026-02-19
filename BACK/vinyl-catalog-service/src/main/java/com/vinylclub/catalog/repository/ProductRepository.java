@@ -21,10 +21,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     // Research by title or artist (for the search bar)
 
-    @Query("SELECT p FROM Product p JOIN p.artist a WHERE " +
-            "LOWER(p.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(a.name) LIKE LOWER(CONCAT('%', :query, '%'))")
-    Page<Product> searchByTitleOrArtist(@Param("query") String query, Pageable pageable);
+    @Query("""
+    SELECT p
+    FROM Product p
+    JOIN p.album al
+    JOIN p.artist a
+    WHERE LOWER(al.name) LIKE LOWER(CONCAT('%', :query, '%'))
+       OR LOWER(a.name)  LIKE LOWER(CONCAT('%', :query, '%'))
+    """)
+    Page<Product> searchByAlbumOrArtist(@Param("query") String query, Pageable pageable);
 
     // Category filtering
     @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId")

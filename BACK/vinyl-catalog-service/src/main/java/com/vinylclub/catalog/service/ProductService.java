@@ -60,7 +60,7 @@ public class ProductService {
 
     // Search products by title or artist
     public Page<ProductDTO> searchProducts(String query, Pageable pageable) {
-        Page<Product> products = productRepository.searchByTitleOrArtist(query, pageable);
+        Page<Product> products = productRepository.searchByAlbumOrArtist(query, pageable);
         return products.map(this::convertToDTO);
     }
 
