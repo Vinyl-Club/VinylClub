@@ -240,4 +240,46 @@ public class FilterProductTest {
 
         verify(productRepository, times(1)).findByFormat(format, pageable);
     } 
+
+    @Test
+    public void getProductsByState_shouldReturnPagedProductDTOs() {
+        // GIVEN
+        ProductState state = ProductState.BON_ETAT;
+        Pageable pageable = PageRequest.of(0, 12);
+
+        Product product3 = new Product();
+        product3.setId(1L);
+        product3.setTitle("Album One");
+        product3.setStatus(ProductStatus.AVAILABLE);
+        product3.setState(ProductState.BON_ETAT);
+        product3.setFormat(ProductFormat.T45);
+
+        Product product4 = new Product();
+        product4.setId(2L);
+        product4.setTitle("Album Two");
+        product4.setStatus(ProductStatus.AVAILABLE);
+        product4.setState(ProductState.BON_ETAT);
+        product4.setFormat(ProductFormat.T33);
+        
+        Page<Product> pageResult = new PageImpl<>(List.of(product3, product4), pageable, 2);
+
+        when(productRepository.findByState(state, pageable)).thenReturn(pageResult);
+
+        // WHEN
+        Page<ProductDTO> result = productService.getProductsByState(state, pageable);
+
+        // THEN
+        assertNotNull(result);
+        assertEquals(2, result.getTotalElements());
+        assertEquals(2, result.getContent().size());
+
+        ProductDTO dto1 = result.getContent().get(0);
+        assertEquals(1L, dto1.getId());
+        assertEquals("Album One", dto1.getTitle());
+        assertEquals("AVAILABLE", dto1.getStatus());
+        assertEquals("BON_ETAT", dto1.getState());
+        assertEquals("T45", dto1.getFormat()); // puisque ton DTO format est String
+
+        verify(productRepository, times(1)).findByState(state, pageable);
+    } 
 }
