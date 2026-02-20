@@ -1,0 +1,54 @@
+.field{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: clamp(280px, 40vw, 420px);
+}
+
+.label{
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.input{
+  width: 100%;
+  padding: 10px 16px;   /* ✅ au lieu de 10px 100px */
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  color: grey;
+  box-shadow: 0px 2px 7px rgba(0,0,0,0.3);
+}
+
+.input::placeholder{
+  text-align: left;     
+}
+
+.input:focus-visible{
+  outline: 3px solid #8AA39F;
+  outline-offset: 2px;
+}
+
+.errorInput{
+  border-color: #c0392b;
+}
+
+.error{
+  color: #c0392b;
+  font-size: 0.85rem;
+}
+
+ @media (max-width: 640px) {
+  .field{
+    width: min(90vw, 300px); /* prend quasi tout l'écran sans déborder */
+  }
+
+  .label{
+    font-size: 1rem;
+  }
+
+  .input{
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+} 
