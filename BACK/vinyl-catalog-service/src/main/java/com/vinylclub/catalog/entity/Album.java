@@ -1,6 +1,5 @@
 package com.vinylclub.catalog.entity;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,11 +22,6 @@ public class Album {
      */
     @Column(nullable = false, length = 100, unique = true)
     private String name;
-    
-
-    
-    
-
 
     // Getters and Setters
     public Long getId() {

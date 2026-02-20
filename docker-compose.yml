@@ -14,11 +14,15 @@ services:
   vinyl-auth-service:
     build: ./BACK/vinyl-auth-service
     container_name: vinyl-auth-service
-    ports:
-      - "8083:8083"
+    expose:
+      - "8083"
     environment:
+      - JWT_SECRET=myVinylClubSecretKeyThatShouldBeLongEnoughForSecurity123456789
+      - INTERNAL_SERVICE_SECRET=vinyl-internal-secret-CHANGE-ME
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-auth-service
     depends_on:
       - vinyl-discovery-service
       - vinyl-user-service
@@ -30,11 +34,14 @@ services:
   vinyl-user-service:
     build: ./BACK/vinyl-user-service
     container_name: vinyl-user-service
-    ports:
-      - "8082:8082"
+    expose:
+      - "8082"
     environment:
+      - INTERNAL_SERVICE_SECRET=vinyl-internal-secret-CHANGE-ME
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-user-service
     depends_on:
       - vinyl-discovery-service
       - postgres-db
@@ -45,11 +52,34 @@ services:
   vinyl-catalog-service:
     build: ./BACK/vinyl-catalog-service
     container_name: vinyl-catalog-service
-    ports:
-      - "8081:8081"
+    expose:
+      - "8081"
+    # env_file:
+    #   - .env
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-catalog-service
+    depends_on:
+      - vinyl-discovery-service
+      - postgres-db
+    networks:
+      - vinyl-network
+
+
+      
+  # Ad service
+  vinyl-ad-service:
+    build: ./BACK/vinyl-ad-service
+    container_name: vinyl-ad-service
+    expose:
+      - "8087"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-ad-service
     depends_on:
       - vinyl-discovery-service
       - postgres-db
@@ -99,16 +129,19 @@ services:
       context: ./BACK/vinyl-favorites-service
       dockerfile: Dockerfile
     container_name: vinyl-favorites-service
-    ports:
-      - "8084:8084"
+    expose:
+      - "8084"
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
       # FORCER la désactivation par variables d'environnement
       - SPRING_CLOUD_CONFIG_ENABLED=false
       - SPRING_CLOUD_CONFIG_IMPORT_CHECK_ENABLED=false
       - SPRING_CONFIG_IMPORT=
       - SPRING_CLOUD_CONFIG_FAIL_FAST=false
       - SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED=false
+      - SPRING_PROFILES_ACTIVE=docker
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-favorites-service
     depends_on:
       mongo-db:
         condition: service_healthy
@@ -119,18 +152,21 @@ services:
   # Gateway service
   vinyl-gateway-service:
     build: ./BACK/vinyl-gateway-service
-    container_name: gateway-service
+    container_name: vinyl-gateway-service
     ports:
       - "8090:8090"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
+      - EUREKA_INSTANCE_HOSTNAME=vinyl-gateway-service
     depends_on:
       - vinyl-discovery-service
       - vinyl-user-service
       - vinyl-catalog-service
       - vinyl-auth-service
       - vinyl-favorites-service
+      - vinyl-ad-service
     networks:
       - vinyl-network
 
@@ -143,7 +179,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
-      - POSTGRES_MULTIPLE_DATABASES=userdb,catalogdb
+      - POSTGRES_MULTIPLE_DATABASES=userdb,catalogdb,addb
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./docker-postgresql-multiple-databases.sh:/docker-entrypoint-initdb.d/docker-postgresql-multiple-databases.sh

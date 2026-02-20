@@ -95,6 +95,12 @@
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
+
+                <!-- Flyway for Database Migrations -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
         
         <!-- Documentation API - mis à jour pour Spring Boot 3.x -->
         <dependency>

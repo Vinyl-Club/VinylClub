@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.vinylclub.catalog.dto.AlbumDTO;
 import com.vinylclub.catalog.service.AlbumService;
@@ -45,6 +47,16 @@ public class AlbumController {
     public ResponseEntity<AlbumDTO> getAlbumById(@PathVariable Long id) {
         AlbumDTO album = albumService.getAlbumById(id);
         return ResponseEntity.ok(album);
+    }
+
+    /**
+     * Search for albums
+     * GET /api/albums/search?query=the wall
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<AlbumDTO>> searchAlbums(@RequestParam String query) {
+        List<AlbumDTO> albums = albumService.searchAlbums(query);
+        return ResponseEntity.ok(albums);
     }
 
     /**

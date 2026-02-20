@@ -1,0 +1,50 @@
+/* :root{
+    --font-1: var(--font-bebas);
+    --font-2: var(--font-anton);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #F6EBDD;
+} */
+
+/* 0) Base safe */
+*, *::before, *::after { box-sizing: border-box; }
+
+/* 1) Le viewport occupe bien toute la hauteur, sans marge parasite */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #F6EBDD; /* ton beige */
+}
+
+/* 2) Wrapper principal = colonne qui remplit l’écran */
+.page {
+  min-height: 100dvh;     /* hauteur de viewport dynamique (mobile+desktop) */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* 3) Le contenu doit pousser le footer en bas */
+.page-main {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;           /* évite les débordements des grilles/conteneurs */
+}
+
+/* 4) S’assurer que header/main/footer s’étirent sur la largeur */
+header, main, footer {
+  display: block;
+  width: 100%;
+}
+
+/* 5) Évite une barre vide à droite si un enfant dépasse d’1-2px */
+html, body { overflow-x: hidden; }
+
+/* 6) Media & éléments potentiellement “larges” responsives */
+img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
+
+

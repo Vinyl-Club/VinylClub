@@ -1,23 +1,20 @@
 package com.vinylclub.user.controller;
 
 import com.vinylclub.user.dto.UserDTO;
+import com.vinylclub.user.dto.UserPublicDTO;
 import com.vinylclub.user.dto.LoginRequest;
+import com.vinylclub.user.dto.ValidatePasswordRequest;
 import com.vinylclub.user.entity.User;
 import com.vinylclub.user.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import java.util.List;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.vinylclub.user.dto.ValidatePasswordRequest;
 
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -26,42 +23,110 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Value("${internal.service.secret}")
+    private String internalSecret;
+
+    // Acces en admin
     @GetMapping
-    public List<UserDTO> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<UserDTO>> getAllUsers(
+            @RequestHeader(value = "X-User-Role", required = false) String role
+    ) {
+        if (role == null || !role.equalsIgnoreCase("ADMIN")) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    // Protection: un user ne peut lire que lui-même
     @GetMapping("/{id}")
-    public UserDTO getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<UserDTO> getUserById(
+            @RequestHeader(value = "X-User-Id", required = false) Long requesterId,
+            @RequestHeader(value = "X-Internal-Call", required = false) String internalCall,
+            @PathVariable Long id
+    ) {
+        boolean isInternal = internalSecret != null && internalSecret.equals(internalCall);
+
+        // appel normal (via gateway) => doit être self-only
+        if (!isInternal) {
+            if (requesterId == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+            if (!id.equals(requesterId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+        }
+
+        UserDTO user = userService.getUserById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 
-    
+
+    @GetMapping("/public/{id}")
+    public ResponseEntity<UserPublicDTO> getUserPublicById(@PathVariable Long id) {
+        UserPublicDTO user = userService.getPublicUserById(id);
+            if (user == null) {
+                return ResponseEntity.notFound().build();
+            }
+        return ResponseEntity.ok(user);
+    }
+
+    /**
+     * IMPORTANT : /api/users est utilisé par auth/register
+     * => en général cette route doit rester PUBLIC (sinon ton auth-service ne peut pas créer d'user via la gateway)
+     */
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User created = userService.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
-    
+
+    // Protection: un user ne peut modifier que lui-même
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User user) {
-        return userService.updateUser(id, user);
+    public ResponseEntity<User> updateUser(
+            @RequestHeader("X-User-Id") Long requesterId,
+            @PathVariable Long id,
+            @RequestBody User user
+    ) {
+        if (!id.equals(requesterId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        User updated = userService.updateUser(id, user);
+        return ResponseEntity.ok(updated);
     }
-    
+
+    // Protection: un user ne peut supprimer que lui-même
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(
+            @RequestHeader("X-User-Id") Long requesterId,
+            @PathVariable Long id
+    ) {
+        if (!id.equals(requesterId)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login")
-    public UserDTO login(@RequestBody LoginRequest loginRequest) {
-        return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+    public ResponseEntity<UserDTO> login(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(userService.login(loginRequest.getEmail(), loginRequest.getPassword()));
     }
 
-    //  Validate a user's password
-    //  Post /USERS /VALIDATE-PASSWORD
-     
     @PostMapping("/validate-password")
-    public ResponseEntity<Boolean> validatePassword(@RequestBody ValidatePasswordRequest request) {
+    public ResponseEntity<Boolean> validatePassword(
+            @RequestHeader(value = "X-Internal-Call", required = false) String internalCall,
+            @RequestBody ValidatePasswordRequest request
+    ) {
+        boolean isInternal = internalSecret != null && internalSecret.equals(internalCall);
+        if (!isInternal) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             boolean isValid = userService.validatePassword(request.getEmail(), request.getPassword());
             return ResponseEntity.ok(isValid);
@@ -71,16 +136,20 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserDTO> getUserByEmail(
+            @RequestHeader(value = "X-Internal-Call", required = false) String internalCall,
+            @PathVariable String email
+    ) {
+        boolean isInternal = internalSecret != null && internalSecret.equals(internalCall);
+        if (!isInternal) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
         try {
             UserDTO user = userService.getUserByEmail(email);
-            if (user != null) {
-                return ResponseEntity.ok(user);
-            }
-            return ResponseEntity.notFound().build();
+            return (user != null) ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
- 
-   }
+    }
 }

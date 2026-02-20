@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.vinylclub.catalog.dto.CategoryDTO;
 import com.vinylclub.catalog.dto.ProductDTO;
@@ -26,11 +30,23 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/categories")
-// @CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*")
 public class CategoryController {
-
+    
     @Autowired
     private CategoryService categoryService;
+    
+    // @Value("${admin.token}")
+    // private String adminToken;
+    
+    /**
+     *Protects routes from user inserts
+     */
+    // private void checkAdminToken(String token) {
+    // if (token == null || !token.equals(adminToken)) {
+    //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
+    //     }
+    // }
 
     /**
      *Recover all categories
@@ -71,7 +87,11 @@ public class CategoryController {
      *Post /API /Categories
      */
     @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> createCategory(
+            // @RequestHeader(value = "X-ADMIN-TOKEN", required = false) String token,
+            @Valid @RequestBody CategoryDTO categoryDTO) {
+        
+        // checkAdminToken(token);
         CategoryDTO createdCategory = categoryService.createCategory(categoryDTO);
         return ResponseEntity.ok(createdCategory);
     }
@@ -82,8 +102,11 @@ public class CategoryController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(
+            // @RequestHeader(value = "X-ADMIN-TOKEN", required = false) String token,
             @PathVariable Long id,
             @Valid @RequestBody CategoryDTO categoryDTO) {
+
+        // checkAdminToken(token);
         CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
         return ResponseEntity.ok(updatedCategory);
     }
@@ -93,7 +116,11 @@ public class CategoryController {
      *Delete/API/Categories/1
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCategory(
+            // @RequestHeader(value = "X-ADMIN-TOKEN", required = false) String token,
+            @PathVariable Long id) {
+
+        // checkAdminToken(token);
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }

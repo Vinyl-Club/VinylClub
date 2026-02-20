@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Entity
 @Table(name = "users", schema = "users")
@@ -18,7 +20,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-   
+
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -33,27 +35,32 @@ public class User {
 
     @Column(nullable = false)
     private String lastName;
-
+    
     @Column(nullable = true)
     private String phone;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
 
     @Column(name = "created_at", nullable = true)
     private Timestamp createdAt;
 
     @Column(name = "updated_at", nullable = true)
     private Timestamp updatedAt;
- 
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Address address;
     
     public User() {}
 
-    public User(String email, String firstName, String lastName, String phone, String password) {
+    public User(String email, String firstName, String lastName, String phone, String password, UserRole role) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
         this.password = password;
+        this.role = role;
     }
 
     // getters and setters
@@ -111,6 +118,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     public Timestamp getCreatedAt() {

@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter+Tight:ital,wght@1,100..900&family=Sriracha&display=swap');
+
+.nav { background: #D48541; }
+
+.list {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 8px 16px;
+    list-style: none;
+    margin: 0;
+}
+.item {
+    font-family: var(--font-bebas), sans-serif;
+    font-weight: 400;
+    letter-spacing: .04em;
+    line-height: 1;
+    text-transform: none;
+    font-size: 20px;
+
+    background: #D48541;
+    border: none;
+    color: #1a1a1a;
+    /* border-radius: 999px; */
+    padding: 6px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.item:hover {
+    background: #DFB793;
+    color: black;
+}

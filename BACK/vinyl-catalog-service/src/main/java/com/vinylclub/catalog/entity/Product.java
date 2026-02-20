@@ -26,8 +26,9 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 @Entity
-@Table(name = "products", schema = "catalog")  
+@Table(name = "products", schema = "catalog")
 public class Product {
 
     @Id
@@ -39,10 +40,6 @@ public class Product {
     @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(name = "user_id")
-    private Long userId;
-
-    
     @NotNull(message = "{product.artist.required}")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "artist_id", nullable = false)
@@ -53,7 +50,6 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-   
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "album_id", nullable = true)
     private Album album;
@@ -62,32 +58,15 @@ public class Product {
     @Column(nullable = true, length = 500)
     private String description;
 
-    
-@NotNull(message = "{product.price.required}")
+    @NotNull(message = "{product.price.required}")
     @DecimalMin(value = "0.01", message = "{product.price.positive}")
     @Digits(integer = 8, fraction = 2, message = "Prix invalide")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @Min(value = 0, message = "{product.quantity.min}")
-    @Column(name = "stock_quantity", nullable = false)
-    private Integer quantity = 0;
-
-    @Min(value = 1200, message = "Année de sortie invalide")
-    @Max(value = 2030, message = "Année de sortie invalide")
-    @Column(name = "release_year", nullable = true)
-    private Integer releaseYear;
-
-    
-    @OneToMany(
-        mappedBy = "product", 
-        cascade = CascadeType.ALL, 
-        orphanRemoval = true,
-        fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Images> images = new ArrayList<>();
 
-    
     @Column(name = "created_at", nullable = false, updatable = false)
     @org.hibernate.annotations.CreationTimestamp
     private Timestamp createdAt;
@@ -96,17 +75,20 @@ public class Product {
     @org.hibernate.annotations.UpdateTimestamp
     private Timestamp updatedAt;
 
-    
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private ProductStatus status = ProductStatus.AVAILABLE;  
+    private ProductStatus status = ProductStatus.AVAILABLE;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = true)
     private ProductState state;
 
-    
-    public Product() {}
+    @Enumerated(EnumType.STRING)
+    @Column(name = "format", nullable = false)
+    private ProductFormat format;
+
+    public Product() {
+    }
 
     public Product(String title, Artist artist, Category category, BigDecimal price) {
         this.title = title;
@@ -115,7 +97,6 @@ public class Product {
         this.price = price;
     }
 
-   
     public Long getId() {
         return id;
     }
@@ -140,7 +121,6 @@ public class Product {
         this.description = description;
     }
 
-    
     public BigDecimal getPrice() {
         return price;
     }
@@ -157,14 +137,6 @@ public class Product {
         this.category = category;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public Artist getArtist() {
         return artist;
     }
@@ -179,22 +151,6 @@ public class Product {
 
     public void setAlbum(Album album) {
         this.album = album;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public Integer getReleaseYear() {
-        return releaseYear;
-    }
-
-    public void setReleaseYear(Integer releaseYear) {
-        this.releaseYear = releaseYear;
     }
 
     public List<Images> getImages() {
@@ -221,7 +177,6 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    
     public ProductStatus getStatus() {
         return status;
     }
@@ -236,5 +191,13 @@ public class Product {
 
     public void setState(ProductState state) {
         this.state = state;
+    }
+
+    public ProductFormat getFormat() {
+        return format;
+    }
+
+    public void setFormat(ProductFormat format) {
+        this.format = format;
     }
 }

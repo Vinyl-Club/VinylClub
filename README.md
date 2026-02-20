@@ -12,8 +12,14 @@ VinylClub est une application de mise en relation entre particuliers qui souhaie
 ### Connectez-vous à PostgreSQL
 Se connecter en tant que postgres (utilisateur par défaut)
 psql -U postgres        # Sur Windows/macOS
+pour quitter
+\q
+
 
 ### Une fois connecté, créer le schémasql
+CREATE DATABASE catalogdb_dev;
+sql\c catalogdb_dev
+CREATE SCHEMA catalog
 CREATE SCHEMA catalog
 CREATE SCHEMA user
 
@@ -26,14 +32,15 @@ GRANT ALL PRIVILEGES ON DATABASE vinyl_ecommerce TO vinyl_user
 ALTER USER vinyl_user WITH SUPERUSER
 
 Connectez-vous à la base de données
-sql\c catalogdb
-sql\c userdb
+sql\c catalogdb_dev
+sql\c userdb_dev
+sql\c addb_dev
 
 
 ## DOCKER
 Compilez chaque service :
 
-cd back
+cd BACK
 cd vinyl-discovery-service
 mvn clean package -DskipTests
 cd ..
@@ -51,6 +58,10 @@ mvn clean package -DskipTests
 cd ..
 cd vinyl-favorites-service
 mvn clean package -DskipTests
+cd ..
+cd vinyl-ad-service
+mvn clean package -DskipTests
+cd ..
 
 Démarrez les conteneurs :
 
@@ -67,7 +78,7 @@ Consultez les journaux en cas de problème :
 
 docker-compose logs -f
 
-arrêter et nettoyer tous les services en cours : 
+arrêter et nettoyer tous les services en cours (ça peut tout supprimer): 
 
 docker-compose down -v
 docker system prune -a
@@ -75,6 +86,7 @@ docker system prune -a
 Test de votre application
 
 Accédez au tableau de bord Eureka : http://localhost:8761
+
 Testez l'API User Service : http://localhost:8082/api/users
 Testez l'API Catalog Service : http://localhost:8081/api/products
 
