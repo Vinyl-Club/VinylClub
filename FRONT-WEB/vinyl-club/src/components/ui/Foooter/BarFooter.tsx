@@ -1,8 +1,14 @@
 'use client';
 import Link from 'next/link';
 import styles from './BarFooter.module.css';
+import { usePathname } from 'next/navigation';
 
 export default function BarFooter() {
+    const pathname = usePathname();
+    const hideFooter = pathname === '/login' || pathname === '/register';
+
+    if(hideFooter) return null;
+
     return (
         <footer className={styles.footerContainer}>
         <div className={styles.contactBar}>

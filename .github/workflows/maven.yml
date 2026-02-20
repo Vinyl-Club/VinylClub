@@ -2,15 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: ["develop", "main", "login-logout"]
-    paths:
-      - "BACK/**"
-      - ".github/workflows/maven.yml"
+    branches: ["develop", "main"]
   pull_request:
-    branches: ["develop", "main", "login-logout"]
-    paths:
-      - "BACK/**"
-      - ".github/workflows/maven.yml"
+    branches: ["develop", "main"]
 
 concurrency:
   group: maven-back-${{ github.ref }}

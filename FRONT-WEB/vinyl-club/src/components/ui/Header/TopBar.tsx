@@ -14,6 +14,7 @@ export default function TopBar() {
   const pathname = usePathname();
 
   const hideSearch = pathname === '/login' || pathname === '/register';
+  const hideMenu = pathname === '/login' || pathname === '/register';
   
   const handleShawLinks = () => setShawLinks((v) => !v);
 
@@ -40,6 +41,7 @@ export default function TopBar() {
         </div>
       )}
 
+      {!hideMenu && (
       <div className={styles.menuWrap}>
         <button
           className={`${styles.burger} ${shawLinks ? styles.open : ''}`}
@@ -66,6 +68,7 @@ export default function TopBar() {
           </ul>
         </nav>
       </div>
+      )}
     </div>
   );
 }
