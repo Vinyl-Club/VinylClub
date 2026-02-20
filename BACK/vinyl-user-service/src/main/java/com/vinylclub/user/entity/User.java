@@ -40,7 +40,7 @@ public class User {
     private String phone;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
+    @Column(nullable = false)
     private UserRole role;
 
     @Column(name = "created_at", nullable = true)
