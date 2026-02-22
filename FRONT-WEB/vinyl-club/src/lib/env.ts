@@ -4,6 +4,6 @@ if (!BASE) throw new Error('NEXT_PUBLIC_API_BASE is missing (.env.local)');
 export const API = {
     base: BASE,
     images: `${BASE}/api/images/`,
-    auth:   `${BASE}/auth`,
+    auth:   `${BASE}/auth/login`,
     product: `${BASE}/api/products`,
 } as const;
