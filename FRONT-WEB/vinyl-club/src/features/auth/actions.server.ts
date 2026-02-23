@@ -5,7 +5,6 @@ import { redirect } from 'next/navigation';
 import { API } from '@/lib/env';
 
 type State = { error: string };
-console.log(API);
 
 export async function loginAction(prevState: State, formData: FormData): Promise<State> {
     const email = String(formData.get('email') ?? '');
@@ -27,10 +26,8 @@ export async function loginAction(prevState: State, formData: FormData): Promise
     }
 
     const data = await response.json();
-    console.log(data);
     // 👇 adapte selon ce que ton backend renvoie (ex: accessToken / token)
     const token = data.accessToken;
-    console.log(token);
 
     if (!token) {
         return { error: 'Réponse backend invalide (token manquant)' };

@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 6px;
   width: clamp(280px, 40vw, 420px);
+  padding: 4px;
 }
 
 .label{
