@@ -36,7 +36,7 @@ public class Product {
     private Long id;
 
     @NotBlank(message = "{product.title.required}")
-    @Size(max = 100, message = "Title cannot exceed 100 characters")
+    @Size(max = 100, message = "{product.title.size}")
     @Column(nullable = false, length = 100)
     private String title;
 
@@ -54,7 +54,7 @@ public class Product {
     @JoinColumn(name = "album_id", nullable = true)
     private Album album;
 
-    @Size(max = 500, message = "Description cannot exceed 500 characters")
+    @Size(max = 500, message = "{product.description.size}")
     @Column(nullable = true, length = 500)
     private String description;
 

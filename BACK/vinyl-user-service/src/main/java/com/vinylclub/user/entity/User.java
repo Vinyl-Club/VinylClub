@@ -12,6 +12,13 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "users", schema = "users")
@@ -40,7 +47,7 @@ public class User {
     private String phone;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = true)
+    @Column(nullable = false)
     private UserRole role;
 
     @Column(name = "created_at", nullable = true)
@@ -151,6 +158,4 @@ public class User {
     public void setAddress(Address address) {
         this.address = address;
     }
-
-    
 }

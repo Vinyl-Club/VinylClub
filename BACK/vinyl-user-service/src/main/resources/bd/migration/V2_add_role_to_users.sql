@@ -5,7 +5,7 @@ ADD COLUMN IF NOT EXISTS role VARCHAR(20);
 -- 2) met USER sur toutes les lignes existantes
 UPDATE users.users
 SET role = 'USER'
-WHERE role IS NULL;
+WHERE role IS NOT NULL;
 
 -- 3) défaut USER pour les futurs users (même si le code le fait déjà)
 ALTER TABLE users.users
