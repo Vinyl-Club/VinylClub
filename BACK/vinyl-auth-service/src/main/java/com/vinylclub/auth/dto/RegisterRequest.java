@@ -33,7 +33,9 @@ public class RegisterRequest {
     )
     private String password;
 
+    @NotBlank(message = "Le nom est obligatoire")
     private String firstName;
+    @NotBlank(message = "Le prénom est obligatoire")
     private String lastName;
     private String phone;
 

@@ -2,16 +2,22 @@
 import Input from '@/components/ui/Input/Input';
 import Button from '@/components/ui/Button/Button';
 import styles from './RegisterForm.module.css';
+import { registerAction } from '@/features/auth/actions.server';
+import { useActionState } from 'react';
 
+const initialState = { error: ''};
 
 export default function RegisterForm() {
+
+    const [state, formAction] = useActionState(registerAction, initialState);
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>
                 Insciption
             </h1>
 
-            <form className={styles.containerForm} action="">
+            <form className={styles.containerForm} action={formAction}>
               
                 <Input 
                     label="Email"
@@ -30,38 +36,44 @@ export default function RegisterForm() {
                     type="password"
                     placeholder="Mot de passe"
                     required
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                 />
 
                 <Input 
                     label="Confirmation mot de passe"
-                    id="Confirm password"
-                    name="Confirm password"
+                    id="confirmPassword"
+                    name="confirmPassword"
                     type="password"
                     placeholder="Confirmez votre mot de passe"
                     required
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                 />
                 
                 <Input
                     label="Nom"
-                    id="Lastname"
-                    name="Lastnamee"
-                    type="Lastname"
+                    id="lastName"
+                    name="lastName"
+                    type="text"
                     placeholder="Nom"
                     required
-                    autoComplete="lastname"
+                    autoComplete="family-name"
                 />
 
                 <Input
                     label="Prénom"
-                    id="Firstname"
-                    name="Firstname"
-                    type="Firstname"
+                    id="firstName"
+                    name="firstName"
+                    type="text"
                     placeholder="Prénom"
                     required
-                    autoComplete="firstname"
+                    autoComplete="given-name"
                 />
+
+                {state?.error && (
+                    <p role='alert' className={styles.error}>
+                        {state.error}
+                    </p>
+                )}
 
                 <div className={styles.cta}>
                     <Button type="submit" variant="primary" fullWidth={false} isLoading={false}>

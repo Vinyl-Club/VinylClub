@@ -6,4 +6,5 @@ export const API = {
     images: `${BASE}/api/images/`,
     auth:   `${BASE}/auth/login`,
     product: `${BASE}/api/products`,
+    register: `${BASE}/auth/register`,
 } as const;
