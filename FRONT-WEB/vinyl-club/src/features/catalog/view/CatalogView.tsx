@@ -1,33 +1,48 @@
-import type { Product } from'../types.ts';
+import type { Product } from '../types';
 import Image from 'next/image';
+import styles from './CatalogView.module.css';
 
 export default function CatalogView({ items }: { items: Product[] }) {
-    if (!items || items.length === 0) {
-        return <p>Aucun produit pour le moment.</p>;
-    }
+  if (!items || items.length === 0) {
+    return <p>Aucun produit pour le moment.</p>;
+  }
 
-    return (
-    <ul style={{ display:'grid', gap:12, gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))' }}>
-        {items.map((p) => {
-            let coverUrl: string | undefined = undefined;
-            if (p.images && p.images.length > 0 && p.images[0] && p.images[0].imageUrl) {
-            coverUrl = p.images[0].imageUrl; // on prend la première image telle quelle
-            }
+  return (
+    <div className={styles.grid}>
+      {items.map((p) => {
+        const coverUrl =
+          p.images && p.images.length > 0 && p.images[0]?.imageUrl
+            ? p.images[0].imageUrl
+            : '/placeholder.png';
 
-            return (
-            <li key={p.id} style={{ border:'1px solid #eee', borderRadius:8, padding:12 }}>
-                <Image
-                    src={coverUrl ?? '/placeholder.png'}
-                    alt={p.title}
-                    width={220}
-                    height={160}
-                    style={{ width:'100%', height:160, objectFit:'cover', marginBottom:8 }}
-                />
-                <div style={{ fontWeight:600 }}>{p.title}</div>
-                <div>{p.price} €</div>
-            </li>
-            );
-        })}
-        </ul>
-    );
+        return (
+          <div key={p.id} className={styles.card}>
+            <div className={styles.left}>
+              <Image
+                src={coverUrl}
+                alt={p.title}
+                width={110}
+                height={110}
+                className={styles.image}
+              />
+
+              <div className={styles.info}>
+                <div className={styles.title}>{p.title}</div>
+                {/* <div>{p.album?.artist?.name}</div>
+                <div>{p.category?.name}</div>
+                <div>{p.location}</div> */}
+              </div>
+            </div>
+
+            <div className={styles.right}>
+              <div className={styles.price}>{p.price} €</div>
+              <button className={styles.button}>
+                Voir le détail
+              </button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
