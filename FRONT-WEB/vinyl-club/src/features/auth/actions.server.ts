@@ -4,15 +4,16 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { API } from '@/lib/env';
 
-type State = { error: string };
+type State = {
+  fieldErrors: Record<string, string>;
+  formError: string;
+};
+
+// const initialState: State = { fieldErrors: {}, formError: '' };
 
 export async function loginAction(prevState: State, formData: FormData): Promise<State> {
     const email = String(formData.get('email') ?? '');
     const password = String(formData.get('password') ?? '');
-
-    if (!email || !password) {
-        return { error: 'Email et mot de passe requis' };
-    }
 
     const response = await fetch(API.auth, {
         method: 'POST',
@@ -22,14 +23,25 @@ export async function loginAction(prevState: State, formData: FormData): Promise
     });
 
     if (!response.ok) {
-        return { error: 'Identifiants incorrects' };
+        const raw = await response.text();
+
+        try {
+            const parsed: unknown = raw ? JSON.parse(raw) : null;
+
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                return { fieldErrors: parsed as Record<string, string>, formError: '' };
+            }
+        } catch {
+        // pas JSON
+        }
+        return { fieldErrors: {}, formError: raw || 'Identifiants incorrects' };
     }
 
     const data = await response.json();
     const token = data.accessToken;
 
     if (!token) {
-        return { error: 'Réponse backend invalide (token manquant)' };
+        return {fieldErrors:{}, formError: 'Réponse backend invalide (token manquant)' };
     }
 
     const cookieStore = await cookies();
@@ -49,16 +61,12 @@ export async function registerAction(prevState: State, formData: FormData): Prom
     const confirmPassword = String(formData.get('confirmPassword') ?? ``);
     const lastName = String(formData.get('lastName') ?? ``);
     const firstName = String(formData.get('firstName') ?? ``);
-
-    console.log(password);
-    console.log(confirmPassword)
-
-    if(!email || !password || !confirmPassword || !lastName || !firstName) {
-        return {error: 'Tous les champs sont requis.'}
-    }
-
+    
     if(password !== confirmPassword) {
-        return {error: 'Les mots de passe sont différents.'}
+        return {
+            fieldErrors: {confirmPassword: "Les mots de passe sont différents."},
+            formError: '',
+        }
     }
 
     const response = await fetch(API.register, {
@@ -68,29 +76,28 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         cache: 'no-store',
     });
 
-    if(!response.ok) {
-        try{
-            const errorData = await response.json();
+    if (!response.ok) {
+        const raw = await response.text();
 
-            if(typeof errorData === 'object' && errorData !== null) {
-                const errorMessage = Object.values(errorData);
+        try {
+            const parsed: unknown = raw ? JSON.parse(raw) : null;
 
-                if(errorMessage.length > 0) {
-                    return {error: String(errorMessage[0])}
-                }
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                return { fieldErrors: parsed as Record<string, string>, formError: '' };
             }
-            return {error: "Erreur de validation"};
-        }catch(e) {
-            const message = await response.text();
-            return {error: message || "Une erreur est survenue."};
+            } catch {
+        // pas JSON
         }
+
+        // 2) Erreur globale texte (ex: "Email déjà pris")
+        return { fieldErrors: {}, formError: raw || 'Une erreur est survenue.' };
     }
 
     const data = await response.json();
     const token = data.accessToken;
 
     if(!token) {
-        return {error: 'Token manquant'}
+        return {fieldErrors: {}, formError: 'Token manquant'}
     }
 
      const cookieStore = await cookies();

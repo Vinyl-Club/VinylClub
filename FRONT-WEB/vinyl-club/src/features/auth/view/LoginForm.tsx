@@ -6,7 +6,12 @@ import Link from 'next/link';
 import { loginAction } from '@/features/auth/actions.server';
 import { useActionState } from 'react';
 
-const initialState = { error: '' };
+type State = {
+  fieldErrors: Record<string, string>;
+  formError: string;
+};
+
+const initialState: State = {fieldErrors: {}, formError: ""};
 
 export default function LoginForm() {
 
@@ -40,9 +45,9 @@ export default function LoginForm() {
           autoComplete="current-password"
         />
 
-        {state?.error && (
+        {state?.formError && (
           <p role="alert" className={styles.error}>
-            {state.error}
+            {state.formError}
           </p>
         )}
 
