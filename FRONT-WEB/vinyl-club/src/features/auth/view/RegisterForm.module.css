@@ -1,0 +1,37 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+}
+
+.title{
+    color: #9C581E;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.containerfprm{
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 19px;
+}
+
+.cta{
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.error{
+  color: red;
+}
+
+@media (max-width: 640px) {
+    .title{
+        font-size: 1.7em
+    }
+}

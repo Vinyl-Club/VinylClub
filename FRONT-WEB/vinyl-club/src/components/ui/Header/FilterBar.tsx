@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import styles from './FilterBar.module.css';
+import { usePathname } from 'next/navigation';
 
 type OpenMenu = null | 'genre' | 'etat' | 'prix' | 'format';
 
