@@ -32,7 +32,9 @@ html, body {
 .page-main {
   flex: 1 1 auto;
   width: 100%;
-  min-width: 0;           /* évite les débordements des grilles/conteneurs */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;   
 }
 
 /* 4) S’assurer que header/main/footer s’étirent sur la largeur */
