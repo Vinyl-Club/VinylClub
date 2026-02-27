@@ -1,14 +1,3 @@
-/* :root{
-    --font-1: var(--font-bebas);
-    --font-2: var(--font-anton);
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #F6EBDD;
-} */
-
 /* 0) Base safe */
 *, *::before, *::after { box-sizing: border-box; }
 

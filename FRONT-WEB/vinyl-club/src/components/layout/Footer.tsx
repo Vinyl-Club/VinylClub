@@ -1,5 +1,5 @@
 'use client';
-import BarFooter from '../ui/BarFooter';
+import BarFooter from '../ui/Foooter/BarFooter';
 
 export default function Footer() {
     return (

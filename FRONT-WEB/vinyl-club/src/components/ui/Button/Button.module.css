@@ -1,0 +1,59 @@
+.button{
+  border: none;
+  cursor: pointer;
+
+  /* look "pilule" */
+  border-radius: 999px;
+
+  /* taille proche de ta maquette */
+  padding: 12px 34px;
+  min-width: 180px;
+
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1;
+
+  box-shadow: 0 6px 12px rgba(0,0,0,0.18);
+  transition: box-shadow .2s ease, filter .2s ease;
+}
+
+.button:focus-visible{
+  outline: 3px solid #111;
+  outline-offset: 3px;
+}
+
+.button:disabled{
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Variants */
+.primary{
+  background: #8AA39F;
+  color: #111;
+}
+
+.primary:hover{
+  background-color: #578079;
+  color: white;
+}
+
+.secondary{
+  background: #D48541;
+  color: #111;
+}
+
+.secondary:hover{
+  background-color: #9C581E;
+  color: white;
+}
+
+.fullWidth{
+  width: 100%;
+  min-width: 0; 
+}
+
+.loading{
+  pointer-events: none;
+}

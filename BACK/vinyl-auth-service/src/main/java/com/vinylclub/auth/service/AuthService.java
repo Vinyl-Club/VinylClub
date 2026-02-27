@@ -9,6 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
 
 import com.vinylclub.auth.dto.LoginRequest;
 import com.vinylclub.auth.dto.LoginResponse;
@@ -158,11 +162,6 @@ public class AuthService {
 
     public LoginResponse register(RegisterRequest req) {
 
-        // 1) (Optionnel mais conseillé) vérifier si email existe déjà
-        UserDTO existing = getUserByEmail(req.getEmail());
-        if (existing != null) {
-            throw new RuntimeException("Email already used");
-        }
 
         // 2) appeler user-service pour créer l’utilisateur
         UserCreatedResponse created = createUserInUserService(req);
@@ -207,9 +206,10 @@ public class AuthService {
                     restTemplate.postForEntity(url, body, UserCreatedResponse.class);
 
             return response.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new ResponseStatusException(e.getStatusCode(), e.getResponseBodyAsString());
         } catch (Exception e) {
-            System.out.println("❌ Error creating user: " + e.getMessage());
-            return null;
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erreur Technique");
         }
     }
 
