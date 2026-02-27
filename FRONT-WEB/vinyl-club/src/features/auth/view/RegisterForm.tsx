@@ -5,11 +5,16 @@ import styles from './RegisterForm.module.css';
 import { registerAction } from '@/features/auth/actions.server';
 import { useActionState } from 'react';
 
-const initialState = { error: ''};
+type State = {
+  fieldErrors: Record<string, string>;
+  formError: string;
+};
+
+const initialState: State = { fieldErrors: {}, formError: '' };
 
 export default function RegisterForm() {
-
     const [state, formAction] = useActionState(registerAction, initialState);
+    const fe = state?.fieldErrors ?? {};
 
     return (
         <div className={styles.container}>
@@ -27,6 +32,7 @@ export default function RegisterForm() {
                     placeholder="Email@.fr"
                     required
                     autoComplete="email"
+                    error={fe.email}
                 />
                     
                 <Input
@@ -37,6 +43,7 @@ export default function RegisterForm() {
                     placeholder="Mot de passe"
                     required
                     autoComplete="new-password"
+                    error={fe.password}
                 />
 
                 <Input 
@@ -47,6 +54,7 @@ export default function RegisterForm() {
                     placeholder="Confirmez votre mot de passe"
                     required
                     autoComplete="new-password"
+                    error={fe.confirmPassword}
                 />
                 
                 <Input
@@ -57,6 +65,7 @@ export default function RegisterForm() {
                     placeholder="Nom"
                     required
                     autoComplete="family-name"
+                    error={fe.lastName}
                 />
 
                 <Input
@@ -67,11 +76,12 @@ export default function RegisterForm() {
                     placeholder="Prénom"
                     required
                     autoComplete="given-name"
+                    error={fe.firstName}
                 />
 
-                {state?.error && (
+                {state?.formError && (
                     <p role='alert' className={styles.error}>
-                        {state.error}
+                        {state.formError}
                     </p>
                 )}
 
