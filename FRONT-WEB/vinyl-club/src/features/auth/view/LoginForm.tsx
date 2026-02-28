@@ -16,6 +16,7 @@ const initialState: State = {fieldErrors: {}, formError: ""};
 export default function LoginForm() {
 
   const [state, formAction] = useActionState(loginAction, initialState);
+  const fe = state?.fieldErrors ?? {};
 
   return (
     <div className={styles.container}>
@@ -33,6 +34,7 @@ export default function LoginForm() {
           placeholder="Email@.fr"
           required
           autoComplete="email"
+          error={fe.email}
         />
 
         <Input
@@ -43,6 +45,7 @@ export default function LoginForm() {
           placeholder="Mot de passe"
           required
           autoComplete="current-password"
+          error={fe.password}
         />
 
         {state?.formError && (
