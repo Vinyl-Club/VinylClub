@@ -22,7 +22,7 @@ export default function RegisterForm() {
                 Insciption
             </h1>
 
-            <form className={styles.containerForm} action={formAction}>
+            <form  className={styles.containerForm} action={formAction}>
               
                 <Input 
                     label="Email"

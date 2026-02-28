@@ -56,6 +56,7 @@ export async function loginAction(prevState: State, formData: FormData): Promise
 }
 
 export async function registerAction(prevState: State, formData: FormData): Promise<State> {
+    console.log("rezet");
     const email = String(formData.get('email') ?? ``);
     const password = String(formData.get('password') ?? ``);
     const confirmPassword = String(formData.get('confirmPassword') ?? ``);
