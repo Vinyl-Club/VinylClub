@@ -13,7 +13,7 @@ public class LoginRequest {
     private String email;
     
     @NotBlank(message = "Mot de passe obligatoire.")
-    @Size(min = 12, max = 72 , message = "72 caractères maximum.")
+    @Size(max = 72 , message = "72 caractères maximum.")
     private String password;
     
     public LoginRequest() {}

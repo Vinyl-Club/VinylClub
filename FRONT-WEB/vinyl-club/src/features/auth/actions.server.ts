@@ -56,7 +56,6 @@ export async function loginAction(prevState: State, formData: FormData): Promise
 }
 
 export async function registerAction(prevState: State, formData: FormData): Promise<State> {
-    console.log("rezet");
     const email = String(formData.get('email') ?? ``);
     const password = String(formData.get('password') ?? ``);
     const confirmPassword = String(formData.get('confirmPassword') ?? ``);
@@ -101,7 +100,7 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         return {fieldErrors: {}, formError: 'Token manquant'}
     }
 
-     const cookieStore = await cookies();
+    const cookieStore = await cookies();
     cookieStore.set('auth', token, {
         httpOnly: true,
         sameSite: 'lax',
@@ -110,4 +109,12 @@ export async function registerAction(prevState: State, formData: FormData): Prom
     });
 
     redirect('/catalog');
+}
+
+export async function logoutAction() {
+   const cookieStore = await cookies();
+
+   cookieStore.delete('auth');
+
+   redirect('/login');
 }
