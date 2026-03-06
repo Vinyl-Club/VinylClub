@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.http.HttpCookie;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vinylclub.gateway.security.SecurityRules;
@@ -81,11 +82,14 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
             return chain.filter(exchange);
         }
 
-        // 2) Protected routes => require Authorization: Bearer <token>
-        String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // 2) Protected routes => require cookie "auth"
+         HttpCookie authCookie = exchange.getRequest().getCookies().getFirst("auth");
+        if (authCookie == null || authCookie.getValue() == null || authCookie.getValue().isBlank()) {
             return unauthorized(exchange);
         }
+
+        String token = authCookie.getValue();
+        String authHeader = "Bearer " + token;
 
         // 3) Validate token with auth-service
         return webClient.get()

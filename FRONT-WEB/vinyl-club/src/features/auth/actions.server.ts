@@ -38,18 +38,29 @@ export async function loginAction(prevState: State, formData: FormData): Promise
     }
 
     const data = await response.json();
-    const token = data.accessToken;
+    const accessToken = data.accessToken;
+    const refreshToken = data.refreshToken;
+    
+    console .log(accessToken);
+    console .log(refreshToken);
 
-    if (!token) {
+    if (!accessToken || !refreshToken) {
         return {fieldErrors:{}, formError: 'Réponse backend invalide (token manquant)' };
     }
 
     const cookieStore = await cookies();
-    cookieStore.set('auth', token, {
+    cookieStore.set('auth', accessToken, {
         httpOnly: true,
         sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
         path: '/',
+    });
+
+    cookieStore.set('refresh', refreshToken, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
     });
 
     redirect('/catalog');
@@ -94,18 +105,26 @@ export async function registerAction(prevState: State, formData: FormData): Prom
     }
 
     const data = await response.json();
-    const token = data.accessToken;
+    const accessToken = data.accessToken;
+    const refreshToken = data.refreshToken;
 
-    if(!token) {
+    if(!accessToken || !refreshToken) {
         return {fieldErrors: {}, formError: 'Token manquant'}
     }
 
     const cookieStore = await cookies();
-    cookieStore.set('auth', token, {
+    cookieStore.set('auth', accessToken, {
         httpOnly: true,
         sameSite: 'lax',
         secure: process.env.NODE_ENV === 'production',
         path: '/',
+    });
+
+    cookieStore.set('refresh', refreshToken, {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
     });
 
     redirect('/catalog');
@@ -115,6 +134,7 @@ export async function logoutAction() {
    const cookieStore = await cookies();
 
    cookieStore.delete('auth');
+   cookieStore.delete('refresh');
 
    redirect('/login');
 }
