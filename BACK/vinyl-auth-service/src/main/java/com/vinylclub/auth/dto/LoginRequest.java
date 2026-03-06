@@ -2,13 +2,18 @@ package com.vinylclub.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 public class LoginRequest {
-    @NotBlank(message = "Email obligatoire")
-    @Email(message = "Email invalide")
+    @NotBlank(message = "Email obligatoire.")
+    @Email(message = "Email invalide.")
+    @Size(max = 200, message = "200 caractères maximum.")
     private String email;
     
-    @NotBlank(message = "Mot de passe obligatoire")
+    @NotBlank(message = "Mot de passe obligatoire.")
+    @Size(max = 72 , message = "72 caractères maximum.")
     private String password;
     
     public LoginRequest() {}

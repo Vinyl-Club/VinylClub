@@ -11,6 +11,7 @@ public class RegisterRequest {
 
     @NotBlank(message = "Email obligatoire.")
     @Email(message = "Email invalide")
+    @Size(max = 200, message = "200 caractères maximum")
     private String email;
 
     @NotBlank(message = "Mot de passe obligatoire.")
@@ -33,9 +34,20 @@ public class RegisterRequest {
     )
     private String password;
 
-    @NotBlank(message = "Le nom est obligatoire")
+    @NotBlank(message = "Le pénom est obligatoire")
+    @Size(min = 3, max = 50, message = "3 caractères mninimum, 50 caractères maximum")
+    @Pattern(
+        regexp = "^[\\p{L}]+(?:[\\p{L} '\\-]*[\\p{L}])?$",
+        message = "Lettres, espaces, tirets et apostrophes uniquement."
+    )
     private String firstName;
-    @NotBlank(message = "Le prénom est obligatoire")
+
+    @NotBlank(message = "Le nom est obligatoire")
+    @Size(min = 3, max = 50, message = "3 caractères mninimum, 50 caractères maximum")
+    @Pattern(
+        regexp = "^[\\p{L}]+(?:[\\p{L} '\\-]*[\\p{L}])?$",
+        message = "Lettres, espaces, tirets et apostrophes uniquement."
+    )
     private String lastName;
     private String phone;
 

@@ -7,4 +7,5 @@ export const API = {
     auth:   `${BASE}/auth/login`,
     product: `${BASE}/api/products`,
     register: `${BASE}/auth/register`,
+    logout: `${BASE}/auth/logout`,
 } as const;

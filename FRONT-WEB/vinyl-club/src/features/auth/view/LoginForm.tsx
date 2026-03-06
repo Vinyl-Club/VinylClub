@@ -6,11 +6,17 @@ import Link from 'next/link';
 import { loginAction } from '@/features/auth/actions.server';
 import { useActionState } from 'react';
 
-const initialState = { error: '' };
+type State = {
+  fieldErrors: Record<string, string>;
+  formError: string;
+};
+
+const initialState: State = {fieldErrors: {}, formError: ""};
 
 export default function LoginForm() {
 
   const [state, formAction] = useActionState(loginAction, initialState);
+  const fe = state?.fieldErrors ?? {};
 
   return (
     <div className={styles.container}>
@@ -28,6 +34,7 @@ export default function LoginForm() {
           placeholder="Email@.fr"
           required
           autoComplete="email"
+          error={fe.email}
         />
 
         <Input
@@ -38,11 +45,12 @@ export default function LoginForm() {
           placeholder="Mot de passe"
           required
           autoComplete="current-password"
+          error={fe.password}
         />
 
-        {state?.error && (
+        {state?.formError && (
           <p role="alert" className={styles.error}>
-            {state.error}
+            {state.formError}
           </p>
         )}
 
