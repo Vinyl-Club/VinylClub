@@ -6,6 +6,7 @@ import logo from '@/assets/logo.png';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { logoutAction } from '@/features/auth/actions.server';
 
 import SearchBar from './SearchBar';
 
@@ -28,6 +29,10 @@ export default function TopBar() {
     window.addEventListener(`keydown`, onKeyDown);
     return () => window.removeEventListener(`keydown`, onKeyDown);
   }, [shawLinks]);
+
+  useEffect(() => {
+  setShawLinks(false);
+  }, [pathname]);
 
   return (
     <div className={styles.topbar}>
@@ -64,7 +69,13 @@ export default function TopBar() {
             <li className={styles.item}><Link href="/" className={styles.link}>Favoris</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Mon profil</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Mes commandes</Link></li>
-            <li className={styles.item}><Link href="/" className={styles.link}>Déconnexion</Link></li>
+            <li className={styles.item}>
+              <form action={logoutAction}>
+                <button type="submit" className={styles.link}>
+                  Déconnexion
+                </button>
+              </form>
+            </li>
           </ul>
         </nav>
       </div>
