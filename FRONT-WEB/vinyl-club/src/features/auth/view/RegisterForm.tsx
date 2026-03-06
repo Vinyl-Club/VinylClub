@@ -3,7 +3,8 @@ import Input from '@/components/ui/Input/Input';
 import Button from '@/components/ui/Button/Button';
 import styles from './RegisterForm.module.css';
 import { registerAction } from '@/features/auth/actions.server';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
+import registerSchema from '@/features/auth/schemas/register.schema';
 
 type State = {
   fieldErrors: Record<string, string>;
@@ -14,7 +15,49 @@ const initialState: State = { fieldErrors: {}, formError: '' };
 
 export default function RegisterForm() {
     const [state, formAction] = useActionState(registerAction, initialState);
+    const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
+
     const fe = state?.fieldErrors ?? {};
+
+    const backFrontErrors = {
+        email: clientErrors.email ?? fe.email,
+        password: clientErrors.password ?? fe.password,
+        confirmPassword: clientErrors.confirmPassword ?? fe.confirmPassword,
+        lastName: clientErrors.lastName ?? fe.lastName,
+        firstName: clientErrors.firstName ?? fe.firstName, 
+    }
+
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const formData = new FormData(e.currentTarget);
+
+    const values = {
+      email: String(formData.get('email') ?? ''),
+      password: String(formData.get('password') ?? ''),
+      confirmPassword: String(formData.get('confirmPassword') ?? ''),
+      lastName: String(formData.get('lastName') ?? ''),
+      firstName: String(formData.get('firstName') ?? ''),
+    };
+
+    const result = registerSchema.safeParse(values);
+
+    if (!result.success) {
+      e.preventDefault();
+
+      const errors: Record<string, string> = {};
+
+      for (const issue of result.error.issues) {
+        const field = issue.path[0];
+        if (typeof field === 'string' && !errors[field]) {
+          errors[field] = issue.message;
+        }
+      }
+
+      setClientErrors(errors);
+      return;
+    }
+
+    setClientErrors({});
+  }
 
     return (
         <div className={styles.container}>
@@ -22,61 +65,61 @@ export default function RegisterForm() {
                 Insciption
             </h1>
 
-            <form  className={styles.containerForm} action={formAction}>
+            <form  className={styles.containerForm} action={formAction} onSubmit={handleSubmit}>
               
                 <Input 
                     label="Email"
                     id="email"
                     name="email"
-                    type="email"
+                    // type="email"
                     placeholder="Email@.fr"
-                    required
+                    // required
                     autoComplete="email"
-                    error={fe.email}
+                    error={backFrontErrors.email}
                 />
                     
                 <Input
                     label="Mot de passe"
                     id="password"
                     name="password"
-                    type="password"
+                    // type="password"
                     placeholder="Mot de passe"
-                    required
+                    // required
                     autoComplete="new-password"
-                    error={fe.password}
+                    error={backFrontErrors.password}
                 />
 
                 <Input 
                     label="Confirmation mot de passe"
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
+                    // type="password"
                     placeholder="Confirmez votre mot de passe"
-                    required
+                    // required
                     autoComplete="new-password"
-                    error={fe.confirmPassword}
+                    error={backFrontErrors.confirmPassword}
                 />
                 
                 <Input
                     label="Nom"
                     id="lastName"
                     name="lastName"
-                    type="text"
+                    // type="text"
                     placeholder="Nom"
-                    required
+                    // required
                     autoComplete="family-name"
-                    error={fe.lastName}
+                    error={backFrontErrors.lastName}
                 />
 
                 <Input
                     label="Prénom"
                     id="firstName"
                     name="firstName"
-                    type="text"
+                    // type="text"
                     placeholder="Prénom"
-                    required
+                    // required
                     autoComplete="given-name"
-                    error={fe.firstName}
+                    error={backFrontErrors.firstName}
                 />
 
                 {state?.formError && (
