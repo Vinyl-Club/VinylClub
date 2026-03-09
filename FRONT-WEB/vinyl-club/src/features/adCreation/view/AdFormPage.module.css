@@ -1,0 +1,72 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 45px;
+}
+
+.title{
+    color: #9C581E;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.containerForm{
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.containerImage{
+    width: clamp(280px, 40vw, 420px);
+    padding: 4px;
+    font-size: 1.2rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.buttonImage{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: #F6EBDD;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+.buttonImage:focus-visible{
+    outline: 3px solid #8AA39F;
+    outline-offset: 2px;
+}
+
+.priceWrapper{
+  position: relative;
+}
+
+.euroIcon{
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  color: grey;
+  pointer-events: none;
+}
+
+.cta{
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 640px) {
+    .title{
+        font-size: 1.7em
+    }
+}

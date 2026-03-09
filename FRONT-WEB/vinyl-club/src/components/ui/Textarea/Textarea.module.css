@@ -11,45 +11,42 @@
   font-weight: 500;
 }
 
-.input{
+.textarea{
   width: 100%;
-  padding: 10px 40px 10px 16px;
+  padding: 10px 16px;
   border-radius: 10px;
   border: none;
   font-size: 1rem;
-  color: grey;
+  font-family: inherit;
+  color: rgb(117, 117, 117);
+  resize: none;
+  overflow: hidden;
+  min-height: 100px;
   box-shadow: 0px 2px 7px rgba(0,0,0,0.3);
 }
 
-.input::placeholder{
-  text-align: left;     
+.textarea::placeholder{
+    font-size: 1.1rem;
+    font-family: inherit;
 }
 
-.input:focus-visible{
+.textarea:focus-visible{
   outline: 3px solid #8AA39F;
   outline-offset: 2px;
 }
 
-.errorInput{
-  border-color: #c0392b;
+.footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.counter{
+  font-size: 0.8rem;
+  color: #777;
 }
 
 .error{
   color: #c0392b;
   font-size: 0.85rem;
 }
-
- @media (max-width: 640px) {
-  .field{
-    width: min(90vw, 300px); /* prend quasi tout l'écran sans déborder */
-  }
-
-  .label{
-    font-size: 1rem;
-  }
-
-  .input{
-    padding: 10px 14px;
-    font-size: 0.95rem;
-  }
-} 
