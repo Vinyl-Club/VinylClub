@@ -18,6 +18,7 @@ import com.vinylclub.catalog.dto.ImageDTO;
 import com.vinylclub.catalog.dto.ImageUploadResponse;
 import com.vinylclub.catalog.entity.Images;
 import com.vinylclub.catalog.service.ImageService;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/api/images")
@@ -32,7 +33,8 @@ public class ImageController {
     @PostMapping("/upload")
     public ResponseEntity<ImageUploadResponse> uploadImage(
             @RequestParam("file") MultipartFile file,
-            @RequestParam("productId") Long productId) {
+            @RequestParam("productId") Long productId,
+            @RequestHeader("X-User-Id") Long userId) {
 
         try {
             if (file.isEmpty()) {
@@ -51,9 +53,7 @@ public class ImageController {
                     new ImageUploadResponse(
                             true,
                             "Image uploadée avec succès",
-                            savedImage.getId()
-                    )
-            );
+                            savedImage.getId()));
 
         } catch (IOException e) {
             return ResponseEntity.internalServerError()
