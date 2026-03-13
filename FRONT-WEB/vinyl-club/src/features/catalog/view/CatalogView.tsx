@@ -10,27 +10,29 @@ export default function CatalogView({ items }: { items: Product[] }) {
   return (
     <div className={styles.grid}>
       {items.map((p) => {
+        console.log("PRODUCT:", p);
+        console.log("IMAGES:", p.images);
+
         const coverUrl =
-          p.images && p.images.length > 0 && p.images[0]?.imageUrl
-            ? p.images[0].imageUrl
-            : '/placeholder.png';
+          p.images && p.images.length > 0
+            ? p.images[0]?.imageUrl
+            : null;
 
         return (
           <div key={p.id} className={styles.card}>
             <div className={styles.left}>
-              <Image
-                src={coverUrl}
-                alt={p.title}
-                width={110}
-                height={110}
-                className={styles.image}
-              />
+              {coverUrl && (
+                <Image
+                  src={coverUrl}
+                  alt={p.title}
+                  width={110}
+                  height={110}
+                  className={styles.image}
+                />
+              )}
 
               <div className={styles.info}>
                 <div className={styles.title}>{p.title}</div>
-                {/* <div>{p.album?.artist?.name}</div>
-                <div>{p.category?.name}</div>
-                <div>{p.location}</div> */}
               </div>
             </div>
 

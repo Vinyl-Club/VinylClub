@@ -18,51 +18,62 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "images", schema = "catalog")
 public class Images {
-   
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-   
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     @JsonIgnore
     private Product product;
-   
-    @Column(name = "image", nullable = false)
-    @JdbcTypeCode(SqlTypes.VARBINARY)  //  SOLUTION: Force VARBINARY type for PostgreSQL
-    @JsonIgnore
-    private byte[] image;
-   
-    // Builders
-    public Images() {}
-   
-    public Images(Product product, byte[] image) {
-        this.product = product;
-        this.image = image;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
+
+    @Column(name = "public_id", nullable = false)
+    private String publicId;
+
+    public Images() {
     }
-   
-    // Getters and Setters
+
+    public Images(Product product, String imageUrl, String publicId) {
+        this.product = product;
+        this.imageUrl = imageUrl;
+        this.publicId = publicId;
+    }
+
+    // Getters / Setters
+
     public Long getId() {
         return id;
     }
-   
+
     public void setId(Long id) {
         this.id = id;
     }
-   
-    public byte[] getImage() {
-        return image;
-    }
-   
-    public void setImage(byte[] image) {
-        this.image = image;
-    }
-   
+
     public Product getProduct() {
         return product;
     }
-   
+
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getPublicId() {
+        return publicId;
+    }
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
     }
 }
