@@ -1,3 +1,5 @@
+'use client';
+
 import styles from './Select.module.css';
 import { ChevronDown } from 'lucide-react';
 

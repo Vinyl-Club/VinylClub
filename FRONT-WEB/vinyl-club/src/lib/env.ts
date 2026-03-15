@@ -8,4 +8,6 @@ export const API = {
     product: `${BASE}/api/products`,
     register: `${BASE}/auth/register`,
     logout: `${BASE}/auth/logout`,
+    createAd: `${BASE}/api/ad`,
+    categories: `${BASE}/api/categories`
 } as const;

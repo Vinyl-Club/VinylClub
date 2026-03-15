@@ -37,7 +37,14 @@ export default function TopBar() {
   return (
     <div className={styles.topbar}>
       <Link href="/catalog" className={styles.logoBox} aria-label="Aller à l'accueil">
-        <Image src={logo} alt="Vinyl Club" fill className={styles.logoImg} priority />
+        <Image 
+          src={logo} 
+          alt="Vinyl Club" 
+          fill className={styles.logoImg} 
+          priority 
+          // width={500}
+          // height={500}
+          />
       </Link>
 
       {!hideSearch && (

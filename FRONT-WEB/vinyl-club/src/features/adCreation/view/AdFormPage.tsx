@@ -1,3 +1,5 @@
+'use client';
+
 import styles from './AdFormPage.module.css'
 import Input from '@/components/ui/Input/Input';
 import Button from '@/components/ui/Button/Button';
@@ -5,10 +7,13 @@ import Select from '@/components/ui/Select/Select';
 import Textarea from '@/components/ui/Textarea/Textarea';
 import { Camera } from 'lucide-react';
 import { Euro } from 'lucide-react';
+import { useAdForm } from '../useAdForm';
 
-<Euro />
+
 
 export default function AdFormPage() {
+    const {categories} = useAdForm();
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>
@@ -17,10 +22,20 @@ export default function AdFormPage() {
 
             <form className={styles.containerForm} action="">
                 <Input
+                    label="Titre"
+                    id="titre"
+                    name="titre"
+                    // type="text"
+                    placeholder="Ex: Vends..."
+                    // required
+                    autoComplete="artiste"
+                />
+
+                <Input
                     label="Artiste"
                     id="artiste"
                     name="artiste"
-                    // type="artiste"
+                    // type="text"
                     placeholder="Ajouter le nom de l'artiste"
                     // required
                     autoComplete="artiste"
@@ -30,7 +45,7 @@ export default function AdFormPage() {
                     label="Album"
                     id="album"
                     name="album"
-                    // type="album"
+                    // type="text"
                     placeholder="Ajouter le nom de l'album"
                     // required
                     autoComplete="album"
@@ -43,17 +58,16 @@ export default function AdFormPage() {
                     </button>
                 </div>
 
+                
                 <Select
                     label="Style de musique"
                     id="style"
                     name="style"
                     placeholder="Choisissez le style"
-                    options={[
-                        { value: "rock", label: "Rock" },
-                        { value: "jazz", label: "Jazz" },
-                        { value: "electro", label: "Electro" },
-                        { value: "hiphop", label: "Hip-Hop" },
-                    ]}
+                    options={categories.map((category) => ({
+                        value: String(category.id),
+                        label: category.name,
+                    }))}
                 />
                 
                 <Textarea
@@ -69,9 +83,9 @@ export default function AdFormPage() {
                     name="etat"
                     placeholder="Etat du produit"
                     options={[
-                        { value: "MINT", label: "Comme neuf" },
-                        { value: "VERY_GOOD", label: "Très bon état" },
-                        { value: "GOOD", label: "Bon état" },
+                        { value: "TRES_BON_ETAT", label: "Très bon état" },
+                        { value: "BON_ETAT", label: "Bon état" },
+                        { value: "MAUVAISE_ETAT", label: "Mauvais état" },
                     ]}
                 />
 
@@ -92,8 +106,9 @@ export default function AdFormPage() {
                     name="format"
                     placeholder="Choisissez le format"
                     options={[
-                        { value: "LP", label: "33T " },
-                        { value: "EP", label: "45T " },
+                        { value: "T33", label: "33 Tours " },
+                        { value: "T45", label: "45 Tours " },
+                        { value: "T78", label: "78 Tours " },
                     ]}
                 />
 
