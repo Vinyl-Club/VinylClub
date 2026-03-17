@@ -8,11 +8,19 @@ import Textarea from '@/components/ui/Textarea/Textarea';
 import { Camera } from 'lucide-react';
 import { Euro } from 'lucide-react';
 import { useAdForm } from '../useAdForm';
+import { createAdAction } from '../actions.server';
+import type { State } from '../types.ts';
+import { useActionState } from 'react';
 
 
+const initialState: State = {
+    fieldErrors: {},
+    formError: '',
+};
 
 export default function AdFormPage() {
     const {categories} = useAdForm();
+    const [stateForm, formAction, isPending] = useActionState(createAdAction, initialState); 
 
     return (
         <div className={styles.container}>
@@ -20,7 +28,7 @@ export default function AdFormPage() {
                 Ajouter une annonce
             </h1>
 
-            <form className={styles.containerForm} action="">
+            <form className={styles.containerForm} action={formAction}>
                 <Input
                     label="Titre"
                     id="titre"
@@ -28,7 +36,7 @@ export default function AdFormPage() {
                     // type="text"
                     placeholder="Ex: Vends..."
                     // required
-                    autoComplete="artiste"
+                    autoComplete="off"
                 />
 
                 <Input
@@ -38,7 +46,7 @@ export default function AdFormPage() {
                     // type="text"
                     placeholder="Ajouter le nom de l'artiste"
                     // required
-                    autoComplete="artiste"
+                    autoComplete="off"
                 />
 
                 <Input
@@ -48,7 +56,7 @@ export default function AdFormPage() {
                     // type="text"
                     placeholder="Ajouter le nom de l'album"
                     // required
-                    autoComplete="album"
+                    autoComplete="off"
                 />
 
                 <div className={styles.containerImage}>
@@ -95,7 +103,7 @@ export default function AdFormPage() {
                         id="prix"
                         name="prix"
                         placeholder="Ajouter un prix"
-                        autoComplete="prix"
+                        autoComplete="off"
                     />
                     <Euro className={styles.euroIcon} />
                 </div>
@@ -112,8 +120,12 @@ export default function AdFormPage() {
                     ]}
                 />
 
+                {stateForm.formError && (
+                    <p>{stateForm.formError}</p>
+                )}
+
                 <div className={styles.cta}>
-                    <Button type="submit" variant="primary" fullWidth={false} isLoading={false}>
+                    <Button type="submit" variant="primary" fullWidth={false} isLoading={isPending}>
                         Valider
                     </Button>
                 </div>
