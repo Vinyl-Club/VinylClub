@@ -72,7 +72,7 @@ export default function TopBar() {
             hidden={!shawLinks}
             className={`${styles.links} ${shawLinks ? styles.open : ''}`}
           >
-            <li className={styles.item}><Link href="/" className={styles.link}>Ajouter une annonce</Link></li>
+            <li className={styles.item}><Link href="/ads/create" className={styles.link} onClick={() => setShawLinks(false)}>Ajouter une annonce</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Favoris</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Mon profil</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Mes commandes</Link></li>

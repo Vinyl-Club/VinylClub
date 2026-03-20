@@ -68,32 +68,28 @@ public class AuthService {
      *Renewal of tokens
      */
     public LoginResponse refreshTokens(String refreshToken) {
-        try {
-            // Extract information from the refresh token
-            Long userId = jwtService.getUserIdFromToken(refreshToken);
-            String email = jwtService.getEmailFromToken(refreshToken);
+    try {
+        Long userId = jwtService.getUserIdFromToken(refreshToken);
 
-            // Recover user information
-            UserDTO user = getUserById(userId);
-            
-            if (user == null || !user.getEmail().equals(email)) {
-                throw new RuntimeException("Invalid refresh token");
-            }
+        UserDTO user = getUserById(userId);
 
-            // Generate new tokens
-            String newAccessToken = jwtService.generateAccessToken(userId, email, user.getRole());
-            String newRefreshToken = jwtService.generateRefreshToken(userId, email);
-
-            return new LoginResponse(
-                newAccessToken,
-                newRefreshToken,
-                jwtService.getAccessTokenExpirationInSeconds(),
-                user
-            );
-        } catch (Exception e) {
+        if (user == null) {
             throw new RuntimeException("Invalid refresh token");
         }
+
+        String newAccessToken = jwtService.generateAccessToken(userId, user.getEmail(), user.getRole());
+        String newRefreshToken = jwtService.generateRefreshToken(userId, user.getEmail());
+
+        return new LoginResponse(
+            newAccessToken,
+            newRefreshToken,
+            jwtService.getAccessTokenExpirationInSeconds(),
+            user
+        );
+    } catch (Exception e) {
+        throw new RuntimeException("Invalid refresh token");
     }
+}
 
     /**
      *Recover user from the token

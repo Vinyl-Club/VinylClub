@@ -100,7 +100,6 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         // pas JSON
         }
 
-        // 2) Erreur globale texte (ex: "Email déjà pris")
         return { fieldErrors: {}, formError: raw || 'Une erreur est survenue.' };
     }
 

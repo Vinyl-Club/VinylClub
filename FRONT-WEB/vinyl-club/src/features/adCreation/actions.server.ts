@@ -7,6 +7,10 @@ import type { State, Album, Artist } from './types';
 export async function findOrCreateArtistId(name: string): Promise<number> {
   const trimmedArtistName = name.trim();
 
+  if (!trimmedArtistName) {
+    throw new Error("L'artiste est obligatoire.");
+  }
+
   const searchArtist = await fetch(
     `${API.searchArtist}?query=${encodeURIComponent(trimmedArtistName)}`,
     {
@@ -43,25 +47,24 @@ export async function findOrCreateArtistId(name: string): Promise<number> {
   });
 
   if (!createResponse.ok) {
-    const errorText = await createResponse.text();
-    throw new Error(errorText || "Impossible de créer l'artiste.");
+    throw new Error("Impossible de créer l'artiste.");
   }
 
-  const raw = await createResponse.text();
+  const contentType = createResponse.headers.get('content-type');
 
-  if (!raw) {
-    throw new Error("Réponse vide lors de la création de l'artiste.");
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error("Réponse invalide du serveur (pas du JSON)");
   }
 
-  const createdArtist: Artist = JSON.parse(raw);
+  const createdArtist: Artist = await createResponse.json();
   return createdArtist.id;
 }
 
-export async function findOrCreateAlbumId(name: string): Promise<number | null> {
+export async function findOrCreateAlbumId(name: string): Promise<number> {
   const trimmedAlbumName = name.trim();
 
-  if (!trimmedAlbumName) {
-    return null;
+   if (!trimmedAlbumName) {
+    throw new Error("L'album est obligatoire.");
   }
 
   const searchAlbum = await fetch(
@@ -100,17 +103,16 @@ export async function findOrCreateAlbumId(name: string): Promise<number | null> 
   });
 
   if (!createResponse.ok) {
-    const errorText = await createResponse.text();
-    throw new Error(errorText || "Impossible de créer l'album.");
+    throw new Error("Impossible de créer l'album.");
   }
 
-  const raw = await createResponse.text();
+  const contentType = createResponse.headers.get('content-type');
 
-  if (!raw) {
-    throw new Error("Réponse vide lors de la création de l'album.");
+  if (!contentType || !contentType.includes('application/json')) {
+    throw new Error("Réponse invalide du serveur (pas du JSON)");
   }
 
-  const createdAlbum: Album = JSON.parse(raw);
+  const createdAlbum: Album = await createResponse.json();
   return createdAlbum.id;
 }
 
@@ -139,12 +141,11 @@ export async function createAdAction(
         title,
         description,
         price,
-        status: 'AVAILABLE',
         state,
         format,
         artist: { id: artistId },
         category: { id: categoryId },
-        album: albumId ? { id: albumId } : null,
+        album: { id: albumId },
       },
     };
 
@@ -159,11 +160,51 @@ export async function createAdAction(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const raw = await response.text();
+
+      try {
+        const parsed: unknown = raw ? JSON.parse(raw) : null;
+
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          const apiErrors = parsed as Record<string, unknown>;
+          const fieldErrors: Record<string, string> = {};
+
+          for (const [field, messages] of Object.entries(apiErrors)) {
+            const firstMessage =
+              Array.isArray(messages) && messages.length > 0
+                ? String(messages[0])
+                : String(messages ?? '');
+
+            let cleanField = field;
+
+            if (cleanField.startsWith('product.')) {
+              cleanField = cleanField.replace('product.', '');
+            }
+
+            if (cleanField === 'title') cleanField = 'titre';
+            if (cleanField === 'artist' || cleanField === 'artist.id') cleanField = 'artiste';
+            if (cleanField === 'album' || cleanField === 'album.id') cleanField = 'album';
+            if (cleanField === 'category' || cleanField === 'category.id') cleanField = 'style';
+            if (cleanField === 'state') cleanField = 'etat';
+            if (cleanField === 'price') cleanField = 'prix';
+
+            if (!fieldErrors[cleanField]) {
+              fieldErrors[cleanField] = firstMessage;
+            }
+          }
+
+          return {
+            fieldErrors,
+            formError: '',
+          };
+        }
+      } catch {
+        // pas JSON
+      }
 
       return {
         fieldErrors: {},
-        formError: errorText || "Erreur lors de la création de l'annonce",
+        formError: raw || "Erreur lors de la création de l'annonce",
       };
     }
 
