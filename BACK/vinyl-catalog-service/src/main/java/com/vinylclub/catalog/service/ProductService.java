@@ -185,6 +185,7 @@ public class ProductService {
             List<ImageSummaryDTO> summaries = product.getImages().stream()
                     .map(this::convertImageToSummaryDTO)
                     .collect(Collectors.toList());
+
             dto.setImages(summaries);
         }
 
@@ -201,9 +202,13 @@ public class ProductService {
     }
 
     private ImageSummaryDTO convertImageToSummaryDTO(com.vinylclub.catalog.entity.Images imageEntity) {
+
         ImageSummaryDTO summary = new ImageSummaryDTO();
+
         summary.setId(imageEntity.getId());
-        summary.setProductId(imageEntity.getProduct().getId());
+
+        summary.setImageUrl(imageEntity.getImageUrl());
+
         return summary;
     }
 }

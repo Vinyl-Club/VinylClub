@@ -63,8 +63,8 @@ services:
       - EUREKA_INSTANCE_HOSTNAME=vinyl-catalog-service
       
       - CLOUDINARY_CLOUD_NAME=dkpnaf6i2
-      - CLOUDINARY_API_KEY=512493157365587
-      - CLOUDINARY_API_SECRET=HRErAsPSTNutbjwDkF3Klxs0
+      - CLOUDINARY_API_KEY=286616641484483
+      - CLOUDINARY_API_SECRET=GxzWrWoX-r_kp2y2kR95QIds68k
       
     depends_on:
       - vinyl-discovery-service
