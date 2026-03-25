@@ -15,7 +15,7 @@ type State = {
 const initialState: State = {fieldErrors: {}, formError: ""};
 
 export default function LoginForm() {
-  const [state, formAction] = useActionState(loginAction, initialState);
+  const [state, formAction, isPending] = useActionState(loginAction, initialState);
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
 
   const fe = state?.fieldErrors ?? {};
@@ -96,7 +96,7 @@ export default function LoginForm() {
         </div>
 
         <div className={styles.cta}>
-          <Button type="submit" variant="primary" fullWidth={false} isLoading={false}>
+          <Button type="submit" variant="primary" fullWidth={false} isLoading={isPending}>
             Se connecter
           </Button>
         </div>

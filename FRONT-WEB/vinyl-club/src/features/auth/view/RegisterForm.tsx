@@ -14,7 +14,7 @@ type State = {
 const initialState: State = { fieldErrors: {}, formError: '' };
 
 export default function RegisterForm() {
-    const [state, formAction] = useActionState(registerAction, initialState);
+    const [state, formAction, ispending] = useActionState(registerAction, initialState);
     const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
 
     const fe = state?.fieldErrors ?? {};
@@ -129,7 +129,7 @@ export default function RegisterForm() {
                 )}
 
                 <div className={styles.cta}>
-                    <Button type="submit" variant="primary" fullWidth={false} isLoading={false}>
+                    <Button type="submit" variant="primary" fullWidth={false} isLoading={ispending}>
                         Valider
                     </Button>
                 </div>

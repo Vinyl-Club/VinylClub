@@ -1,7 +1,7 @@
 'use server';
 
 import { API } from '@/lib/env';
-import { cookies } from 'next/headers';
+import { getAuthToken } from '@/lib/auth.Server';
 import type { State, Album, Artist } from './types';
 
 export async function findOrCreateArtistId(name: string): Promise<number> {
@@ -33,21 +33,41 @@ export async function findOrCreateArtistId(name: string): Promise<number> {
     return exactMatch.id;
   }
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('auth')?.value;
+  const token = await getAuthToken();
 
   const createResponse = await fetch(API.artist, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-        Cookie: `auth=${token}`,
+      Cookie: `auth=${token}`,
     },
     body: JSON.stringify({ name: trimmedArtistName }),
     cache: 'no-store',
   });
 
+  const raw = await createResponse.text();
+
   if (!createResponse.ok) {
-    throw new Error("Impossible de créer l'artiste.");
+    let parsedMessage = '';
+
+    try {
+      const parsed: unknown = raw ? JSON.parse(raw) : null;
+
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        const apiErrors = parsed as Record<string, unknown>;
+
+        for (const messages of Object.values(apiErrors)) {
+          if (Array.isArray(messages) && messages.length > 0) {
+            parsedMessage = String(messages[0]);
+            break;
+          }
+        }
+      }
+    } catch {
+      // pas JSON
+    }
+
+    throw new Error(parsedMessage || raw || "Impossible de créer l'artiste.");
   }
 
   const contentType = createResponse.headers.get('content-type');
@@ -56,7 +76,12 @@ export async function findOrCreateArtistId(name: string): Promise<number> {
     throw new Error("Réponse invalide du serveur (pas du JSON)");
   }
 
-  const createdArtist: Artist = await createResponse.json();
+  const createdArtist: Artist = raw ? JSON.parse(raw) : null;
+
+  if (!createdArtist?.id) {
+    throw new Error("Réponse invalide : id artiste manquant.");
+  }
+
   return createdArtist.id;
 }
 
@@ -89,8 +114,7 @@ export async function findOrCreateAlbumId(name: string): Promise<number> {
     return exactMatch.id;
   }
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('auth')?.value;
+  const token = await getAuthToken();
 
   const createResponse = await fetch(API.album, {
     method: 'POST',
@@ -103,7 +127,28 @@ export async function findOrCreateAlbumId(name: string): Promise<number> {
   });
 
   if (!createResponse.ok) {
-    throw new Error("Impossible de créer l'album.");
+    const raw = await createResponse.text();
+
+    let parsedMessage = '';
+
+    try {
+      const parsed: unknown = raw ? JSON.parse(raw) : null;
+
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        const apiErrors = parsed as Record<string, unknown>;
+
+        for (const messages of Object.values(apiErrors)) {
+          if (Array.isArray(messages) && messages.length > 0) {
+            parsedMessage = String(messages[0]);
+            break;
+          }
+        }
+      }
+    } catch {
+      // pas JSON ou format inattendu
+    }
+
+    throw new Error(parsedMessage || raw || "Impossible de créer l'album.");
   }
 
   const contentType = createResponse.headers.get('content-type');
@@ -133,8 +178,7 @@ export async function createAdAction(
     const artistId = await findOrCreateArtistId(artistName);
     const albumId = await findOrCreateAlbumId(albumName);
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get('auth')?.value;
+    const token = await getAuthToken();
 
     const payload = {
       product: {
