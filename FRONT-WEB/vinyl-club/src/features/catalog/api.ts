@@ -1,8 +1,8 @@
 import { API } from '@/lib/env';
-import type { Product } from './types';
+import type { CatalogItem } from './types';
 
-export async function catalog(): Promise<Product[]> {
-  const response = await fetch(API.product, {
+export async function catalog(): Promise<CatalogItem[]> {
+  const response = await fetch(API.ad, {
     cache: 'no-store',
   });
 
@@ -12,5 +12,5 @@ export async function catalog(): Promise<Product[]> {
 
   const data = await response.json();
 
-  return data.content; 
+  return data.content;
 }

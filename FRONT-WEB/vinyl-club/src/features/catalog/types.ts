@@ -1,16 +1,9 @@
-export interface ProductImage {
-    id: number;
-    ProductId: number;
-    imageUrl: string;
+export interface CatalogItem {
+  id: number;
+  title: string;
+  artistName: string | null;
+  categoryName: string | null;
+  price: number | null;
+  city: string | null;
+  imageUrl: string | null;
 }
-
-export interface Product {
-    id: number;
-    title: string;
-    description: string;
-    price: number;          // BigDecimal côté Java → number côté TS
-    status: string;
-    state: string;
-    format: string;
-    images: ProductImage[];
-    } 
