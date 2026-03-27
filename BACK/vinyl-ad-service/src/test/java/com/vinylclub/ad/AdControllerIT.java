@@ -86,11 +86,18 @@ class AdControllerIT {
         // ⚠️ Adapte si CreateProductRequestDTO a des champs @NotNull (ex: artistId, categoryId, etc.)
         String json = """
             {
-              "product": {
-                "title": "Thriller"
-              }
+            "product": {
+                "title": "Thriller",
+                "description": "Vinyle en très bon état",
+                "price": 29.99,
+                "state": "TRES_BON_ETAT",
+                "format": "T33",
+                "artist": { "id": 1 },
+                "category": { "id": 2 },
+                "album": { "id": 3 }
             }
-            """;
+        }
+        """;
 
         // WHEN
         mockMvc.perform(post("/api/ad")
@@ -127,11 +134,18 @@ class AdControllerIT {
 
         String json = """
             {
-              "product": {
-                "title": "Thriller"
-              }
+            "product": {
+                "title": "Thriller",
+                "description": "Vinyle en très bon état",
+                "price": 29.99,
+                "state": "TRES_BON_ETAT",
+                "format": "T33",
+                "artist": { "id": 1 },
+                "category": { "id": 2 },
+                "album": { "id": 3 }
             }
-            """;
+        }
+        """;
 
         // WHEN
         mockMvc.perform(post("/api/ad")
@@ -171,11 +185,18 @@ class AdControllerIT {
         when(userClient.getUserById(7L)).thenReturn(user);
         when(userClient.getAddressesByUserId(7L)).thenReturn(java.util.List.of());
 
-        String json = """
-            {
-            "title": "Updated title"
-            }
-            """;
+       String json = """
+        {
+        "title": "Updated title",
+        "description": "Description mise à jour",
+        "price": 35.00,
+        "state": "BON_ETAT",
+        "format": "T33",
+        "artist": { "id": 1 },
+        "category": { "id": 2 },
+        "album": { "id": 3 }
+        }
+        """;
 
         mockMvc.perform(
                 put("/api/ad/" + ad.getId())
@@ -198,11 +219,18 @@ class AdControllerIT {
         ad.setProductId(100L);
         ad = adRepository.save(ad);
 
-        String json = """
-            {
-                "title": "Updated title"
-            }
-            """;
+         String json = """
+        {
+        "title": "Updated title",
+        "description": "Description mise à jour",
+        "price": 35.00,
+        "state": "BON_ETAT",
+        "format": "T33",
+        "artist": { "id": 1 },
+        "category": { "id": 2 },
+        "album": { "id": 3 }
+        }
+        """;
         
         mockMvc.perform(
             put("/api/ad/{id}", ad.getId())

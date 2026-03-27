@@ -2,16 +2,52 @@ package com.vinylclub.auth.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 public class RegisterRequest {
 
-    @NotBlank @Email
+    @NotBlank(message = "Email obligatoire.")
+    @Email(message = "Email invalide")
+    @Size(max = 200, message = "200 caractères maximum")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Mot de passe obligatoire.")
+    @Size(min = 12, max = 72, message = "12 caractères minimum")
+    @Pattern(
+        regexp = ".*[A-Z].*",
+        message = "Vous devez avoir au moins une majuscule"
+    )
+    @Pattern(
+        regexp = ".*[a-z].*",
+        message = "Vous devez avoir au moins une minuscule"
+    )
+    @Pattern(
+        regexp = ".*\\d.*",
+        message = "Vous devez avoir au moins un chiffre"
+    )
+    @Pattern(
+        regexp = ".*[^A-Za-z\\d].*",
+        message = "Vous devez avoir au moins un caractère spécial"
+    )
     private String password;
 
+    @NotBlank(message = "Le pénom est obligatoire")
+    @Size(min = 3, max = 50, message = "3 caractères mninimum, 50 caractères maximum")
+    @Pattern(
+        regexp = "^[\\p{L}]+(?:[\\p{L} '\\-]*[\\p{L}])?$",
+        message = "Lettres, espaces, tirets et apostrophes uniquement."
+    )
     private String firstName;
+
+    @NotBlank(message = "Le nom est obligatoire")
+    @Size(min = 3, max = 50, message = "3 caractères mninimum, 50 caractères maximum")
+    @Pattern(
+        regexp = "^[\\p{L}]+(?:[\\p{L} '\\-]*[\\p{L}])?$",
+        message = "Lettres, espaces, tirets et apostrophes uniquement."
+    )
     private String lastName;
     private String phone;
 

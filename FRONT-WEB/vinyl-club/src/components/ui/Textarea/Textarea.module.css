@@ -1,0 +1,52 @@
+.field{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: clamp(280px, 40vw, 420px);
+  padding: 4px;
+}
+
+.label{
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.textarea{
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  font-family: inherit;
+  color: rgb(117, 117, 117);
+  resize: none;
+  overflow: hidden;
+  min-height: 100px;
+  box-shadow: 0px 2px 7px rgba(0,0,0,0.3);
+}
+
+.textarea::placeholder{
+    font-size: 1.1rem;
+    font-family: inherit;
+}
+
+.textarea:focus-visible{
+  outline: 3px solid #8AA39F;
+  outline-offset: 2px;
+}
+
+.footer{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.counter{
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.error{
+  color: #c0392b;
+  font-size: 0.85rem;
+}

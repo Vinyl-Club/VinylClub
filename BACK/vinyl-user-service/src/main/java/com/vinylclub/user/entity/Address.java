@@ -12,17 +12,23 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "addresses", schema = "users")
 public class Address {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name= "street")
     private String street;
+
     @Column(name = "city")
     private String city;
+
     @Column(name = "zip_code")
     private String zipCode;
+
     @Column(name = "country")
     private String country;
+    
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;

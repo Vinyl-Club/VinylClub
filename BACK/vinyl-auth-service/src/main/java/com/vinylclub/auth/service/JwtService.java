@@ -1,5 +1,6 @@
 package com.vinylclub.auth.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,45 +21,41 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt.access-token-expiration:3600000}") // 1 hour by default
-
+    @Value("${jwt.access-token-expiration:3600000}")
     private Long accessTokenExpiration;
 
-    @Value("${jwt.refresh-token-expiration:604800000}") // 7 days by default
-
+    @Value("${jwt.refresh-token-expiration:604800000}")
     private Long refreshTokenExpiration;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
-     *Grinds an access token
+     * Generate an access token
      */
     public String generateAccessToken(Long userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
-        claims.put("email", email);
         claims.put("role", role);
         claims.put("type", "access");
-        
-        return createToken(claims, email, accessTokenExpiration);
+
+        return createToken(claims, String.valueOf(userId), accessTokenExpiration);
     }
 
     /**
-     *Grinds a token refresh
+     * Generate a refresh token
      */
     public String generateRefreshToken(Long userId, String email) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
-        claims.put("email", email);
         claims.put("type", "refresh");
-        
-        return createToken(claims, email, refreshTokenExpiration);
+
+        return createToken(claims, String.valueOf(userId), refreshTokenExpiration);
     }
 
     /**
-     *Create a jwt token
+     * Create a JWT token
      */
     private String createToken(Map<String, Object> claims, String subject, Long expiration) {
         Date now = new Date();
@@ -80,14 +77,7 @@ public class JwtService {
     }
 
     /**
-     *Extract the token email
-     */
-    public String getEmailFromToken(String token) {
-        return getClaimsFromToken(token).getSubject();
-    }
-
-    /**
-     *Extracts the userId from the token
+     * Extract userId from token
      */
     public Long getUserIdFromToken(String token) {
         Claims claims = getClaimsFromToken(token);
@@ -95,7 +85,14 @@ public class JwtService {
     }
 
     /**
-     *Extract the type of token
+     * Optional: extract subject
+     */
+    public String getSubjectFromToken(String token) {
+        return getClaimsFromToken(token).getSubject();
+    }
+
+    /**
+     * Extract token type
      */
     public String getTokenType(String token) {
         Claims claims = getClaimsFromToken(token);
@@ -103,7 +100,7 @@ public class JwtService {
     }
 
     /**
-     *Extract all the token claims
+     * Extract all token claims
      */
     private Claims getClaimsFromToken(String token) {
         return Jwts.parserBuilder()
@@ -114,7 +111,7 @@ public class JwtService {
     }
 
     /**
-     * Checks if the token has expired
+     * Checks if token has expired
      */
     public Boolean isTokenExpired(String token) {
         try {
@@ -126,12 +123,12 @@ public class JwtService {
     }
 
     /**
-     * Validate the token
+     * Validate generic token
      */
-    public Boolean validateToken(String token, String email) {
+    public Boolean validateToken(String token) {
         try {
-            String tokenEmail = getEmailFromToken(token);
-            return (tokenEmail.equals(email) && !isTokenExpired(token));
+            getClaimsFromToken(token);
+            return !isTokenExpired(token);
         } catch (Exception e) {
             return false;
         }
@@ -162,7 +159,7 @@ public class JwtService {
     }
 
     /**
-     *Return the expiration time in seconds
+     * Return expiration time in seconds
      */
     public Long getAccessTokenExpirationInSeconds() {
         return accessTokenExpiration / 1000;

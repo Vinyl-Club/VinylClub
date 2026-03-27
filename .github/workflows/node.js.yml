@@ -2,12 +2,12 @@ name: Front Web CI
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["develop", "main"]
     paths:
       - "FRONT-WEB/**"
       - ".github/workflows/node.js.yml"
   pull_request:
-    branches: ["develop"]
+    branches: ["develop", "main"]
     paths:
       - "FRONT-WEB/**"
       - ".github/workflows/node.js.yml"
@@ -37,7 +37,7 @@ jobs:
 
       - name: Create .env.local for CI
         working-directory: FRONT-WEB/vinyl-club
-        run: echo "NEXT_PUBLIC_API_BASE=http://localhost:8080" > .env.local
+        run: echo "NEXT_PUBLIC_API_BASE=http://localhost:8090" > .env.local
 
       - name: Test
         working-directory: FRONT-WEB/vinyl-club

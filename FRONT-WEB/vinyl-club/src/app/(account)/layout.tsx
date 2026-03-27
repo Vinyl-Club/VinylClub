@@ -1,3 +1,13 @@
-export default function PublicLayout() {
-    return null
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import '@/styles/global.css';
+
+export default function AccountLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="page">  {/* classe globale */}
+      <Header />
+      <main className="page-main">{children}</main>
+      <Footer />
+    </div>
+  );
 }

@@ -4,9 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.time.Instant;
 import java.util.Map;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Global exception handler for the API.
@@ -20,6 +24,21 @@ import java.util.Map;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * 400: validation errors on @Valid @RequestBody
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, List<String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, List<String>> errors = new HashMap<>();
+
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.computeIfAbsent(error.getField(), k -> new ArrayList<>())
+                  .add(error.getDefaultMessage());
+        });
+
+        return ResponseEntity.badRequest().body(errors);
+    }
 
     /**
      * 404: resource not found (in base or via external service)

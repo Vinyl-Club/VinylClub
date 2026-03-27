@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: ["develop"]
+    branches: ["develop", "main"]
   pull_request:
-    branches: ["develop"]
+    branches: ["develop", "main"]
 
 concurrency:
   group: maven-back-${{ github.ref }}
