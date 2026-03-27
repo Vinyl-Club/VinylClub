@@ -42,7 +42,7 @@ export default function BarFooter() {
 
         <div className={styles.legalBar}>
             <div className={styles.copyRight}>
-            <small> {new Date().getFullYear()} VINYLCLUB — TOUS DROITS RESERVES</small>
+                <small> {new Date().getFullYear()} VINYLCLUB — TOUS DROITS RESERVES</small>
             </div>
 
             <nav aria-label="Liens légaux" className={styles.legalLinks}>

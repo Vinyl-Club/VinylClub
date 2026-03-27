@@ -41,7 +41,7 @@ jobs:
 
       - name: Test
         working-directory: FRONT-WEB/vinyl-club
-        run: npm test --if-present -- --ci
+        run: npm run test:run
 
       - name: Build
         working-directory: FRONT-WEB/vinyl-club
