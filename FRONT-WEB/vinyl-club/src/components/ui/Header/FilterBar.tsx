@@ -6,6 +6,7 @@ import styles from "./FilterBar.module.css";
 
 type OpenMenu = null | "genre" | "etat" | "prix" | "format";
 
+
 export default function FilterBar() {
   const pathname = usePathname();
   const hideFilterBar = pathname === "/login" || pathname === "/register";
