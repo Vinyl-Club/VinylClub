@@ -1,8 +1,8 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { API } from '@/lib/env';
+import {setAuthCookie, clearAuthCookie} from '@/lib/auth.Server'
 
 type State = {
   fieldErrors: Record<string, string>;
@@ -41,27 +41,11 @@ export async function loginAction(prevState: State, formData: FormData): Promise
     const accessToken = data.accessToken;
     const refreshToken = data.refreshToken;
     
-    console .log(accessToken);
-    console .log(refreshToken);
-
     if (!accessToken || !refreshToken) {
         return {fieldErrors:{}, formError: 'Réponse backend invalide (token manquant)' };
     }
 
-    const cookieStore = await cookies();
-    cookieStore.set('auth', accessToken, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-    });
-
-    cookieStore.set('refresh', refreshToken, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    });
+    await setAuthCookie(accessToken, refreshToken);
 
     redirect('/catalog');
 }
@@ -100,7 +84,6 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         // pas JSON
         }
 
-        // 2) Erreur globale texte (ex: "Email déjà pris")
         return { fieldErrors: {}, formError: raw || 'Une erreur est survenue.' };
     }
 
@@ -112,29 +95,12 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         return {fieldErrors: {}, formError: 'Token manquant'}
     }
 
-    const cookieStore = await cookies();
-    cookieStore.set('auth', accessToken, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-    });
-
-    cookieStore.set('refresh', refreshToken, {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    });
+    await setAuthCookie(accessToken, refreshToken);
 
     redirect('/catalog');
 }
 
 export async function logoutAction() {
-   const cookieStore = await cookies();
-
-   cookieStore.delete('auth');
-   cookieStore.delete('refresh');
-
+  await clearAuthCookie()
    redirect('/login');
 }

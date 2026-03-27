@@ -37,7 +37,14 @@ export default function TopBar() {
   return (
     <div className={styles.topbar}>
       <Link href="/catalog" className={styles.logoBox} aria-label="Aller à l'accueil">
-        <Image src={logo} alt="Vinyl Club" fill className={styles.logoImg} priority />
+        <Image 
+          src={logo} 
+          alt="Vinyl Club" 
+          fill className={styles.logoImg} 
+          priority 
+          // width={500}
+          // height={500}
+          />
       </Link>
 
       {!hideSearch && (
@@ -65,7 +72,7 @@ export default function TopBar() {
             hidden={!shawLinks}
             className={`${styles.links} ${shawLinks ? styles.open : ''}`}
           >
-            <li className={styles.item}><Link href="/" className={styles.link}>Ajouter une annonce</Link></li>
+            <li className={styles.item}><Link href="/ads/create" className={styles.link} onClick={() => setShawLinks(false)}>Ajouter une annonce</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Favoris</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Mon profil</Link></li>
             <li className={styles.item}><Link href="/" className={styles.link}>Mes commandes</Link></li>

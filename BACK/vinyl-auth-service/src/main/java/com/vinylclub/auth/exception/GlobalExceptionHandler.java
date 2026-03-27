@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
-    // Petit bonus : Ajoute ceci pour gérer les erreurs renvoyées par AuthService (comme l'email déjà pris)
     @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
     public ResponseEntity<String> handleResponseStatusException(org.springframework.web.server.ResponseStatusException ex) {
         return new ResponseEntity<>(ex.getReason(), ex.getStatusCode());

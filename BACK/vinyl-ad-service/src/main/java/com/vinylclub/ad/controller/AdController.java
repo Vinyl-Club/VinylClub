@@ -72,7 +72,7 @@ public class AdController {
     public ResponseEntity<AdDTO> createdAd(
         @RequestHeader("X-User-Id") Long userId,
         @RequestHeader(value = "X-User-Role", required = false) String role,
-        @RequestBody CreateAdRequestDTO request
+        @Valid @RequestBody CreateAdRequestDTO request
     ) {
         System.out.println("🔐 [AD] X-User-Id = " + userId);
         System.out.println("🔐 [AD] X-User-Role = " + role);
