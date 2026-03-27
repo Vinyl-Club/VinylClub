@@ -50,9 +50,9 @@ export default function AddListingPage() {
   const [images, setImages]                   = useState<ImagePicker.ImagePickerAsset[]>([]);
 
   const productStates = [
-    { label: 'Très bon état', value: 'TRES_BON_ETAT' },
-    { label: 'Bon état',      value: 'BON_ETAT'      },
-    { label: 'Mauvais état',  value: 'MAUVAIS_ETAT'  },
+    { label: 'TrÃ¨s bon Ã©tat', value: 'TRES_BON_ETAT' },
+    { label: 'Bon Ã©tat',      value: 'BON_ETAT'      },
+    { label: 'Mauvais Ã©tat',  value: 'MAUVAIS_ETAT'  },
   ];
 
   // Fetch initial data
@@ -133,11 +133,11 @@ export default function AddListingPage() {
       return;
     }
     if (!artistName.trim()) {
-      alert('L’artiste est obligatoire');
+      alert('Lâ€™artiste est obligatoire');
       return;
     }
 
-    // 2) créer l’artiste si besoin
+    // 2) crÃ©er lâ€™artiste si besoin
     let artistId = selectedArtistId;
     if (!artistId) {
       const resA = await fetch('http://localhost:8090/api/artists', {
@@ -147,23 +147,23 @@ export default function AddListingPage() {
       });
       if (!resA.ok) {
         const err = await resA.json();
-        alert( err.message || 'Impossible de créer l’artiste');
+        alert( err.message || 'Impossible de crÃ©er lâ€™artiste');
         return;
       }
       artistId = (await resA.json()).id;
     }
-    // 2) déterminer l’ID de l’album : on évite de recréer un doublon
+    // 2) dÃ©terminer lâ€™ID de lâ€™album : on Ã©vite de recrÃ©er un doublon
     let albumId = selectedAlbumId;
     const nameTrim = albumName.trim();
     if (nameTrim && !albumId) {
-      // rechercher dans la liste chargée
+      // rechercher dans la liste chargÃ©e
       const existing = albums.find(a =>
         a.name.toLowerCase() === nameTrim.toLowerCase()
       );
       if (existing) {
         albumId = existing.id;
       } else {
-        // créer seulement si inexistant
+        // crÃ©er seulement si inexistant
         const resB = await fetch('http://localhost:8090/api/albums', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -171,7 +171,7 @@ export default function AddListingPage() {
         });
         if (!resB.ok) {
           const err = await resB.json();
-          alert(err.message || 'Impossible de créer l’album');
+          alert(err.message || 'Impossible de crÃ©er lâ€™album');
           return;
         }
         albumId = (await resB.json()).id;
@@ -186,7 +186,7 @@ export default function AddListingPage() {
     quantity: parseInt(quantity, 10),
     releaseYear: parseInt(releaseYear, 10),
     userId,                          // issu de useAuth()
-    artist: { id: artistId! },      // idem pour artistId déterminé plus haut
+    artist: { id: artistId! },      // idem pour artistId dÃ©terminÃ© plus haut
     category: { id: parseInt(categoryId, 10) },
     album:  albumId ? { id: albumId } : null,
     status: 'AVAILABLE',
@@ -200,17 +200,17 @@ export default function AddListingPage() {
   });
   if (!resP.ok) {
     const err = await resP.json();
-    alert(err.message || 'Impossible de créer le produit');
+    alert(err.message || 'Impossible de crÃ©er le produit');
     return;
   }
   const { id: productId } = await resP.json();
 
 
-    /// 4) upload des images — une requête par fichier, part 'file'
+    /// 4) upload des images â€” une requÃªte par fichier, part 'file'
     for (let i = 0; i < images.length; i++) {
     const asset = images[i]
 
-    // 1) charger la donnée binaire (nécessaire sur web + mobile)
+    // 1) charger la donnÃ©e binaire (nÃ©cessaire sur web + mobile)
     const response = await fetch(asset.uri)
     const blob = await response.blob()
 
@@ -230,14 +230,14 @@ export default function AddListingPage() {
     if (!resI.ok) {
       console.error('Erreur upload image', i, await resI.text())
       alert(
-        `Produit créé, mais échec de l’upload de l’image #${i + 1}`
+        `Produit crÃ©Ã©, mais Ã©chec de lâ€™upload de lâ€™image #${i + 1}`
       )
-      // on continue quand même
+      // on continue quand mÃªme
     }
   }
 
-    alert('Annonce ajoutée avec succès !');
-    // … reset du formulaire …
+    alert('Annonce ajoutÃ©e avec succÃ¨s !');
+    // â€¦ reset du formulaire â€¦
     setTitle(''); setDescription(''); setPrice('');
     setQuantity(''); setReleaseYear(''); setCategoryId('');
     setState(''); setArtistName(''); setAlbumName('');
@@ -317,9 +317,9 @@ export default function AddListingPage() {
           />
         </View>
 
-        {/* --- Année de sortie --- */}
+        {/* --- AnnÃ©e de sortie --- */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Année de sortie *</Text>
+          <Text style={styles.label}>AnnÃ©e de sortie *</Text>
           <TextInput
             style={[styles.textInput, styles.yearInput]}
             value={releaseYear}
@@ -337,7 +337,7 @@ export default function AddListingPage() {
           </TouchableOpacity>
         </View>
 
-        {/* Aperçu */}
+        {/* AperÃ§u */}
         {images.length > 0 && (
           <View style={styles.previewContainer}>
             {images.map((asset, idx) => (
@@ -350,16 +350,16 @@ export default function AddListingPage() {
           </View>
         )}
 
-        {/* --- Catégorie --- */}
+        {/* --- CatÃ©gorie --- */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>Catégorie *</Text>
+          <Text style={styles.label}>CatÃ©gorie *</Text>
           <View style={styles.pickerContainer}>
             <Picker
               selectedValue={categoryId}
               onValueChange={setCategoryId}
               style={styles.picker}
             >
-              <Picker.Item label="Sélectionner..." value="" />
+              <Picker.Item label="SÃ©lectionner..." value="" />
               {categories.map(c => (
                 <Picker.Item key={c.id} label={c.name} value={c.id.toString()} />
               ))}
@@ -379,16 +379,16 @@ export default function AddListingPage() {
           />
         </View>
 
-        {/* --- État --- */}
+        {/* --- Ã‰tat --- */}
         <View style={styles.inputGroup}>
-          <Text style={styles.label}>État *</Text>
+          <Text style={styles.label}>Ã‰tat *</Text>
           <View style={styles.pickerStateContainer}>
             <Picker
               selectedValue={state}
               onValueChange={setState}
               style={styles.picker}
             >
-              <Picker.Item label="Sélectionner..." value="" />
+              <Picker.Item label="SÃ©lectionner..." value="" />
               {productStates.map((c, i) => (
                 <Picker.Item key={i} label={c.label} value={c.value} />
               ))}
@@ -396,7 +396,7 @@ export default function AddListingPage() {
           </View>
         </View>
 
-        {/* --- Prix & Quantité --- */}
+        {/* --- Prix & QuantitÃ© --- */}
         <View style={styles.row}>
           <View style={[styles.inputGroup, { flex: 1, marginRight: 10 }]}>
             <Text style={styles.label}>Prix *</Text>
@@ -408,7 +408,7 @@ export default function AddListingPage() {
             />
           </View>
           <View style={[styles.inputGroup, { width: 100 }]}>
-            <Text style={styles.label}>Quantité *</Text>
+            <Text style={styles.label}>QuantitÃ© *</Text>
             <TextInput
               style={styles.textInput}
               value={quantity}

@@ -1,9 +1,11 @@
 package com.vinylclub.catalog.controller;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,6 +72,18 @@ public class ImageController {
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<ImageDTO>> getImagesByProduct(@PathVariable Long productId) {
         return ResponseEntity.ok(imageService.getImageDTOsByProductId(productId));
+    }
+
+    /**
+     * Redirect to the Cloudinary URL of an image.
+     */
+    @GetMapping("/{imageId}")
+    public ResponseEntity<Void> getImage(@PathVariable Long imageId) {
+        Images image = imageService.getImageById(imageId);
+
+        return ResponseEntity.status(302)
+                .header(HttpHeaders.LOCATION, URI.create(image.getImageUrl()).toString())
+                .build();
     }
 
     /**

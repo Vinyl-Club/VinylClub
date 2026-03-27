@@ -1,23 +1,22 @@
 package com.vinylclub.ad.client.dto;
 
 /**
- * Light" DTO for a product image (without bytes).
- * Allows you to construct a URL to retrieve the full image.
+ * DTO of a product image returned by catalog-service.
  */
 public class ImageSummaryDTO {
     private Long id;
     private Long productId;
+    private String imageUrl;
 
-    // Builders
     public ImageSummaryDTO() {
     }
 
-    public ImageSummaryDTO(Long id, Long productId) {
+    public ImageSummaryDTO(Long id, Long productId, String imageUrl) {
         this.id = id;
         this.productId = productId;
+        this.imageUrl = imageUrl;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -34,10 +33,11 @@ public class ImageSummaryDTO {
         this.productId = productId;
     }
 
-    /**
-     * Generates the URL to recover the full image
-     */
     public String getImageUrl() {
-        return "/api/images/" + this.id;
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

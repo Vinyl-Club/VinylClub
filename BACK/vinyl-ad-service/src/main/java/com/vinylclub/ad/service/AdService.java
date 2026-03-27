@@ -81,7 +81,7 @@ public class AdService {
 
             String imageUrl = null;
             if (product != null && product.getImages() != null && !product.getImages().isEmpty()) {
-                imageUrl = "/api/images/" + product.getImages().get(0).getId();
+                imageUrl = product.getImages().get(0).getImageUrl();
             }
 
             return new AdListDTO(
