@@ -35,6 +35,7 @@ public class RegisterRequest {
     private String password;
 
     @NotBlank(message = "Le pénom est obligatoire")
+<<<<<<< HEAD
     @Size(min = 3, max = 50, message = "3 caractères mninimum, 50 caractères maximum")
     @Pattern(
         regexp = "^[\\p{L}]+(?:[\\p{L} '\\-]*[\\p{L}])?$",
@@ -48,6 +49,10 @@ public class RegisterRequest {
         regexp = "^[\\p{L}]+(?:[\\p{L} '\\-]*[\\p{L}])?$",
         message = "Lettres, espaces, tirets et apostrophes uniquement."
     )
+=======
+    private String firstName;
+    @NotBlank(message = "Le nom est obligatoire")
+>>>>>>> c34363d (message d'erreur back ok)
     private String lastName;
     private String phone;
 
