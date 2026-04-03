@@ -1,27 +1,32 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
+import { Camera, Euro } from 'lucide-react';
 import styles from './AdFormPage.module.css';
 import Input from '@/components/ui/Input/Input';
 import Button from '@/components/ui/Button/Button';
 import Select from '@/components/ui/Select/Select';
 import Textarea from '@/components/ui/Textarea/Textarea';
-import { Camera } from 'lucide-react';
-import { Euro } from 'lucide-react';
 import { useAdForm } from '../useAdForm';
 import { createAdAction } from '../actions.server';
 import type { State } from '../types';
 import adFormSchema from '../schemas/adForm.schema';
 
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
 const initialState: State = {
   fieldErrors: {},
   formError: '',
+  successMessage: '',
 };
 
 export default function AdFormPage() {
   const { categories } = useAdForm();
   const [stateForm, formAction, isPending] = useActionState(createAdAction, initialState);
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const formRef = useRef<HTMLFormElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fe = stateForm?.fieldErrors ?? {};
 
@@ -34,10 +39,26 @@ export default function AdFormPage() {
     etat: clientErrors.etat ?? fe.etat,
     prix: clientErrors.prix ?? fe.prix,
     format: clientErrors.format ?? fe.format,
+    images: clientErrors.images ?? fe.images,
   };
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    const formData = new FormData(e.currentTarget);
+  useEffect(() => {
+    if (!stateForm.successMessage) {
+      return;
+    }
+
+    formRef.current?.reset();
+    setSelectedImages([]);
+    setClientErrors({});
+  }, [stateForm.successMessage]);
+
+  function handleImagesChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.currentTarget.files ?? []);
+    setSelectedImages(files.map((file) => file.name));
+  }
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    const formData = new FormData(event.currentTarget);
 
     const values = {
       titre: String(formData.get('titre') ?? ''),
@@ -50,20 +71,30 @@ export default function AdFormPage() {
       format: String(formData.get('format') ?? ''),
     };
 
+    const errors: Record<string, string> = {};
     const result = adFormSchema.safeParse(values);
 
     if (!result.success) {
-      e.preventDefault();
-
-      const errors: Record<string, string> = {};
-
       for (const issue of result.error.issues) {
         const field = issue.path[0];
         if (typeof field === 'string' && !errors[field]) {
           errors[field] = issue.message;
         }
       }
+    }
 
+    const imageFiles = formData
+      .getAll('images')
+      .filter((entry): entry is File => entry instanceof File && entry.size > 0);
+
+    if (imageFiles.some((file) => !file.type.startsWith('image/'))) {
+      errors.images = 'Veuillez selectionner uniquement des images.';
+    } else if (imageFiles.some((file) => file.size > MAX_IMAGE_SIZE)) {
+      errors.images = 'Chaque image doit faire moins de 5 Mo.';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      event.preventDefault();
       setClientErrors(errors);
       return;
     }
@@ -73,11 +104,15 @@ export default function AdFormPage() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>
-        Ajouter une annonce
-      </h1>
+      <h1 className={styles.title}>Ajouter une annonce</h1>
 
-      <form className={styles.containerForm} action={formAction} onSubmit={handleSubmit}>
+      <form
+        ref={formRef}
+        className={styles.containerForm}
+        action={formAction}
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+      >
         <Input
           label="Titre"
           id="titre"
@@ -106,11 +141,49 @@ export default function AdFormPage() {
         />
 
         <div className={styles.containerImage}>
-          <span>Importer vos images</span>
-          <button type="button" className={styles.buttonImage}>
+          <div className={styles.imageInfo}>
+            <span>Importer vos images</span>
+            {selectedImages.length > 0 && (
+              <span className={styles.imageCount}>
+                {selectedImages.length} fichier(s) selectionne(s)
+              </span>
+            )}
+          </div>
+
+          <button
+            type="button"
+            className={styles.buttonImage}
+            aria-label="Choisir des images"
+            onClick={() => fileInputRef.current?.click()}
+          >
             <Camera />
           </button>
+
+          <input
+            ref={fileInputRef}
+            id="images"
+            name="images"
+            type="file"
+            accept="image/*"
+            multiple
+            className={styles.hiddenInput}
+            onChange={handleImagesChange}
+          />
         </div>
+
+        {selectedImages.length > 0 && (
+          <ul className={styles.imageList}>
+            {selectedImages.map((imageName) => (
+              <li key={imageName}>{imageName}</li>
+            ))}
+          </ul>
+        )}
+
+        {backFrontErrors.images && (
+          <p role="alert" className={styles.error}>
+            {backFrontErrors.images}
+          </p>
+        )}
 
         <Select
           label="Style de musique"
@@ -138,9 +211,9 @@ export default function AdFormPage() {
           name="etat"
           placeholder="Etat du produit"
           options={[
-            { value: 'TRES_BON_ETAT', label: 'Très bon état' },
-            { value: 'BON_ETAT', label: 'Bon état' },
-            { value: 'MAUVAIS_ETAT', label: 'Mauvais état' },
+            { value: 'TRES_BON_ETAT', label: 'Tres bon etat' },
+            { value: 'BON_ETAT', label: 'Bon etat' },
+            { value: 'MAUVAIS_ETAT', label: 'Mauvais etat' },
           ]}
           error={backFrontErrors.etat}
         />
@@ -163,12 +236,18 @@ export default function AdFormPage() {
           name="format"
           placeholder="Choisissez le format"
           options={[
-            { value: 'T33', label: '33 Tours ' },
-            { value: 'T45', label: '45 Tours ' },
-            { value: 'T78', label: '78 Tours ' },
+            { value: 'T33', label: '33 Tours' },
+            { value: 'T45', label: '45 Tours' },
+            { value: 'T78', label: '78 Tours' },
           ]}
           error={backFrontErrors.format}
         />
+
+        {stateForm.successMessage && (
+          <p role="status" className={styles.success}>
+            {stateForm.successMessage}
+          </p>
+        )}
 
         {stateForm.formError && (
           <p role="alert" className={styles.error}>
@@ -177,12 +256,7 @@ export default function AdFormPage() {
         )}
 
         <div className={styles.cta}>
-          <Button
-            type="submit"
-            variant="primary"
-            fullWidth={false}
-            isLoading={isPending}
-          >
+          <Button type="submit" variant="primary" fullWidth={false} isLoading={isPending}>
             Valider
           </Button>
         </div>

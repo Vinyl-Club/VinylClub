@@ -45,6 +45,7 @@ export async function loginAction(prevState: State, formData: FormData): Promise
         return {fieldErrors:{}, formError: 'Réponse backend invalide (token manquant)' };
     }
 
+
     await setAuthCookie(accessToken, refreshToken);
 
     redirect('/catalog');

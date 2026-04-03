@@ -2,7 +2,11 @@ package com.vinylclub.catalog.service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,27 +29,36 @@ public class ImageService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private Cloudinary cloudinary;
+
     /**
-     *Save an image for a product
+     * Upload image to Cloudinary + save URL in DB
      */
     public Images saveImage(MultipartFile file, Long productId) throws IOException {
-        // Check that the product exists
+
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
 
-        // Create the image entity
+        // Upload to Cloudinary
+        Map uploadResult = cloudinary.uploader().upload(
+                file.getBytes(),
+                ObjectUtils.emptyMap()
+        );
+
+        String secureUrl = uploadResult.get("secure_url").toString();
+        String publicId = uploadResult.get("public_id").toString();
+
         Images image = new Images();
         image.setProduct(product);
-        image.setImage(file.getBytes());
+        image.setImageUrl(secureUrl);
+        image.setPublicId(publicId);
 
-        // Save in base
         return imageRepository.save(image);
     }
 
-
-
     /**
-     *Recover an image by his ID
+     * Get image by ID
      */
     public Images getImageById(Long imageId) {
         return imageRepository.findById(imageId)
@@ -53,64 +66,64 @@ public class ImageService {
     }
 
     /**
-     *Recover the IDS IDs from a product
+     * Get image IDs by product
      */
     public List<Long> getImageIdsByProductId(Long productId) {
-        // Check that the product exists
         if (!productRepository.existsById(productId)) {
             throw new RuntimeException("Product not found with id: " + productId);
         }
 
-        List<Images> images = imageRepository.findByProductId(productId);
-        return images.stream()
+        return imageRepository.findByProductId(productId)
+                .stream()
                 .map(Images::getId)
                 .collect(Collectors.toList());
     }
 
     /**
-     *Recover all the images of a product (with bytes)
+     * Get images DTO by product
      */
-public List<ImageDTO> getImageDTOsByProductId(Long productId) {
-    // Suppose you have a method in your restitory to recover by Productid
-    List<Images> images = imageRepository.findByProductId(productId);
-    
-    return images.stream()
-        .map(this::convertToDTO)
-        .collect(Collectors.toList());
-}
+    public List<ImageDTO> getImageDTOsByProductId(Long productId) {
+        return imageRepository.findByProductId(productId)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
-/**
- * Conversion Images Entity → ImageDTO
- */
-private ImageDTO convertToDTO(Images imageEntity) {
-    ImageDTO imageDTO = new ImageDTO();
-    imageDTO.setId(imageEntity.getId());
-    imageDTO.setImage(imageEntity.getImage());
-    imageDTO.setProductId(imageEntity.getProduct().getId());
-    return imageDTO;
-}
-
-    /**
-     * Delete an image
-     */
-    public void deleteImage(Long imageId) {
-        if (!imageRepository.existsById(imageId)) {
-            throw new RuntimeException("Image not found with id: " + imageId);
-        }
-        imageRepository.deleteById(imageId);
+    private ImageDTO convertToDTO(Images imageEntity) {
+        ImageDTO dto = new ImageDTO();
+        dto.setId(imageEntity.getId());
+        dto.setProductId(imageEntity.getProduct().getId());
+        dto.setImageUrl(imageEntity.getImageUrl());
+        dto.setPublicId(imageEntity.getPublicId());
+        return dto;
     }
 
     /**
-     *Delete all images from a product
+     * Delete image (Cloudinary + DB)
      */
-    public void deleteImagesByProductId(Long productId) {
+    public void deleteImage(Long imageId) throws IOException {
+        Images image = imageRepository.findById(imageId)
+                .orElseThrow(() -> new RuntimeException("Image not found"));
+
+        // Delete from Cloudinary
+        cloudinary.uploader().destroy(image.getPublicId(), ObjectUtils.emptyMap());
+
+        imageRepository.delete(image);
+    }
+
+    /**
+     * Delete all images of product
+     */
+    public void deleteImagesByProductId(Long productId) throws IOException {
         List<Images> images = imageRepository.findByProductId(productId);
+
+        for (Images image : images) {
+            cloudinary.uploader().destroy(image.getPublicId(), ObjectUtils.emptyMap());
+        }
+
         imageRepository.deleteAll(images);
     }
 
-    /**
-     *Count the number of images of a product
-     */
     public long countImagesByProductId(Long productId) {
         return imageRepository.countByProductId(productId);
     }

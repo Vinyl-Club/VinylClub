@@ -61,6 +61,11 @@ services:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - EUREKA_INSTANCE_HOSTNAME=vinyl-catalog-service
+      
+      - CLOUDINARY_CLOUD_NAME=dkpnaf6i2
+      - CLOUDINARY_API_KEY=286616641484483
+      - CLOUDINARY_API_SECRET=GxzWrWoX-r_kp2y2kR95QIds68k
+      
     depends_on:
       - vinyl-discovery-service
       - postgres-db

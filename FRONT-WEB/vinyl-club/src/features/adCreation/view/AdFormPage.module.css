@@ -1,57 +1,79 @@
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 15px;
-    padding-bottom: 45px;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 45px;
 }
 
-.title{
-    color: #9C581E;
-    font-size: 2.5rem;
-    font-weight: 900;
-    text-align: center;
-    line-height: 1.2;
+.title {
+  color: #9c581e;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.2;
 }
 
-.containerForm{
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+.containerForm {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.containerImage{
-    width: clamp(280px, 40vw, 420px);
-    padding: 4px;
-    font-size: 1.2rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.containerImage {
+  width: clamp(280px, 40vw, 420px);
+  padding: 4px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.buttonImage{
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background-color: #F6EBDD;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 10px;
+.imageInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.buttonImage:focus-visible{
-    outline: 3px solid #8AA39F;
-    outline-offset: 2px;
+.imageCount {
+  font-size: 0.9rem;
+  color: #6b6b6b;
 }
 
-.priceWrapper{
+.buttonImage {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #f6ebdd;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+.buttonImage:focus-visible {
+  outline: 3px solid #8aa39f;
+  outline-offset: 2px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.imageList {
+  width: clamp(280px, 40vw, 420px);
+  margin: 0;
+  padding-left: 18px;
+  color: #6b6b6b;
+}
+
+.priceWrapper {
   position: relative;
 }
 
-.euroIcon{
+.euroIcon {
   position: absolute;
   right: 16px;
   bottom: 14px;
@@ -59,14 +81,28 @@
   pointer-events: none;
 }
 
-.cta{
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
+.cta {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  width: clamp(280px, 40vw, 420px);
+  color: #b42318;
+  font-size: 0.95rem;
+  margin: 4px 0 0;
+}
+
+.success {
+  width: clamp(280px, 40vw, 420px);
+  color: #116329;
+  font-size: 0.95rem;
+  margin: 4px 0 0;
 }
 
 @media (max-width: 640px) {
-    .title{
-        font-size: 1.7em
-    }
+  .title {
+    font-size: 1.7em;
+  }
 }
