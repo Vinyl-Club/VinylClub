@@ -105,20 +105,23 @@ public class ProductService {
             product.setFormat(ProductFormat.valueOf(productDTO.getFormat()));
 
         if (productDTO.getArtist() != null && productDTO.getArtist().getId() != null) {
-            Artist artist = artistRepository.findById(productDTO.getArtist().getId())
-                    .orElseThrow(() -> new RuntimeException("Artist not found"));
+            Long artistId = productDTO.getArtist().getId();
+            Artist artist = artistRepository.findById(artistId)
+                    .orElseThrow(() -> new RuntimeException("Artist not found with id: " + artistId));
             product.setArtist(artist);
         }
 
         if (productDTO.getCategory() != null && productDTO.getCategory().getId() != null) {
-            Category category = categoryRepository.findById(productDTO.getCategory().getId())
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            Long categoryId = productDTO.getCategory().getId();
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
             product.setCategory(category);
         }
 
         if (productDTO.getAlbum() != null && productDTO.getAlbum().getId() != null) {
-            Album album = albumRepository.findById(productDTO.getAlbum().getId())
-                    .orElseThrow(() -> new RuntimeException("Album not found"));
+            Long albumId = productDTO.getAlbum().getId();
+            Album album = albumRepository.findById(albumId)
+                    .orElseThrow(() -> new RuntimeException("Album not found with id: " + albumId));
             product.setAlbum(album);
         }
 
@@ -127,7 +130,7 @@ public class ProductService {
 
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
         product.setTitle(productDTO.getTitle());
         product.setDescription(productDTO.getDescription());
@@ -146,6 +149,9 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+
         productRepository.deleteById(id);
     }
 
@@ -202,13 +208,9 @@ public class ProductService {
     }
 
     private ImageSummaryDTO convertImageToSummaryDTO(com.vinylclub.catalog.entity.Images imageEntity) {
-
         ImageSummaryDTO summary = new ImageSummaryDTO();
-
         summary.setId(imageEntity.getId());
-
         summary.setImageUrl(imageEntity.getImageUrl());
-
         return summary;
     }
 }
