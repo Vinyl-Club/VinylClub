@@ -126,7 +126,6 @@ public class UserController {
         if (!isInternal) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         try {
             boolean isValid = userService.validatePassword(request.getEmail(), request.getPassword());
             return ResponseEntity.ok(isValid);
@@ -144,7 +143,6 @@ public class UserController {
         if (!isInternal) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
         try {
             UserDTO user = userService.getUserByEmail(email);
             return (user != null) ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();

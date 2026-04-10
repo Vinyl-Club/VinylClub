@@ -139,7 +139,7 @@ public class AuthService {
             System.out.println("1: " + url);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Internal-Call", internalSecret); // <-- IMPORTANT
+            headers.set("X-Internal-Call", internalSecret); 
 
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
