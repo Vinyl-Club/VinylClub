@@ -116,6 +116,7 @@ public class UserService {
             user.getFirstName(),
             user.getLastName(),
             user.getPhone(),
+            user.getRole(),
             user.getUpdatedAt()
         );
     }
