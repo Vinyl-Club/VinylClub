@@ -66,9 +66,9 @@ export default function LoginForm() {
           label="Email"
           id="email"
           name="email"
-          // type="email"
+          type="email"
           placeholder="Email@.fr"
-          // required
+          required
           autoComplete="email"
           error={backFrontErrors.email}
         />
@@ -77,9 +77,9 @@ export default function LoginForm() {
           label="Mot de passe"
           id="password"
           name="password"
-          // type="password"
+          type="password"
           placeholder="Mot de passe"
-          // required
+          required
           autoComplete="current-password"
           error={backFrontErrors.password}
         />
