@@ -15,4 +15,5 @@ export const API = {
   album: `${BASE}/api/albums`,
   searchAlbum: `${BASE}/api/albums/search`,
   ad: `${BASE}/api/ad`,
+  adDetails: `${BASE}/api/ad`,
 } as const;

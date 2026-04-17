@@ -1,6 +1,6 @@
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import '@/styles/global.css';
+import '@/styles/globals.css';
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
   return (
