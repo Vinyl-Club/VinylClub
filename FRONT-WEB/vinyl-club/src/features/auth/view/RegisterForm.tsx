@@ -71,9 +71,9 @@ export default function RegisterForm() {
                     label="Email"
                     id="email"
                     name="email"
-                    // type="email"
+                    type="email"
                     placeholder="Email@.fr"
-                    // required
+                    required
                     autoComplete="email"
                     error={backFrontErrors.email}
                 />
@@ -82,9 +82,9 @@ export default function RegisterForm() {
                     label="Mot de passe"
                     id="password"
                     name="password"
-                    // type="password"
+                    type="password"
                     placeholder="Mot de passe"
-                    // required
+                    required
                     autoComplete="new-password"
                     error={backFrontErrors.password}
                 />
@@ -93,9 +93,9 @@ export default function RegisterForm() {
                     label="Confirmation mot de passe"
                     id="confirmPassword"
                     name="confirmPassword"
-                    // type="password"
+                    type="password"
                     placeholder="Confirmez votre mot de passe"
-                    // required
+                    required
                     autoComplete="new-password"
                     error={backFrontErrors.confirmPassword}
                 />
@@ -104,9 +104,9 @@ export default function RegisterForm() {
                     label="Nom"
                     id="lastName"
                     name="lastName"
-                    // type="text"
+                    type="text"
                     placeholder="Nom"
-                    // required
+                    required
                     autoComplete="family-name"
                     error={backFrontErrors.lastName}
                 />
@@ -115,9 +115,9 @@ export default function RegisterForm() {
                     label="Prénom"
                     id="firstName"
                     name="firstName"
-                    // type="text"
+                    type="text"
                     placeholder="Prénom"
-                    // required
+                    required
                     autoComplete="given-name"
                     error={backFrontErrors.firstName}
                 />

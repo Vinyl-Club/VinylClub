@@ -1,4 +1,4 @@
-.container{
+.container {
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -6,34 +6,41 @@
   padding: 4px;
 }
 
-.label{
+.label {
   font-size: 1.2rem;
   font-weight: 500;
 }
 
-.selectWrapper{
+.selectWrapper {
   position: relative;
 }
 
-.select{
+.select {
   width: 100%;
   padding: 10px 40px 10px 16px;
   border-radius: 10px;
   border: none;
   font-size: 1rem;
-  color: rgb(183, 182, 182);
   background: white;
-  box-shadow: 0px 2px 7px rgba(0,0,0,0.3);
+  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.3);
   appearance: none;
   cursor: pointer;
 }
 
-.select:focus-visible{
-  outline: 3px solid #8AA39F;
+.placeholder {
+  color: rgb(183, 182, 182);
+}
+
+.selected {
+  color: black;
+}
+
+.select:focus-visible {
+  outline: 3px solid #8aa39f;
   outline-offset: 2px;
 }
 
-.chevron{
+.chevron {
   position: absolute;
   right: 12px;
   top: 50%;
@@ -43,25 +50,25 @@
   height: 18px;
 }
 
-.errorSelect{
-  border-color: #c0392b;
+.errorSelect {
+  outline: 1px solid #c0392b;
 }
 
-.error{
+.error {
   color: #c0392b;
   font-size: 0.85rem;
 }
 
 @media (max-width: 640px) {
-  .container{
+  .container {
     width: min(90vw, 300px);
   }
 
-  .label{
+  .label {
     font-size: 1rem;
   }
 
-  .select{
+  .select {
     padding: 10px 38px 10px 14px;
     font-size: 0.95rem;
   }
