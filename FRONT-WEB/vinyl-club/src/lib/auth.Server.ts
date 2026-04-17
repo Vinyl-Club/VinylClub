@@ -1,9 +1,11 @@
+import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-const cookieOptions = {
+
+const cookieOptions: Partial<ResponseCookie> = {
   httpOnly: true,
-  samesite: 'lax',
+  sameSite: 'lax',
   secure: process.env.NODE_ENV === 'production',
   path: '/',
 };

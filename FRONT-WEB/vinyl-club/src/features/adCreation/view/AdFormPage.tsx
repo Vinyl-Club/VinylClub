@@ -25,6 +25,7 @@ export default function AdFormPage() {
   const [stateForm, formAction, isPending] = useActionState(createAdAction, initialState);
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [selectResetKey, setSelectResetKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +51,7 @@ export default function AdFormPage() {
     formRef.current?.reset();
     setSelectedImages([]);
     setClientErrors({});
+    setSelectResetKey((prev) => prev + 1);
   }, [stateForm.successMessage]);
 
   function handleImagesChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -186,6 +188,7 @@ export default function AdFormPage() {
         )}
 
         <Select
+          key={`style-${selectResetKey}`}
           label="Style de musique"
           id="style"
           name="style"
@@ -206,6 +209,7 @@ export default function AdFormPage() {
         />
 
         <Select
+          key={`etat-${selectResetKey}`}
           label="Etat"
           id="etat"
           name="etat"
@@ -231,6 +235,7 @@ export default function AdFormPage() {
         </div>
 
         <Select
+          key={`format-${selectResetKey}`}
           label="Format"
           id="format"
           name="format"

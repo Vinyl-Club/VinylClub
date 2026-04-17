@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import styles from './Select.module.css';
 import { ChevronDown } from 'lucide-react';
 
@@ -18,26 +19,32 @@ type Props = {
 };
 
 export default function Select({
-    label,
-    id,
-    name,
-    options,
-    placeholder,
-    error,
+  label,
+  id,
+  name,
+  options,
+  placeholder,
+  error,
 }: Props) {
-    return(
-        <div className={styles.container}>
+  const [value, setValue] = useState('');
+
+  return (
+    <div className={styles.container}>
       <label htmlFor={id} className={styles.label}>
         {label}
       </label>
 
       <div className={styles.selectWrapper}>
-        <select id={id} name={name} className={styles.select}>
-          {placeholder && (
-            <option value="" disabled hidden>
-              {placeholder}
-            </option>
-          )}
+        <select
+          id={id}
+          name={name}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className={`${styles.select} ${value === '' ? styles.placeholder : styles.selected} ${
+            error ? styles.errorSelect : ''
+          }`}
+        >
+          {placeholder && <option value="">{placeholder}</option>}
 
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -51,5 +58,5 @@ export default function Select({
 
       {error && <p className={styles.error}>{error}</p>}
     </div>
-    );
+  );
 }
