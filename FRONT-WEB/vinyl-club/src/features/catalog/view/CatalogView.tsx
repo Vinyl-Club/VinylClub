@@ -2,6 +2,7 @@ import type { CatalogItem } from '../types';
 import Image from 'next/image';
 import { API } from '@/lib/env';
 import styles from './CatalogView.module.css';
+import Link from 'next/link';
 
 export default function CatalogView({ items }: { items: CatalogItem[] }) {
   if (!items || items.length === 0) {
@@ -10,7 +11,7 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
 
   return (
     <div className={styles.grid}>
-      {items.map((item) => {
+      {items.map((item: CatalogItem) => {
         const coverUrl = item.imageUrl
           ? item.imageUrl.startsWith('http')
             ? item.imageUrl
@@ -41,7 +42,9 @@ export default function CatalogView({ items }: { items: CatalogItem[] }) {
 
             <div className={styles.right}>
               <div className={styles.price}>{item.price ?? 0} €</div>
-              <button className={styles.button}>Voir le détail</button>
+                <Link href={`/details/${item.id}`} className={styles.button}>
+                  Voir le détail
+                </Link>
             </div>
           </div>
         );
