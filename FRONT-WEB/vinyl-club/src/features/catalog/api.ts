@@ -18,8 +18,6 @@ export async function catalog(): Promise<CatalogItem[]> {
 export async function catalogDetails(id: string): Promise<CatalogDetails> {
   const url = `${API.adDetails}/${id}`;
 
-  console.log('URL appelée :', url);
-
   const response = await fetch(url, {
     method: 'GET',
     cache: 'no-store',
@@ -34,7 +32,6 @@ export async function catalogDetails(id: string): Promise<CatalogDetails> {
   }
 
   const data = await response.json();
-  console.log('DATA DETAILS :', data);
 
   return data;
 }

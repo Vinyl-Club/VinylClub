@@ -1,3 +1,211 @@
-.container{
-    background-color: whitesmoke;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px 50px;
+  gap: 24px;
+}
+
+.title {
+  color: #9c581e;
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.containerCard {
+  width: min(1100px, 100%);
+  background-color: white;
+  padding: 32px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.imageSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.mainImage {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+
+.thumbnailList {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+  background: #ececec;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+}
+
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.infoBlock1,
+.infoBlock2 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.infoBlock2 {
+  padding-top: 16px;
+  border-top: 1px solid #D48541;
+}
+
+.rowBetween {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.sellerName,
+.city,
+.state,
+.date,
+.artistAlbum,
+.category,
+.format,
+.label,
+.descriptionText {
+  margin: 0;
+}
+
+.sellerName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #111;
+}
+
+.city,
+.state,
+.date,
+.category,
+.format {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.priceBlock {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #9c581e;
+  line-height: 1;
+}
+
+.artistAlbum {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.descriptionBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 14px;
+  background-color: #faf7f2;
+  border-radius: 12px;
+}
+
+.label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #9c581e;
+}
+
+.descriptionText {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+.containerNav {
+  width: min(1100px, 100%);
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .containerCard {
+    padding: 24px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .container {
+    padding: 20px 14px 40px;
+  }
+
+  .containerCard {
+    padding: 18px;
+  }
+
+  .rowBetween {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .priceBlock {
+    font-size: 1.5rem;
+  }
+
+  .containerNav {
+    flex-direction: column;
+    align-items: center;
+  }
 }
