@@ -18,25 +18,26 @@
 .select {
   width: 100%;
   padding: 10px 40px 10px 16px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: none;
   font-size: 1rem;
-  background: white;
-  box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.3);
+  color: var(--color-text-placeholder);
+  background: var(--color-surface-default);
+  box-shadow: var(--shadow-control);
   appearance: none;
   cursor: pointer;
 }
 
 .placeholder {
-  color: rgb(183, 182, 182);
+  color: var(--color-text-placeholder);
 }
 
 .selected {
-  color: black;
+  color: var(--color-text-primary);
 }
 
 .select:focus-visible {
-  outline: 3px solid #8aa39f;
+  outline: 3px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
@@ -51,11 +52,11 @@
 }
 
 .errorSelect {
-  outline: 1px solid #c0392b;
+  outline: 1px solid var(--color-border-danger);
 }
 
 .error {
-  color: #c0392b;
+  color: var(--color-danger);
   font-size: 0.85rem;
 }
 

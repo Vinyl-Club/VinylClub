@@ -5,6 +5,7 @@ export const API = {
   base: BASE,
   images: `${BASE}/api/images/`,
   auth: `${BASE}/auth/login`,
+  authMe: `${BASE}/auth/me`,
   product: `${BASE}/api/products`,
   register: `${BASE}/auth/register`,
   logout: `${BASE}/auth/logout`,
