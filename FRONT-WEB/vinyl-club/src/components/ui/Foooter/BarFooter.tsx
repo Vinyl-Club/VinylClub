@@ -25,7 +25,7 @@ export default function BarFooter() {
                 <h2 id="footer-about">À propos de VinylClub</h2>
                 <ul>
                     <li>
-                    <Link href="/a-propos">Qui sommes-nous&nbsp;?</Link>
+                    <Link href="/qui-sommes-nous">Qui sommes-nous&nbsp;?</Link>
                     </li>
                 </ul>
             </section>
