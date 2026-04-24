@@ -1,0 +1,48 @@
+:root {
+  --color-bg-page: #f6ebdd;
+  --color-surface-default: #ffffff;
+  --color-surface-muted: #dfb793;
+  --color-surface-brand: #8aa39f;
+  --color-surface-brand-hover: #578079;
+  --color-surface-accent: #d48541;
+  --color-surface-accent-hover: #9c581e;
+  --color-surface-soft: #9fbeba;
+  --color-surface-soft-hover: #8fb0ab;
+
+  --color-text-primary: #111111;
+  --color-text-secondary: #5d5248;
+  --color-text-placeholder: #b7b6b6;
+  --color-text-muted: #777777;
+  --color-text-inverse: #ffffff;
+  --color-text-accent: #9c581e;
+  --color-text-soft: #334441;
+
+  --color-border-subtle: rgba(179, 157, 132, 0.18);
+  --color-border-default: #e5e5e5;
+  --color-border-strong: #1a1a1a;
+  --color-border-danger: #c0392b;
+
+  --color-focus-ring: rgba(138, 163, 159, 0.45);
+  --color-danger: #c0392b;
+  --color-danger-strong: #b42318;
+  --color-success: #116329;
+
+  --shadow-card: 0 4px 4px rgba(0, 0, 0, 0.25);
+  --shadow-control: 0 2px 7px rgba(0, 0, 0, 0.3);
+  --shadow-button: 0 6px 12px rgba(0, 0, 0, 0.18);
+  --shadow-dropdown: 0 10px 18px rgba(0, 0, 0, 0.18);
+  --shadow-search: 0 6px 10px rgba(0, 0, 0, 0.3);
+  --shadow-soft-hover: 0 4px 10px rgba(115, 149, 142, 0.28);
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+}

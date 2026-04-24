@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import '@/styles/globals.css';
-import { Bebas_Neue, Anton } from 'next/font/google';
+import '../styles/global.css';
+import { Bebas_Neue, Anton, Raleway } from 'next/font/google';
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -16,6 +16,12 @@ const anton = Anton({
   variable: '--font-anton',
 });
 
+const raleway = Raleway({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-raleway',
+});
+
 export const metadata: Metadata = {
   title: 'Vinyl Club',
   description: 'Marketplace de vinyles',
@@ -23,7 +29,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${bebas.variable} ${anton.variable}`}>
+    <html
+      lang="fr"
+      className={`${bebas.variable} ${anton.variable} ${raleway.variable}`}
+    >
       <body>{children}</body>
     </html>
   );
