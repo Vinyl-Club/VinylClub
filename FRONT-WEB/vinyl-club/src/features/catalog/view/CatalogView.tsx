@@ -6,7 +6,7 @@ import { Heart } from 'lucide-react';
 import Button from '@/components/ui/Button/Button';
 import { API } from '@/lib/env';
 import styles from './CatalogView.module.css';
-import { useRouter } from 'next/navigation'
+import Link from 'next/link';
 
 
 type CatalogViewProps = {
@@ -22,8 +22,6 @@ const priceFormatter = new Intl.NumberFormat('fr-FR', {
 });
 
 export default function CatalogView({ items, error }: CatalogViewProps) {
-  
-  const router = useRouter();
   
   if (error) {
     return (
@@ -100,15 +98,16 @@ export default function CatalogView({ items, error }: CatalogViewProps) {
                   <Heart size={24} strokeWidth={2.1} />
                 </button>
 
+                <Link href={`/details/${item.id}`}>
                 <Button
                   type="button"
                   variant="soft"
                   size="xs"
                   className={styles['catalog-card__detail-button']}
-                  onClick={() => router.push(`details/${item.id}`)}
                 >
                   {'Voir le d\u00e9tail'}
                 </Button>
+                </Link>
               </div>
             </div>
           </article>
