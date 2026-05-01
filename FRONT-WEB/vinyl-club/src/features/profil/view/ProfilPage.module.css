@@ -42,14 +42,14 @@
   box-shadow: var(--shadow-card);
 }
 
-.profile__errorTitle {
+.profile__error-title {
   margin: 0 0 8px;
   color: var(--color-text-primary);
   font-size: 18px;
   font-weight: 700;
 }
 
-.profile__errorMessage {
+.profile__error-message {
   margin: 0;
   color: var(--color-text-secondary);
   font-size: 15px;
@@ -82,7 +82,7 @@
   align-self: center;
 }
 
-.card__coverStack {
+.card__cover-stack {
   position: relative;
   width: 132px;
   height: 86.64px;
@@ -153,6 +153,7 @@
 }
 
 .card__title {
+  line-height: 1.18;
   display: -webkit-box;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -214,14 +215,14 @@
   outline-offset: 3px;
 }
 
-.card__favoriteActive,
-.card__favoriteActive:hover,
-.card__favoriteActive:focus-visible {
+.card__favorite--active,
+.card__favorite--active:hover,
+.card__favorite--active:focus-visible {
   color: #d73535;
   transform: scale(1.06);
 }
 
-.card__detailButton {
+.card__detail-button {
   flex: 0 0 auto;
 }
 
@@ -285,7 +286,7 @@
     width: 86.64px;
   }
 
-  .card__coverStack {
+  .card__cover-stack {
     width: 86.64px;
   }
 
