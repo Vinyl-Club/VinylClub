@@ -24,7 +24,7 @@ export default function AdFormPage() {
   const { categories } = useAdForm();
   const [stateForm, formAction, isPending] = useActionState(createAdAction, initialState);
   const [clientErrors, setClientErrors] = useState<Record<string, string>>({});
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [selectResetKey, setSelectResetKey] = useState(0);
   const formRef = useRef<HTMLFormElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,11 +52,39 @@ export default function AdFormPage() {
     setSelectedImages([]);
     setClientErrors({});
     setSelectResetKey((prev) => prev + 1);
+
+    if (fileInputRef.current) {
+      const dt = new DataTransfer();
+      fileInputRef.current.files = dt.files;
+    }
   }, [stateForm.successMessage]);
 
   function handleImagesChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.currentTarget.files ?? []);
-    setSelectedImages(files.map((file) => file.name));
+    const newFiles = Array.from(event.currentTarget.files ?? []);
+
+    const mergedFiles = [...selectedImages];
+
+    for (const file of newFiles) {
+      const alreadyExists = mergedFiles.some(
+        (existingFile) =>
+          existingFile.name === file.name &&
+          existingFile.size === file.size &&
+          existingFile.lastModified === file.lastModified,
+      );
+
+      if (!alreadyExists) {
+        mergedFiles.push(file);
+      }
+    }
+
+    setSelectedImages(mergedFiles);
+
+    const dt = new DataTransfer();
+    for (const file of mergedFiles) {
+      dt.items.add(file);
+    }
+
+    event.currentTarget.files = dt.files;
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -85,13 +113,9 @@ export default function AdFormPage() {
       }
     }
 
-    const imageFiles = formData
-      .getAll('images')
-      .filter((entry): entry is File => entry instanceof File && entry.size > 0);
-
-    if (imageFiles.some((file) => !file.type.startsWith('image/'))) {
+    if (selectedImages.some((file) => !file.type.startsWith('image/'))) {
       errors.images = 'Veuillez selectionner uniquement des images.';
-    } else if (imageFiles.some((file) => file.size > MAX_IMAGE_SIZE)) {
+    } else if (selectedImages.some((file) => file.size > MAX_IMAGE_SIZE)) {
       errors.images = 'Chaque image doit faire moins de 5 Mo.';
     }
 
@@ -113,7 +137,6 @@ export default function AdFormPage() {
         className={styles.containerForm}
         action={formAction}
         onSubmit={handleSubmit}
-        encType="multipart/form-data"
       >
         <Input
           label="Titre"
@@ -175,8 +198,8 @@ export default function AdFormPage() {
 
         {selectedImages.length > 0 && (
           <ul className={styles.imageList}>
-            {selectedImages.map((imageName) => (
-              <li key={imageName}>{imageName}</li>
+            {selectedImages.map((file) => (
+              <li key={`${file.name}-${file.lastModified}`}>{file.name}</li>
             ))}
           </ul>
         )}

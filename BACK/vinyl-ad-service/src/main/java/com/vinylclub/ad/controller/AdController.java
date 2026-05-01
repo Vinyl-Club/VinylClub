@@ -1,5 +1,7 @@
 package com.vinylclub.ad.controller;
 
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +50,23 @@ public class AdController {
     @GetMapping
     public ResponseEntity<Page<AdListDTO>> getAds(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String format) {
 
-        Page<AdListDTO> ads = adService.getAllAds(page, size);
+        Page<AdListDTO> ads = adService.getAds(
+                page,
+                size,
+                q,
+                genre,
+                minPrice,
+                maxPrice,
+                state,
+                format);
         return ResponseEntity.ok(ads);
     }
 

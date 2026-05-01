@@ -14,11 +14,12 @@
 .input{
   width: 100%;
   padding: 10px 40px 10px 16px;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: none;
   font-size: 1rem;
-  color: grey;
-  box-shadow: 0px 2px 7px rgba(0,0,0,0.3);
+  color: var(--color-text-muted);
+  background: var(--color-surface-default);
+  box-shadow: var(--shadow-control);
 }
 
 .input::placeholder{
@@ -26,16 +27,16 @@
 }
 
 .input:focus-visible{
-  outline: 3px solid #8AA39F;
+  outline: 3px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
 .errorInput{
-  border-color: #c0392b;
+  border-color: var(--color-border-danger);
 }
 
 .error{
-  color: #c0392b;
+  color: var(--color-danger);
   font-size: 0.85rem;
 }
 
