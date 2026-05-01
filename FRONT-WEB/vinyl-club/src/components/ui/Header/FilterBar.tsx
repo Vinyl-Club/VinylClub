@@ -1,19 +1,40 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Button from '@/components/ui/Button/Button';
 import styles from './FilterBar.module.css';
 
 type OpenMenu = null | 'genre' | 'etat' | 'prix' | 'format';
+type FilterOption = {
+  value: string;
+  label: string;
+};
 
 export default function FilterBar() {
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const hideFilterBar = pathname === '/login' || pathname === '/register';
 
-  const genres = ['Classique', 'Rock', 'Jazz', 'Rap', 'Electro', 'Pop'];
-  const etats = ['Neuf', 'Tres bon etat', 'Bon etat', 'Satisfaisant', 'Mauvais etat'];
-  const formats = ['33 RPM', '45 RPM'];
+  const genres: FilterOption[] = [
+    { value: 'Classique', label: 'Classique' },
+    { value: 'Rock', label: 'Rock' },
+    { value: 'Jazz', label: 'Jazz' },
+    { value: 'Rap', label: 'Rap' },
+    { value: 'Electro', label: 'Electro' },
+    { value: 'Pop', label: 'Pop' },
+  ];
+  const etats: FilterOption[] = [
+    { value: 'TRES_BON_ETAT', label: 'Tres bon etat' },
+    { value: 'BON_ETAT', label: 'Bon etat' },
+    { value: 'MAUVAIS_ETAT', label: 'Mauvais etat' },
+  ];
+  const formats: FilterOption[] = [
+    { value: 'T33', label: '33 Tours' },
+    { value: 'T45', label: '45 Tours' },
+    { value: 'T78', label: '78 Tours' },
+  ];
 
   const [open, setOpen] = useState<OpenMenu>(null);
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
@@ -29,6 +50,56 @@ export default function FilterBar() {
   const etatBtnRef = useRef<HTMLButtonElement | null>(null);
   const prixBtnRef = useRef<HTMLButtonElement | null>(null);
   const formatBtnRef = useRef<HTMLButtonElement | null>(null);
+
+  function getOptionLabel(options: FilterOption[], value: string) {
+    return options.find((option) => option.value === value)?.label ?? value;
+  }
+
+  function applyFilters() {
+    const params = new URLSearchParams(searchParams.toString());
+
+    const nextFilters = {
+      genre,
+      state: etat,
+      format,
+      minPrice,
+      maxPrice,
+    };
+
+    Object.entries(nextFilters).forEach(([key, value]) => {
+      const trimmed = value.trim();
+
+      if (trimmed) {
+        params.set(key, trimmed);
+      } else {
+        params.delete(key);
+      }
+    });
+
+    params.delete('page');
+
+    const queryString = params.toString();
+    router.push(queryString ? `/catalog?${queryString}` : '/catalog');
+    setOpen(null);
+  }
+
+  function clearFilters() {
+    const params = new URLSearchParams(searchParams.toString());
+
+    ['genre', 'state', 'format', 'minPrice', 'maxPrice', 'page'].forEach((key) =>
+      params.delete(key),
+    );
+
+    setGenre('');
+    setEtat('');
+    setFormat('');
+    setMinPrice('');
+    setMaxPrice('');
+    setOpen(null);
+
+    const queryString = params.toString();
+    router.push(queryString ? `/catalog?${queryString}` : '/catalog');
+  }
 
   function toggleMenu(which: Exclude<OpenMenu, null>) {
     const nextOpen = open === which ? null : which;
@@ -51,6 +122,14 @@ export default function FilterBar() {
 
     setOpen(nextOpen);
   }
+
+  useEffect(() => {
+    setGenre(searchParams.get('genre') ?? '');
+    setEtat(searchParams.get('state') ?? '');
+    setFormat(searchParams.get('format') ?? '');
+    setMinPrice(searchParams.get('minPrice') ?? '');
+    setMaxPrice(searchParams.get('maxPrice') ?? '');
+  }, [searchParams]);
 
   useEffect(() => {
     function onPointerDown(event: MouseEvent) {
@@ -92,7 +171,7 @@ export default function FilterBar() {
             aria-expanded={open === 'genre'}
             onClick={() => toggleMenu('genre')}
           >
-            {genre || 'Genre'}
+            {genre ? getOptionLabel(genres, genre) : 'Genre'}
           </button>
 
           {open === 'genre' && (
@@ -105,20 +184,20 @@ export default function FilterBar() {
             >
               <ul className={styles.menuList}>
                 {genres.map((item) => (
-                  <li key={item}>
+                  <li key={item.value}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${genre === item ? styles.optionActive : ''}`}
-                      onClick={() => setGenre(item)}
+                      className={`${styles.optionBtn} ${genre === item.value ? styles.optionActive : ''}`}
+                      onClick={() => setGenre(item.value)}
                     >
-                      {item}
+                      {item.label}
                     </button>
                   </li>
                 ))}
               </ul>
 
               <div className={styles.actions}>
-                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
               </div>
@@ -176,7 +255,7 @@ export default function FilterBar() {
               </div>
 
               <div className={styles.actions}>
-                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
               </div>
@@ -197,7 +276,7 @@ export default function FilterBar() {
             aria-expanded={open === 'etat'}
             onClick={() => toggleMenu('etat')}
           >
-            {etat || 'Etat'}
+            {etat ? getOptionLabel(etats, etat) : 'Etat'}
           </button>
 
           {open === 'etat' && (
@@ -210,20 +289,20 @@ export default function FilterBar() {
             >
               <ul className={styles.menuList}>
                 {etats.map((item) => (
-                  <li key={item}>
+                  <li key={item.value}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${etat === item ? styles.optionActive : ''}`}
-                      onClick={() => setEtat(item)}
+                      className={`${styles.optionBtn} ${etat === item.value ? styles.optionActive : ''}`}
+                      onClick={() => setEtat(item.value)}
                     >
-                      {item}
+                      {item.label}
                     </button>
                   </li>
                 ))}
               </ul>
 
               <div className={styles.actions}>
-                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
               </div>
@@ -244,7 +323,7 @@ export default function FilterBar() {
             aria-expanded={open === 'format'}
             onClick={() => toggleMenu('format')}
           >
-            {format || 'Format'}
+            {format ? getOptionLabel(formats, format) : 'Format'}
           </button>
 
           {open === 'format' && (
@@ -257,26 +336,34 @@ export default function FilterBar() {
             >
               <ul className={styles.menuList}>
                 {formats.map((item) => (
-                  <li key={item}>
+                  <li key={item.value}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${format === item ? styles.optionActive : ''}`}
-                      onClick={() => setFormat(item)}
+                      className={`${styles.optionBtn} ${format === item.value ? styles.optionActive : ''}`}
+                      onClick={() => setFormat(item.value)}
                     >
-                      {item}
+                      {item.label}
                     </button>
                   </li>
                 ))}
               </ul>
 
               <div className={styles.actions}>
-                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
               </div>
             </div>
           )}
         </li>
+
+        {(genre || etat || format || minPrice || maxPrice) && (
+          <li className={styles.dropdown}>
+            <button type="button" className={styles.item} onClick={clearFilters}>
+              Reinitialiser
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   );

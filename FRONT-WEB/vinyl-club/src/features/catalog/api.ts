@@ -9,6 +9,41 @@ export type CatalogResult = {
   error: string | null;
 };
 
+export type CatalogFilters = {
+  q?: string;
+  genre?: string;
+  state?: string;
+  format?: string;
+  minPrice?: string;
+  maxPrice?: string;
+};
+
+function appendParam(params: URLSearchParams, key: keyof CatalogFilters, value: unknown) {
+  if (typeof value !== 'string') {
+    return;
+  }
+
+  const trimmed = value.trim();
+
+  if (trimmed) {
+    params.set(key, trimmed);
+  }
+}
+
+function buildCatalogUrl(filters: CatalogFilters = {}) {
+  const params = new URLSearchParams();
+
+  appendParam(params, 'q', filters.q);
+  appendParam(params, 'genre', filters.genre);
+  appendParam(params, 'state', filters.state);
+  appendParam(params, 'format', filters.format);
+  appendParam(params, 'minPrice', filters.minPrice);
+  appendParam(params, 'maxPrice', filters.maxPrice);
+
+  const query = params.toString();
+  return query ? `${API.ad}?${query}` : API.ad;
+}
+
 function extractCatalogItems(data: unknown): CatalogItem[] {
   if (Array.isArray(data)) {
     return data as CatalogItem[];
@@ -22,9 +57,9 @@ function extractCatalogItems(data: unknown): CatalogItem[] {
   return [];
 }
 
-export async function getCatalog(): Promise<CatalogResult> {
+export async function getCatalog(filters: CatalogFilters = {}): Promise<CatalogResult> {
   try {
-    const response = await fetch(API.ad, {
+    const response = await fetch(buildCatalogUrl(filters), {
       cache: 'no-store',
     });
 

@@ -43,8 +43,8 @@ export default function ProfilPage({ greeting, items, catalogError }: ProfilPage
 
         {catalogError ? (
           <div className={styles.profile__error} role="status">
-            <p className={styles.profile__errorTitle}>Catalogue indisponible</p>
-            <p className={styles.profile__errorMessage}>{catalogError}</p>
+            <p className={styles['profile__error-title']}>Catalogue indisponible</p>
+            <p className={styles['profile__error-message']}>{catalogError}</p>
           </div>
         ) : items.length === 0 ? (
           <p className={styles.profile__empty}>Aucun vinyle pour le moment.</p>
@@ -67,7 +67,7 @@ export default function ProfilPage({ greeting, items, catalogError }: ProfilPage
                   <div className={styles.card__main}>
                     <div className={styles.card__media}>
                       {coverUrl ? (
-                        <div className={styles.card__coverStack}>
+                        <div className={styles['card__cover-stack']}>
                           <div className={styles.card__vinyl} aria-hidden="true" />
                           <Image
                             src={coverUrl}
@@ -97,7 +97,7 @@ export default function ProfilPage({ greeting, items, catalogError }: ProfilPage
                         <button
                           type="button"
                           className={`${styles.card__favorite} ${
-                            isFavorite ? styles.card__favoriteActive : ''
+                            isFavorite ? styles['card__favorite--active'] : ''
                           }`}
                           aria-label={`Ajouter ${title} aux favoris`}
                           aria-pressed={isFavorite}
@@ -114,7 +114,7 @@ export default function ProfilPage({ greeting, items, catalogError }: ProfilPage
                           type="button"
                           variant="soft"
                           size="xs"
-                          className={styles.card__detailButton}
+                          className={styles['card__detail-button']}
                         >
                           Voir le detail
                         </Button>
