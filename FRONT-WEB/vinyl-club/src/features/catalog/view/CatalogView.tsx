@@ -1,10 +1,13 @@
+'use client'
+
 import type { CatalogItem } from '../types';
 import Image from 'next/image';
 import { Heart } from 'lucide-react';
 import Button from '@/components/ui/Button/Button';
 import { API } from '@/lib/env';
 import styles from './CatalogView.module.css';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation'
+
 
 type CatalogViewProps = {
   items: CatalogItem[];
@@ -19,6 +22,9 @@ const priceFormatter = new Intl.NumberFormat('fr-FR', {
 });
 
 export default function CatalogView({ items, error }: CatalogViewProps) {
+  
+  const router = useRouter();
+  
   if (error) {
     return (
       <div className={styles.catalog__error} role="status">
@@ -57,10 +63,9 @@ export default function CatalogView({ items, error }: CatalogViewProps) {
             }`}
           >
             <div className={styles['catalog-card__content']}>
-              {coverUrl && (
-                <div className={styles['catalog-card__media']}>
-                  <div className={styles['catalog-card__cover-stack']}>
-                    <div className={styles['catalog-card__vinyl']} aria-hidden="true" />
+              <div className={styles['catalog-card__media']}>
+                <div className={styles['catalog-card__cover-stack']}>
+                  {coverUrl ? (
                     <Image
                       src={coverUrl}
                       alt={title}
@@ -69,9 +74,11 @@ export default function CatalogView({ items, error }: CatalogViewProps) {
                       unoptimized
                       className={styles['catalog-card__image']}
                     />
-                  </div>
+                  ) : (
+                    <div className={styles['catalog-card__vinyl']} aria-hidden="true" />
+                  )}
                 </div>
-              )}
+              </div>
 
               <div className={styles['catalog-card__info']}>
                 <div className={styles['catalog-card__title']}>{title}</div>
@@ -98,6 +105,7 @@ export default function CatalogView({ items, error }: CatalogViewProps) {
                   variant="soft"
                   size="xs"
                   className={styles['catalog-card__detail-button']}
+                  onClick={() => router.push(`details/${item.id}`)}
                 >
                   {'Voir le d\u00e9tail'}
                 </Button>
