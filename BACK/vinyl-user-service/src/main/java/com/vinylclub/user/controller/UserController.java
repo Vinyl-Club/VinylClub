@@ -4,6 +4,7 @@ import com.vinylclub.user.dto.UserDTO;
 import com.vinylclub.user.dto.UserPublicDTO;
 import com.vinylclub.user.dto.LoginRequest;
 import com.vinylclub.user.dto.ValidatePasswordRequest;
+import com.vinylclub.user.dto.CreateUserRequest;
 import com.vinylclub.user.entity.User;
 import com.vinylclub.user.service.UserService;
 
@@ -75,11 +76,11 @@ public class UserController {
 
     /**
      * IMPORTANT : /api/users est utilisé par auth/register
-     * => en général cette route doit rester PUBLIC (sinon ton auth-service ne peut pas créer d'user via la gateway)
+     * => en général cette route doit rester PUBLIC (sinon auth-service ne peut pas créer d'user via la gateway)
      */
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = userService.createUser(user);
+    public ResponseEntity<User> createUser(@RequestBody CreateUserRequest request) {
+        User created = userService.createUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 

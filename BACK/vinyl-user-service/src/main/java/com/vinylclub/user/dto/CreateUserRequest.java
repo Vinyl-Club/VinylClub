@@ -1,14 +1,12 @@
-package com.vinylclub.auth.dto;
+package com.vinylclub.user.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+// import jakarta.validation.constraints.Max;
+// import jakarta.validation.constraints.Min;
 
-public class RegisterRequest {
-
+public class CreateUserRequest {
     @NotBlank(message = "Email obligatoire.")
     @Email(message = "Email invalide")
     @Size(max = 200, message = "200 caractères maximum")
@@ -16,22 +14,6 @@ public class RegisterRequest {
 
     @NotBlank(message = "Mot de passe obligatoire.")
     @Size(min = 12, max = 72, message = "12 caractères minimum")
-    @Pattern(
-        regexp = ".*[A-Z].*",
-        message = "Vous devez avoir au moins une majuscule"
-    )
-    @Pattern(
-        regexp = ".*[a-z].*",
-        message = "Vous devez avoir au moins une minuscule"
-    )
-    @Pattern(
-        regexp = ".*\\d.*",
-        message = "Vous devez avoir au moins un chiffre"
-    )
-    @Pattern(
-        regexp = ".*[^A-Za-z\\d].*",
-        message = "Vous devez avoir au moins un caractère spécial"
-    )
     private String password;
 
     @NotBlank(message = "Le nom est obligatoire")
@@ -42,8 +24,6 @@ public class RegisterRequest {
     @NotBlank(message = "La ville est obligatoire")
     @Size(max = 70, message = "70 caractères maximun")
     private String city;
-
-    public RegisterRequest() {}
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

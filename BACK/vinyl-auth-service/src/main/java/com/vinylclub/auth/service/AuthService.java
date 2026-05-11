@@ -176,7 +176,7 @@ public class AuthService {
         user.setFirstName(created.getFirstName());
         user.setLastName(created.getLastName());
         user.setRole(created.getRole());
-        user.setCreatedAt(created.getCreatedAt()); // si tu l’as
+        user.setCreatedAt(created.getCreatedAt()); 
 
         return new LoginResponse(
             accessToken,
@@ -197,6 +197,7 @@ public class AuthService {
             body.setFirstName(req.getFirstName());
             body.setLastName(req.getLastName());
             body.setPhone(req.getPhone());
+            body.setCity(req.getCity());
 
             ResponseEntity<UserCreatedResponse> response =
                     restTemplate.postForEntity(url, body, UserCreatedResponse.class);
@@ -215,6 +216,7 @@ public class AuthService {
         private String firstName;
         private String lastName;
         private String phone;
+        private String city;
 
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
@@ -226,6 +228,8 @@ public class AuthService {
         public void setLastName(String lastName) { this.lastName = lastName; }
         public String getPhone() { return phone; }
         public void setPhone(String phone) { this.phone = phone; }
+        public String getCity() {return city;}
+        public void setCity(String city ) { this.city = city; }
     }
 
     private static class UserCreatedResponse {
@@ -235,6 +239,7 @@ public class AuthService {
         private String lastName;
         private String role;
         private java.sql.Timestamp createdAt;
+        private String city;
 
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
@@ -248,6 +253,8 @@ public class AuthService {
         public void setRole(String role) { this.role = role; }
         public java.sql.Timestamp getCreatedAt() { return createdAt; }
         public void setCreatedAt(java.sql.Timestamp createdAt) { this.createdAt = createdAt; }
+        public String getCity() {return city;}
+        public void setCity(String city ) { this.city = city; }
     }
 
 

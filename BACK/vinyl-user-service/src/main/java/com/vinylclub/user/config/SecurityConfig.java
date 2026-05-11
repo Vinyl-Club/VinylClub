@@ -12,13 +12,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity // Enables Spring Security’s web security support
 public class SecurityConfig {
 
-    // 👉 This Bean allows you to hardage passwords with Bcrypt
+    // This Bean allows you to hardage passwords with Bcrypt
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    
     @Bean // Declares a bean to be managed by the Spring container
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
