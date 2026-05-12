@@ -64,6 +64,7 @@ export async function registerAction(prevState: State, formData: FormData): Prom
     const confirmPassword = String(formData.get('confirmPassword') ?? ``);
     const lastName = String(formData.get('lastName') ?? ``);
     const firstName = String(formData.get('firstName') ?? ``);
+    const city = String(formData.get('city') ?? ``);
     
     if(password !== confirmPassword) {
         return {
@@ -78,7 +79,7 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         response = await fetch(API.register, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({email, password, lastName, firstName }),
+            body: JSON.stringify({email, password, lastName, firstName, city}),
             cache: 'no-store',
         });
     } catch (error) {
