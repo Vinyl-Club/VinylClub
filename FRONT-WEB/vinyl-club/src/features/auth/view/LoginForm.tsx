@@ -1,4 +1,5 @@
 'use client';
+
 import Input from '@/components/ui/Input/Input';
 import Button from '@/components/ui/Button/Button';
 import styles from './LoginForm.module.css';
@@ -12,7 +13,7 @@ type State = {
   formError: string;
 };
 
-const initialState: State = {fieldErrors: {}, formError: ""};
+const initialState: State = { fieldErrors: {}, formError: '' };
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, initialState);
@@ -23,7 +24,7 @@ export default function LoginForm() {
   const backFrontErrors = {
     email: clientErrors.email ?? fe.email,
     password: clientErrors.password ?? fe.password,
-  }
+  };
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     const formData = new FormData(e.currentTarget);
@@ -35,7 +36,7 @@ export default function LoginForm() {
 
     const result = loginSchema.safeParse(values);
 
-    if(!result.success) {
+    if (!result.success) {
       e.preventDefault();
 
       const errors: Record<string, string> = {};
@@ -55,14 +56,14 @@ export default function LoginForm() {
   }
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>
+    <div className={styles['login-form']}>
+      <h1 className={styles['login-form__title']}>
         Bienvenue sur
-        <span>Vinyl.Club</span>
+        <span className={styles['login-form__brand']}>Vinyl.Club</span>
       </h1>
 
-      <form className={styles.containerForm} action={formAction} onSubmit={handleSubmit}>
-        <Input 
+      <form className={styles['login-form__form']} action={formAction} onSubmit={handleSubmit}>
+        <Input
           label="Email"
           id="email"
           name="email"
@@ -85,17 +86,21 @@ export default function LoginForm() {
         />
 
         {state?.formError && (
-          <p role="alert" className={styles.error}>
+          <p role="alert" className={styles['login-form__error']}>
             {state.formError}
           </p>
         )}
 
-        <div className={styles.containerLinks}>
-          <Link href='/register'>S&apos;inscrire</Link>
-          <Link href=''>Mot de passe oublié</Link>
+        <div className={styles['login-form__links']}>
+          <Link href="/register" className={styles['login-form__link']}>
+            S&apos;inscrire
+          </Link>
+          <Link href="" className={styles['login-form__link']}>
+            Mot de passe oubliÃ©
+          </Link>
         </div>
 
-        <div className={styles.cta}>
+        <div className={styles['login-form__actions']}>
           <Button type="submit" variant="primary" fullWidth={false} isLoading={isPending}>
             Se connecter
           </Button>

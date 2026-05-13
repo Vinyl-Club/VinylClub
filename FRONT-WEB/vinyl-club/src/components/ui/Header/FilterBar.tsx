@@ -156,17 +156,20 @@ export default function FilterBar() {
   }
 
   return (
-    <nav className={styles.nav} aria-label="Filtres">
-      <ul className={styles.list}>
-        <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="genre-btn">
+    <nav className={styles['filter-bar']} aria-label="Filtres">
+      <ul className={styles['filter-bar__list']}>
+        <li className={styles['filter-bar__dropdown']}>
+          <label className={styles['filter-bar__visually-hidden']} htmlFor="genre-btn">
             Genre
           </label>
           <button
             id="genre-btn"
             ref={genreBtnRef}
             type="button"
-            className={`${styles.item} ${styles.dropdownBtn}`}
+            className={[
+              styles['filter-bar__item'],
+              styles['filter-bar__dropdown-button'],
+            ].join(' ')}
             aria-haspopup="dialog"
             aria-expanded={open === 'genre'}
             onClick={() => toggleMenu('genre')}
@@ -177,17 +180,22 @@ export default function FilterBar() {
           {open === 'genre' && (
             <div
               ref={menuRef}
-              className={styles.menu}
+              className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Choisir un genre"
               style={{ top: menuPos.top, left: menuPos.left }}
             >
-              <ul className={styles.menuList}>
+              <ul className={styles['filter-bar__menu-list']}>
                 {genres.map((item) => (
                   <li key={item.value}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${genre === item.value ? styles.optionActive : ''}`}
+                      className={[
+                        styles['filter-bar__option-button'],
+                        genre === item.value ? styles['filter-bar__option-button--active'] : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
                       onClick={() => setGenre(item.value)}
                     >
                       {item.label}
@@ -196,7 +204,7 @@ export default function FilterBar() {
                 ))}
               </ul>
 
-              <div className={styles.actions}>
+              <div className={styles['filter-bar__actions']}>
                 <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
@@ -205,15 +213,18 @@ export default function FilterBar() {
           )}
         </li>
 
-        <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="prix-btn">
+        <li className={styles['filter-bar__dropdown']}>
+          <label className={styles['filter-bar__visually-hidden']} htmlFor="prix-btn">
             Prix
           </label>
           <button
             id="prix-btn"
             ref={prixBtnRef}
             type="button"
-            className={`${styles.item} ${styles.dropdownBtn}`}
+            className={[
+              styles['filter-bar__item'],
+              styles['filter-bar__dropdown-button'],
+            ].join(' ')}
             aria-haspopup="dialog"
             aria-expanded={open === 'prix'}
             onClick={() => toggleMenu('prix')}
@@ -224,15 +235,15 @@ export default function FilterBar() {
           {open === 'prix' && (
             <div
               ref={menuRef}
-              className={styles.menu}
+              className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Filtrer par prix"
               style={{ top: menuPos.top, left: menuPos.left }}
             >
-              <div className={styles.priceRow}>
-                <span className={styles.priceLabel}>De</span>
+              <div className={styles['filter-bar__price-row']}>
+                <span className={styles['filter-bar__price-label']}>De</span>
                 <input
-                  className={styles.priceInput}
+                  className={styles['filter-bar__price-input']}
                   type="number"
                   min="0"
                   step="0.01"
@@ -240,21 +251,21 @@ export default function FilterBar() {
                   value={minPrice}
                   onChange={(event) => setMinPrice(event.target.value)}
                 />
-                <span className={styles.euro}>EUR</span>
+                <span className={styles['filter-bar__euro']}>EUR</span>
 
-                <span className={styles.priceLabel}>A</span>
+                <span className={styles['filter-bar__price-label']}>A</span>
                 <input
-                  className={styles.priceInput}
+                  className={styles['filter-bar__price-input']}
                   type="number"
                   min="0"
                   step="0.01"
                   value={maxPrice}
                   onChange={(event) => setMaxPrice(event.target.value)}
                 />
-                <span className={styles.euro}>EUR</span>
+                <span className={styles['filter-bar__euro']}>EUR</span>
               </div>
 
-              <div className={styles.actions}>
+              <div className={styles['filter-bar__actions']}>
                 <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
@@ -263,15 +274,18 @@ export default function FilterBar() {
           )}
         </li>
 
-        <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="etat-btn">
+        <li className={styles['filter-bar__dropdown']}>
+          <label className={styles['filter-bar__visually-hidden']} htmlFor="etat-btn">
             Etat
           </label>
           <button
             id="etat-btn"
             ref={etatBtnRef}
             type="button"
-            className={`${styles.item} ${styles.dropdownBtn}`}
+            className={[
+              styles['filter-bar__item'],
+              styles['filter-bar__dropdown-button'],
+            ].join(' ')}
             aria-haspopup="dialog"
             aria-expanded={open === 'etat'}
             onClick={() => toggleMenu('etat')}
@@ -282,17 +296,22 @@ export default function FilterBar() {
           {open === 'etat' && (
             <div
               ref={menuRef}
-              className={styles.menu}
+              className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Choisir un etat"
               style={{ top: menuPos.top, left: menuPos.left }}
             >
-              <ul className={styles.menuList}>
+              <ul className={styles['filter-bar__menu-list']}>
                 {etats.map((item) => (
                   <li key={item.value}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${etat === item.value ? styles.optionActive : ''}`}
+                      className={[
+                        styles['filter-bar__option-button'],
+                        etat === item.value ? styles['filter-bar__option-button--active'] : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
                       onClick={() => setEtat(item.value)}
                     >
                       {item.label}
@@ -301,7 +320,7 @@ export default function FilterBar() {
                 ))}
               </ul>
 
-              <div className={styles.actions}>
+              <div className={styles['filter-bar__actions']}>
                 <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
@@ -310,15 +329,18 @@ export default function FilterBar() {
           )}
         </li>
 
-        <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="format-btn">
+        <li className={styles['filter-bar__dropdown']}>
+          <label className={styles['filter-bar__visually-hidden']} htmlFor="format-btn">
             Format
           </label>
           <button
             id="format-btn"
             ref={formatBtnRef}
             type="button"
-            className={`${styles.item} ${styles.dropdownBtn}`}
+            className={[
+              styles['filter-bar__item'],
+              styles['filter-bar__dropdown-button'],
+            ].join(' ')}
             aria-haspopup="dialog"
             aria-expanded={open === 'format'}
             onClick={() => toggleMenu('format')}
@@ -329,17 +351,22 @@ export default function FilterBar() {
           {open === 'format' && (
             <div
               ref={menuRef}
-              className={styles.menu}
+              className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Choisir un format"
               style={{ top: menuPos.top, left: menuPos.left }}
             >
-              <ul className={styles.menuList}>
+              <ul className={styles['filter-bar__menu-list']}>
                 {formats.map((item) => (
                   <li key={item.value}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${format === item.value ? styles.optionActive : ''}`}
+                      className={[
+                        styles['filter-bar__option-button'],
+                        format === item.value ? styles['filter-bar__option-button--active'] : '',
+                      ]
+                        .filter(Boolean)
+                        .join(' ')}
                       onClick={() => setFormat(item.value)}
                     >
                       {item.label}
@@ -348,7 +375,7 @@ export default function FilterBar() {
                 ))}
               </ul>
 
-              <div className={styles.actions}>
+              <div className={styles['filter-bar__actions']}>
                 <Button type="button" variant="secondary" size="sm" onClick={applyFilters}>
                   Afficher les resultats
                 </Button>
@@ -358,8 +385,15 @@ export default function FilterBar() {
         </li>
 
         {(genre || etat || format || minPrice || maxPrice) && (
-          <li className={styles.dropdown}>
-            <button type="button" className={styles.item} onClick={clearFilters}>
+          <li className={styles['filter-bar__dropdown']}>
+            <button
+              type="button"
+              className={[
+                styles['filter-bar__item'],
+                styles['filter-bar__item--reset'],
+              ].join(' ')}
+              onClick={clearFilters}
+            >
               Reinitialiser
             </button>
           </li>

@@ -1,56 +1,61 @@
-.field{
+.input-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   width: clamp(280px, 40vw, 420px);
   padding: 4px;
 }
 
-.label{
-  font-size: 1.2rem;
-  font-weight: 500;
+.input-field__label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
 }
 
-.input{
+.input-field__control {
   width: 100%;
-  padding: 10px 40px 10px 16px;
+  min-height: 44px;
+  padding: 11px 40px 11px 16px;
   border-radius: var(--radius-md);
   border: none;
-  font-size: 1rem;
-  color: var(--color-text-muted);
+  font-size: var(--text-base);
+  line-height: var(--leading-snug);
+  color: var(--color-text-primary);
   background: var(--color-surface-default);
   box-shadow: var(--shadow-control);
 }
 
-.input::placeholder{
-  text-align: left;     
+.input-field__control::placeholder {
+  text-align: left;
+  color: var(--color-text-placeholder);
 }
 
-.input:focus-visible{
+.input-field__control:focus-visible {
   outline: 3px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
-.errorInput{
+.input-field__control--error {
   border-color: var(--color-border-danger);
 }
 
-.error{
+.input-field__error {
   color: var(--color-danger);
-  font-size: 0.85rem;
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
 }
 
- @media (max-width: 640px) {
-  .field{
-    width: min(90vw, 300px); /* prend quasi tout l'écran sans déborder */
+@media (max-width: 640px) {
+  .input-field {
+    width: min(90vw, 300px);
   }
 
-  .label{
-    font-size: 1rem;
+  .input-field__label {
+    font-size: var(--text-sm);
   }
 
-  .input{
+  .input-field__control {
     padding: 10px 14px;
-    font-size: 0.95rem;
+    font-size: var(--text-sm);
   }
-} 
+}

@@ -1,0 +1,44 @@
+.page {
+  width: min(1365px, calc(100vw - 84px));
+  margin-left: calc(50% - 50vw + 42px);
+  padding: 24px 0 45px;
+  font-family: var(--font-raleway), sans-serif;
+}
+
+.title {
+  margin: 0 0 81px;
+  color: #9c581e;
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 42px;
+  letter-spacing: 0;
+}
+
+@media (max-width: 1120px) {
+  .page {
+    width: min(902px, calc(100vw - 48px));
+    margin-left: calc(50% - 50vw + 24px);
+    padding-top: 30px;
+  }
+
+  .title {
+    margin-bottom: 52px;
+    font-size: 2rem;
+    line-height: 1.18;
+  }
+}
+
+@media (max-width: 820px) {
+  .page {
+    width: min(427px, calc(100vw - 32px));
+    margin-left: calc(50% - 50vw + 16px);
+    padding-top: 20px;
+  }
+
+  .title {
+    margin-bottom: 36px;
+    font-size: 1.7rem;
+    line-height: 1.15;
+  }
+}

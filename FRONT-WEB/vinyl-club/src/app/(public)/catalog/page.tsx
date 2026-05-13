@@ -1,5 +1,8 @@
 import { getCatalog, type CatalogFilters } from '@/features/catalog/api';
+import { getCurrentUserFavoriteSelection } from '@/features/favorites/api';
+import { getCurrentUser } from '@/features/auth/api';
 import CatalogView from '@/features/catalog/view/CatalogView';
+import styles from './page.module.css';
 
 type CatalogPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -24,7 +27,28 @@ export default async function Page({ searchParams }: CatalogPageProps) {
     maxPrice: getParam(params, 'maxPrice'),
   };
 
-  const { items, error } = await getCatalog(filters);
+  const [{ items, error }, favoriteSelection, currentUser] = await Promise.all([
+    getCatalog(filters),
+    getCurrentUserFavoriteSelection(),
+    getCurrentUser(),
+  ]);
+  const greetingName =
+    currentUser?.firstName?.trim() ||
+    currentUser?.lastName?.trim() ||
+    null;
 
-  return <CatalogView items={items} error={error} />;
+  return (
+    <section className={styles.page}>
+      {greetingName ? (
+        <h1 className={styles.title}>{`Bonjour : ${greetingName} !`}</h1>
+      ) : null}
+
+      <CatalogView
+        items={items}
+        error={error}
+        favoriteProductIds={favoriteSelection.productIds}
+        isAuthenticated={favoriteSelection.isAuthenticated}
+      />
+    </section>
+  );
 }

@@ -1,5 +1,6 @@
 export interface CatalogItem {
   id: number;
+  productId: number | null;
   title: string;
   artistName: string | null;
   categoryName: string | null;
@@ -69,10 +70,10 @@ export interface User {
   id: number;
   firstName: string;
   lastName: string;
-  address: Address;
+  address: Address | null;
 }
 
 export interface Address {
   id: number | null;
-  city: string;
+  city: string | null;
 }

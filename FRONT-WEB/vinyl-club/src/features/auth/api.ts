@@ -5,6 +5,7 @@ import {
   getAuthToken,
   getStoredAuthUser,
   getTokenUserSnapshot,
+  isTokenExpired,
   normalizeAuthSessionUser,
   type AuthSessionUser,
 } from '@/lib/auth.Server';
@@ -18,6 +19,13 @@ export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
     return null;
   }
 
+  if (isTokenExpired(token)) {
+    return null;
+  }
+
+  const storedUser = await getStoredAuthUser();
+  const tokenSnapshot = getTokenUserSnapshot(token);
+
   try {
     const response = await fetch(API.authMe, {
       headers: {
@@ -28,19 +36,19 @@ export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
 
     if (response.ok) {
       const data: unknown = await response.json();
-      return normalizeAuthSessionUser(data) ?? getTokenUserSnapshot(token);
+      return normalizeAuthSessionUser(data) ?? storedUser ?? tokenSnapshot;
     }
 
-    if (response.status === 401 || response.status === 403) {
+    if (response.status === 400 || response.status === 401 || response.status === 403) {
       return null;
     }
 
-    console.error(
+    console.warn(
       `Current user request failed: ${response.status} ${response.statusText}`,
     );
   } catch (error) {
-    console.error('Current user request failed:', error);
+    console.warn('Current user request failed:', error);
   }
 
-  return (await getStoredAuthUser()) ?? getTokenUserSnapshot(token);
+  return storedUser ?? tokenSnapshot;
 }

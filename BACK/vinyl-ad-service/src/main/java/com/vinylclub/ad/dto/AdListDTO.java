@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class AdListDTO {
 
     private Long id;
+    private Long productId;
 
     private String title;
     private String artistName;
@@ -20,6 +21,7 @@ public class AdListDTO {
     public AdListDTO() {}
 
     public AdListDTO(Long id,
+                    Long productId,
                     String title,
                     String artistName,
                     String categoryName,
@@ -28,6 +30,7 @@ public class AdListDTO {
                     String imageUrl) {
 
         this.id = id;
+        this.productId = productId;
         this.title = title;
         this.artistName = artistName;
         this.categoryName = categoryName;
@@ -44,6 +47,14 @@ public class AdListDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
     public String getTitle() {

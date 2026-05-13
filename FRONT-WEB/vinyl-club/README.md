@@ -23,6 +23,23 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## CSS Convention
+
+Le front suit maintenant une convention BEM pour les composants et leurs feuilles `*.module.css` :
+
+- `block`
+- `block__element`
+- `block__element--modifier`
+
+Exemples :
+
+- `topbar__burger`
+- `topbar__burger--open`
+- `input-field__control`
+- `favorite-toggle__button--active`
+
+Eviter les noms trop generiques comme `container`, `title`, `item` ou `button` lorsqu'ils ne sont pas scopes par leur bloc.
+
 ## Learn More 
 
 To learn more about Next.js, take a look at the following resources:
