@@ -6,7 +6,7 @@
 }
 
 .title{
-    color: #9C581E;
+    color: var(--color-text-accent);
     font-size: 2.5rem;
     font-weight: 900;
     text-align: center;

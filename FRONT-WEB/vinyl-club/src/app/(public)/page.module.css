@@ -7,7 +7,7 @@
 
 .title {
   margin: 0 0 71px;
-  color: #9c581e;
+  color: var(--color-text-accen);
   font-size: 36px;
   font-weight: 700;
   line-height: 1;

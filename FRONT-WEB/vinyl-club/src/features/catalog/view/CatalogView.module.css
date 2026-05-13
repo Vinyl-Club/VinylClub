@@ -2,9 +2,9 @@
   display: grid;
   grid-template-columns: repeat(3, 427px);
   gap: 35px;
-  justify-content: start;
+  justify-content: center;
   align-items: stretch;
-  max-width: 1351px;
+  /* max-width: 1351px; */
 }
 
 .catalog__empty {

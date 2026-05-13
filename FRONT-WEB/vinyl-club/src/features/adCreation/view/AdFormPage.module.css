@@ -7,7 +7,7 @@
 }
 
 .title {
-  color: #9c581e;
+  color: var(--color-text-accent);
   font-size: 2.5rem;
   font-weight: 900;
   text-align: center;
@@ -54,7 +54,7 @@
 }
 
 .buttonImage:focus-visible {
-  outline: 3px solid #8aa39f;
+  outline: 3px solid var(--color-focus-ring);
   outline-offset: 2px;
 }
 
@@ -89,14 +89,14 @@
 
 .error {
   width: clamp(280px, 40vw, 420px);
-  color: #b42318;
+  color: var(--color-danger-strong);
   font-size: 0.95rem;
   margin: 4px 0 0;
 }
 
 .success {
   width: clamp(280px, 40vw, 420px);
-  color: #116329;
+  color: var(--color-success);
   font-size: 0.95rem;
   margin: 4px 0 0;
 }
