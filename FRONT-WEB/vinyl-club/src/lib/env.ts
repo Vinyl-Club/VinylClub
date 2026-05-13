@@ -6,6 +6,8 @@ export const API = {
   images: `${BASE}/api/images/`,
   auth: `${BASE}/auth/login`,
   authMe: `${BASE}/auth/me`,
+  users: `${BASE}/api/users`,
+  addresses: `${BASE}/api/addresses`,
   product: `${BASE}/api/products`,
   register: `${BASE}/auth/register`,
   logout: `${BASE}/auth/logout`,
@@ -17,4 +19,7 @@ export const API = {
   searchAlbum: `${BASE}/api/albums/search`,
   ad: `${BASE}/api/ad`,
   adDetails: `${BASE}/api/ad`,
+  profileAds: `${BASE}/api/ad/mine`,
+  favoriteAds: `${BASE}/api/ad/products`,
+  favorites: `${BASE}/api/favorites`,
 } as const;

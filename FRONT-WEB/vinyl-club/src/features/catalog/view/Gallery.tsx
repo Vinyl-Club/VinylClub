@@ -15,17 +15,13 @@ export default function Gallery({ images, title }: Props) {
   const selectedImage = images[currentIndex]?.imageUrl;
 
   useEffect(() => {
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'ArrowRight') {
-        setCurrentIndex((prev) =>
-          prev === images.length - 1 ? 0 : prev + 1
-        );
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'ArrowRight') {
+        setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
       }
 
-      if (e.key === 'ArrowLeft') {
-        setCurrentIndex((prev) =>
-          prev === 0 ? images.length - 1 : prev - 1
-        );
+      if (event.key === 'ArrowLeft') {
+        setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
       }
     }
 
@@ -37,7 +33,7 @@ export default function Gallery({ images, title }: Props) {
   }, [images.length]);
 
   return (
-    <div className={styles.imageSection}>
+    <div className={styles['listing-details__gallery']}>
       {images.length > 0 && selectedImage ? (
         <>
           <Image
@@ -45,11 +41,11 @@ export default function Gallery({ images, title }: Props) {
             alt={title}
             width={420}
             height={420}
-            className={styles.mainImage}
+            className={styles['listing-details__main-image']}
           />
 
           {images.length > 1 && (
-            <div className={styles.thumbnailList}>
+            <div className={styles['listing-details__thumbnail-list']}>
               {images.map((img, index) => (
                 <Image
                   key={img.id}
@@ -57,9 +53,12 @@ export default function Gallery({ images, title }: Props) {
                   alt={title}
                   width={90}
                   height={90}
-                  className={`${styles.thumbnail} ${
-                    currentIndex === index ? styles.activeThumbnail : ''
-                  }`}
+                  className={[
+                    styles['listing-details__thumbnail'],
+                    currentIndex === index ? styles['listing-details__thumbnail--active'] : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   onClick={() => setCurrentIndex(index)}
                 />
               ))}
@@ -67,7 +66,7 @@ export default function Gallery({ images, title }: Props) {
           )}
         </>
       ) : (
-        <div className={styles.imagePlaceholder}>Aucune image</div>
+        <div className={styles['listing-details__image-placeholder']}>Aucune image</div>
       )}
     </div>
   );

@@ -22,111 +22,140 @@ function getUserLabel(user: AuthSessionUser) {
 }
 
 export default function TopBar({ currentUser }: TopBarProps) {
-  const [shawLinks, setShawLinks] = useState(false);
+  const [showLinks, setShowLinks] = useState(false);
   const pathname = usePathname();
   const userLabel = currentUser ? getUserLabel(currentUser) : null;
+  const greetingLabel =
+    currentUser?.firstName?.trim() || currentUser?.lastName?.trim()
+      ? `Bonjour ${currentUser.firstName?.trim() || currentUser.lastName?.trim() || ''}`
+      : userLabel
+        ? `Bonjour ${userLabel}`
+        : null;
+  const showInlineGreeting = greetingLabel && pathname !== '/catalog';
+  const favoritesHref = currentUser ? '/favorite' : '/login';
 
   const hideSearch = pathname === '/login' || pathname === '/register';
   const hideMenu = pathname === '/login' || pathname === '/register';
 
-  const handleShawLinks = () => setShawLinks((v) => !v);
+  const handleShowLinks = () => setShowLinks((value) => !value);
 
   useEffect(() => {
-    if (!shawLinks) return;
+    if (!showLinks) return;
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShawLinks(false);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowLinks(false);
     };
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [shawLinks]);
+  }, [showLinks]);
 
   useEffect(() => {
-    setShawLinks(false);
+    setShowLinks(false);
   }, [pathname]);
 
   return (
     <div className={styles.topbar}>
-      <Link href="/catalog" className={styles.logoBox} aria-label="Aller a l'accueil">
+      <Link href="/catalog" className={styles['topbar__logo-box']} aria-label="Aller a l'accueil">
         <Image
           src={logo}
           alt="Vinyl Club"
           fill
-          className={styles.logoImg}
+          className={styles['topbar__logo-image']}
           priority
         />
       </Link>
 
       {!hideSearch && (
-        <div className={styles.searchWrap}>
+        <div className={styles['topbar__search-wrap']}>
+          {showInlineGreeting ? (
+            <p className={styles['topbar__greeting']}>{greetingLabel}</p>
+          ) : null}
           <SearchBar />
         </div>
       )}
 
       {!hideMenu && (
-        <div className={styles.menuWrap}>
+        <div className={styles['topbar__menu-wrap']}>
           <button
-            className={`${styles.burger} ${shawLinks ? styles.open : ''}`}
+            className={[
+              styles['topbar__burger'],
+              showLinks ? styles['topbar__burger--open'] : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
             type="button"
-            aria-label={shawLinks ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-label={showLinks ? 'Fermer le menu' : 'Ouvrir le menu'}
             aria-controls="topbar-menu"
-            aria-expanded={shawLinks}
-            onClick={handleShawLinks}
+            aria-expanded={showLinks}
+            onClick={handleShowLinks}
           >
-            <span className={styles.bar} />
+            <span className={styles['topbar__burger-line']} />
           </button>
 
           <nav aria-label="Navigation principale">
             <ul
               id="topbar-menu"
-              hidden={!shawLinks}
-              className={`${styles.links} ${shawLinks ? styles.open : ''}`}
+              hidden={!showLinks}
+              className={[
+                styles['topbar__links'],
+                showLinks ? styles['topbar__links--open'] : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
               {currentUser && userLabel && (
-                <li className={`${styles.item} ${styles.session}`}>
-                  <span className={styles.sessionLabel}>Connecte en tant que</span>
-                  <span className={styles.sessionName}>{userLabel}</span>
+                <li className={[styles['topbar__item'], styles['topbar__session']].join(' ')}>
+                  <span className={styles['topbar__session-label']}>Connecte en tant que</span>
+                  <span className={styles['topbar__session-name']}>{userLabel}</span>
                   {currentUser.role && (
-                    <span className={styles.sessionRole}>{currentUser.role}</span>
+                    <span className={styles['topbar__session-role']}>{currentUser.role}</span>
                   )}
                 </li>
               )}
 
-              <li className={styles.item}>
+              <li className={styles['topbar__item']}>
                 <Link
                   href="/ads/create"
-                  className={styles.link}
-                  onClick={() => setShawLinks(false)}
+                  className={styles['topbar__link']}
+                  onClick={() => setShowLinks(false)}
                 >
                   Ajouter une annonce
                 </Link>
               </li>
-              <li className={styles.item}>
-                <Link href="/" className={styles.link} onClick={() => setShawLinks(false)}>
+              <li className={styles['topbar__item']}>
+                <Link
+                  href={favoritesHref}
+                  className={styles['topbar__link']}
+                  onClick={() => setShowLinks(false)}
+                >
                   Favoris
                 </Link>
               </li>
 
               {currentUser ? (
                 <>
-                  <li className={styles.item}>
+                  <li className={styles['topbar__item']}>
                     <Link
                       href="/profile"
-                      className={styles.link}
-                      onClick={() => setShawLinks(false)}
+                      className={styles['topbar__link']}
+                      onClick={() => setShowLinks(false)}
                     >
                       Mon profil
                     </Link>
                   </li>
-                  <li className={styles.item}>
-                    <Link href="/" className={styles.link} onClick={() => setShawLinks(false)}>
+                  <li className={styles['topbar__item']}>
+                    <Link
+                      href="/"
+                      className={styles['topbar__link']}
+                      onClick={() => setShowLinks(false)}
+                    >
                       Mes commandes
                     </Link>
                   </li>
-                  <li className={styles.item}>
+                  <li className={styles['topbar__item']}>
                     <form action={logoutAction}>
-                      <button type="submit" className={styles.link}>
+                      <button type="submit" className={styles['topbar__link']}>
                         Deconnexion
                       </button>
                     </form>
@@ -134,20 +163,20 @@ export default function TopBar({ currentUser }: TopBarProps) {
                 </>
               ) : (
                 <>
-                  <li className={styles.item}>
+                  <li className={styles['topbar__item']}>
                     <Link
                       href="/login"
-                      className={styles.link}
-                      onClick={() => setShawLinks(false)}
+                      className={styles['topbar__link']}
+                      onClick={() => setShowLinks(false)}
                     >
                       Connexion
                     </Link>
                   </li>
-                  <li className={styles.item}>
+                  <li className={styles['topbar__item']}>
                     <Link
                       href="/register"
-                      className={styles.link}
-                      onClick={() => setShawLinks(false)}
+                      className={styles['topbar__link']}
+                      onClick={() => setShowLinks(false)}
                     >
                       Inscription
                     </Link>

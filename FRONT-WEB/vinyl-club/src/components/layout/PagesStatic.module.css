@@ -2,12 +2,15 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 40px 20px;
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
   color: #222;
 }
 
 .pageTitle {
-  font-size: 2.5rem;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tight);
   margin-bottom: 30px;
   text-align: center;
   color: #9c581e;
@@ -18,7 +21,8 @@
 }
 
 .sectionTitle {
-  font-size: 1.4rem;
+  font-size: 1.16rem;
+  font-weight: var(--weight-bold);
   margin-top: 30px;
   margin-bottom: 10px;
   color: #111;
@@ -27,7 +31,8 @@
 }
 
 .text {
-  font-size: 1.1rem;
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
   margin-bottom: 10px;
   color: #444;
 }

@@ -8,10 +8,10 @@
 .title {
   margin: 0 0 71px;
   color: #9c581e;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
 }
 
 @media (max-width: 900px) {
@@ -23,6 +23,6 @@
 
   .title {
     margin-bottom: 36px;
-    font-size: 30px;
+    font-size: var(--text-2xl);
   }
 }

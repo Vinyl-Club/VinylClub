@@ -2,9 +2,13 @@ package com.vinylclub.ad.service;
 
 import java.math.BigDecimal;
 import java.text.Normalizer;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -106,6 +110,32 @@ public class AdService {
         return adsPage.map(ad -> toFilterableAd(ad).item());
     }
 
+    public List<AdListDTO> getAdsByUserId(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("Il manque l'id utilisateur");
+        }
+
+        return adRepository.findAllByUseridOrderByIdDesc(userId).stream()
+                .map(ad -> toFilterableAd(ad).item())
+                .toList();
+    }
+
+    public List<AdListDTO> getAdsByProductIds(List<Long> productIds) {
+        if (productIds == null || productIds.isEmpty()) {
+            return List.of();
+        }
+
+        Map<Long, Integer> orderByProductId = IntStream.range(0, productIds.size())
+                .boxed()
+                .collect(Collectors.toMap(productIds::get, index -> index, (first, ignored) -> first));
+
+        return adRepository.findAllByProductidIn(productIds).stream()
+                .map(ad -> toFilterableAd(ad).item())
+                .sorted(Comparator.comparingInt(item ->
+                        orderByProductId.getOrDefault(item.getProductId(), Integer.MAX_VALUE)))
+                .toList();
+    }
+
     private FilterableAd toFilterableAd(Ad ad) {
         // Home/search = tolerant: an external service issue should not break the whole listing.
         ProductSummaryDTO product = external.callExternalOrNull(
@@ -125,6 +155,7 @@ public class AdService {
 
         AdListDTO item = new AdListDTO(
                 ad.getId(),
+                ad.getProductId(),
                 title,
                 artistName,
                 categoryName,
