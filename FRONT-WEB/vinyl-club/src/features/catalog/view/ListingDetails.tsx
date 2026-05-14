@@ -2,6 +2,8 @@ import styles from './ListingDetails.module.css';
 import { catalogDetails } from '../api';
 import Button from '@/components/ui/Button/Button';
 import Gallery from './Gallery';
+import { getCurrentUserFavoriteSelection } from '@/features/favorites/api';
+import FavoriteToggleButton from '@/features/favorites/view/FavoriteToggleButton';
 
 const stateLabels: Record<string, string> = {
   TRES_BON_ETAT: 'Très bon état',
@@ -20,23 +22,26 @@ type Props = {
 };
 
 export default async function ListingDetails({ id }: Props) {
-  const listing = await catalogDetails(id);
+  const [listing, favoriteSelection] = await Promise.all([
+    catalogDetails(id),
+    getCurrentUserFavoriteSelection(),
+  ]);
+  const city = listing.user.address?.city?.trim() || 'Localisation';
+  const productId = listing.product.id;
+  const isFavorite = favoriteSelection.productIds.includes(productId);
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>{listing.product.title}</h1>
+    <div className={styles['listing-details']}>
+      <h1 className={styles['listing-details__title']}>{listing.product.title}</h1>
 
-      <div className={styles.containerCard}>
-        <div className={styles.contentGrid}>
-          <Gallery
-            images={listing.product.images}
-            title={listing.product.title}
-          />
+      <div className={styles['listing-details__card']}>
+        <div className={styles['listing-details__content']}>
+          <Gallery images={listing.product.images} title={listing.product.title} />
 
-          <div className={styles.infoSection}>
-            <div className={styles.infoBlock1}>
-              <div className={styles.rowBetween}>
-                <p className={styles.sellerName}>
+          <div className={styles['listing-details__info']}>
+            <div className={styles['listing-details__summary']}>
+              <div className={styles['listing-details__row']}>
+                <p className={styles['listing-details__seller-name']}>
                   {listing.user.firstName} {listing.user.lastName}
                 </p>
                 <div className={styles.priceBlock}>
@@ -44,32 +49,34 @@ export default async function ListingDetails({ id }: Props) {
                 </div>
               </div>
 
-              <div className={styles.rowBetween}>
-                <p className={styles.city}>{listing.user.address.city}</p>
-                <p className={styles.state}>
+              <div className={styles['listing-details__row']}>
+                <p className={styles['listing-details__city']}>{city}</p>
+                <p className={styles['listing-details__state']}>
                   {stateLabels[listing.product.state]}
                 </p>
               </div>
 
-              <p className={styles.date}>
+              <p className={styles['listing-details__date']}>
                 {new Date(listing.product.createdAt).toLocaleDateString()}
               </p>
             </div>
 
-            <div className={styles.infoBlock2}>
-              <p className={styles.artistAlbum}>
+            <div className={styles['listing-details__details']}>
+              <p className={styles['listing-details__artist-album']}>
                 {listing.product.artist.name} / {listing.product.album.name}
               </p>
 
-              <div className={styles.descriptionBlock}>
-                <p className={styles.label}>Description :</p>
-                <p className={styles.descriptionText}>
+              <div className={styles['listing-details__description']}>
+                <p className={styles['listing-details__description-label']}>Description :</p>
+                <p className={styles['listing-details__description-text']}>
                   {listing.product.description}
                 </p>
               </div>
 
-              <p className={styles.category}>{listing.product.category.name}</p>
-              <p className={styles.format}>
+              <p className={styles['listing-details__category']}>
+                {listing.product.category.name}
+              </p>
+              <p className={styles['listing-details__format']}>
                 {formatLabels[listing.product.format]}
               </p>
             </div>
@@ -77,10 +84,15 @@ export default async function ListingDetails({ id }: Props) {
         </div>
       </div>
 
-      <div className={styles.containerNav}>
-        <Button type="button" variant="primary" fullWidth={false} isLoading={false}>
-          Ajouter aux favoris
-        </Button>
+      <div className={styles['listing-details__actions']}>
+        <FavoriteToggleButton
+          productId={productId}
+          title={listing.product.title}
+          initialIsFavorite={isFavorite}
+          isAuthenticated={favoriteSelection.isAuthenticated}
+          variant="button"
+          className={styles['listing-details__favorite-button']}
+        />
 
         <Button type="button" variant="primary" fullWidth={false} isLoading={false}>
           Acheter

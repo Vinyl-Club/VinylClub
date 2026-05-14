@@ -1,37 +1,39 @@
-.container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 15px;
+.register-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15px;
 }
 
-.title{
-    color: var(--color-text-accent);
-    font-size: 2.5rem;
-    font-weight: 900;
-    text-align: center;
-    line-height: 1.2;
+.register-form__title {
+  color: #9c581e;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  text-align: center;
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tight);
 }
 
-.containerfprm{
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 19px;
+.register-form__form {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.cta{
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
+.register-form__actions {
+  margin-top: 32px;
+  display: flex;
+  justify-content: center;
 }
 
-.error{
+.register-form__error {
   color: red;
+  font-size: var(--text-sm);
 }
 
 @media (max-width: 640px) {
-    .title{
-        font-size: 1.7em
-    }
+  .register-form__title {
+    font-size: var(--text-2xl);
+  }
 }

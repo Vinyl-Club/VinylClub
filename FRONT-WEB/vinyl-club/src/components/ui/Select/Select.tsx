@@ -16,6 +16,7 @@ type Props = {
   options: Option[];
   placeholder?: string;
   error?: string;
+  labelClassName?: string;
 };
 
 export default function Select({
@@ -25,24 +26,34 @@ export default function Select({
   options,
   placeholder,
   error,
+  labelClassName,
 }: Props) {
   const [value, setValue] = useState('');
 
   return (
-    <div className={styles.container}>
-      <label htmlFor={id} className={styles.label}>
+    <div className={styles['select-field']}>
+      <label
+        htmlFor={id}
+        className={[styles['select-field__label'], labelClassName ?? ''].filter(Boolean).join(' ')}
+      >
         {label}
       </label>
 
-      <div className={styles.selectWrapper}>
+      <div className={styles['select-field__control-wrap']}>
         <select
           id={id}
           name={name}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className={`${styles.select} ${value === '' ? styles.placeholder : styles.selected} ${
-            error ? styles.errorSelect : ''
-          }`}
+          className={[
+            styles['select-field__control'],
+            value === ''
+              ? styles['select-field__control--placeholder']
+              : styles['select-field__control--selected'],
+            error ? styles['select-field__control--error'] : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
         >
           {placeholder && <option value="">{placeholder}</option>}
 
@@ -53,10 +64,10 @@ export default function Select({
           ))}
         </select>
 
-        <ChevronDown className={styles.chevron} />
+        <ChevronDown className={styles['select-field__chevron']} />
       </div>
 
-      {error && <p className={styles.error}>{error}</p>}
+      {error && <p className={styles['select-field__error']}>{error}</p>}
     </div>
   );
 }

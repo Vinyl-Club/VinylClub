@@ -39,9 +39,6 @@ public class RegisterRequest {
     @NotBlank(message = "Le prénom est obligatoire")
     private String lastName;
     private String phone;
-    @NotBlank(message = "La ville est obligatoire")
-    @Size(max = 70, message = "70 caractères maximun")
-    private String city;
 
     public RegisterRequest() {}
 
@@ -59,7 +56,4 @@ public class RegisterRequest {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
-
-    public String getCity() {return city;}
-    public void setCity(String city ) { this.city = city; }
 }

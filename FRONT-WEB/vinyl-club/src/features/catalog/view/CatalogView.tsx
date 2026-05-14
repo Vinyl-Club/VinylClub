@@ -2,9 +2,9 @@
 
 import type { CatalogItem } from '../types';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
 import Button from '@/components/ui/Button/Button';
 import { API } from '@/lib/env';
+import FavoriteToggleButton from '@/features/favorites/view/FavoriteToggleButton';
 import styles from './CatalogView.module.css';
 import Link from 'next/link';
 
@@ -12,6 +12,8 @@ import Link from 'next/link';
 type CatalogViewProps = {
   items: CatalogItem[];
   error?: string | null;
+  favoriteProductIds?: number[];
+  isAuthenticated?: boolean;
 };
 
 const priceFormatter = new Intl.NumberFormat('fr-FR', {
@@ -21,7 +23,13 @@ const priceFormatter = new Intl.NumberFormat('fr-FR', {
   maximumFractionDigits: 2,
 });
 
-export default function CatalogView({ items, error }: CatalogViewProps) {
+export default function CatalogView({
+  items,
+  error,
+  favoriteProductIds = [],
+  isAuthenticated = false,
+}: CatalogViewProps) {
+  const favoriteIds = new Set(favoriteProductIds);
   
   if (error) {
     return (
@@ -52,53 +60,55 @@ export default function CatalogView({ items, error }: CatalogViewProps) {
           typeof item.price === 'number'
             ? priceFormatter.format(item.price)
             : 'Prix \u20AC';
+        const initialIsFavorite =
+          typeof item.productId === 'number' && favoriteIds.has(item.productId);
 
         return (
-          <article
-            key={item.id}
-            className={`${styles['catalog-card']} ${
-              !coverUrl ? styles['catalog-card--no-image'] : ''
-            }`}
-          >
-            <div className={styles['catalog-card__content']}>
+          <article key={item.id} className={styles['catalog-card']}>
+            <h2 className={styles['catalog-card__title']}>{title}</h2>
+
+            <div className={styles['catalog-card__body']}>
               <div className={styles['catalog-card__media']}>
                 <div className={styles['catalog-card__cover-stack']}>
                   {coverUrl ? (
                     <Image
                       src={coverUrl}
                       alt={title}
-                      width={87}
+                      width={132}
                       height={87}
                       unoptimized
                       className={styles['catalog-card__image']}
                     />
                   ) : (
-                    <div className={styles['catalog-card__vinyl']} aria-hidden="true" />
+                    <div className={styles['catalog-card__fallback']} aria-hidden="true" />
                   )}
                 </div>
               </div>
 
               <div className={styles['catalog-card__info']}>
-                <div className={styles['catalog-card__title']}>{title}</div>
-                <div className={styles['catalog-card__meta']}>{artist}</div>
-                <div className={styles['catalog-card__meta']}>{category}</div>
-                <div className={styles['catalog-card__meta']}>{city}</div>
+                <div className={styles['catalog-card__artist']}>{artist}</div>
+                <div className={styles['catalog-card__category']}>{category}</div>
+                <div className={styles['catalog-card__city']}>{city}</div>
               </div>
             </div>
 
             <div className={styles['catalog-card__actions']}>
               <div className={styles['catalog-card__price']}>{price}</div>
 
-              <div className={styles['catalog-card__cta-row']}>
-                <button
-                  type="button"
+              <div className={styles['catalog-card__favorite-shell']}>
+                <FavoriteToggleButton
+                  productId={item.productId}
+                  title={title}
+                  initialIsFavorite={initialIsFavorite}
+                  isAuthenticated={isAuthenticated}
                   className={styles['catalog-card__favorite']}
-                  aria-label={`Ajouter ${title} aux favoris`}
-                >
-                  <Heart size={24} strokeWidth={2.1} />
-                </button>
+                />
+              </div>
 
-                <Link href={`/details/${item.id}`}>
+              <Link
+                href={`/details/${item.id}`}
+                className={styles['catalog-card__detail-link']}
+              >
                 <Button
                   type="button"
                   variant="soft"
@@ -107,8 +117,7 @@ export default function CatalogView({ items, error }: CatalogViewProps) {
                 >
                   {'Voir le d\u00e9tail'}
                 </Button>
-                </Link>
-              </div>
+              </Link>
             </div>
           </article>
         );

@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -36,20 +37,24 @@ export default function SearchBar() {
 
   return (
     <form
-      className={styles.search}
+      className={styles['search-bar']}
       role="search"
       aria-label="Rechercher"
       onSubmit={handleSubmit}
     >
       <input
-        className={styles.input}
+        className={styles['search-bar__input']}
         type="search"
         name="q"
         placeholder="Rechercher"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
       />
-      <button className={styles.searchBtn} type="submit" aria-label="Bouton Rechercher">
+      <button
+        className={styles['search-bar__button']}
+        type="submit"
+        aria-label="Bouton Rechercher"
+      >
         <Search size={22} strokeWidth={3} />
       </button>
     </form>

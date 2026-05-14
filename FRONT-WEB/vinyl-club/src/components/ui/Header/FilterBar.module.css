@@ -1,39 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter+Tight:ital,wght@1,100..900&family=Sriracha&display=swap');
-
-.nav {
+.filter-bar {
   background: var(--color-surface-accent);
   overflow-x: auto;
 }
 
-.list {
+.filter-bar__list {
   display: flex;
-  gap: 12px;
-  padding: 8px 16px;
+  gap: 18px;
+  padding: 8px 24px;
   list-style: none;
   margin: 0;
   align-items: center;
 }
 
-.item {
-  font-family: var(--font-bebas), sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  font-size: 20px;
+.filter-bar__item {
+  font-family: var(--font-raleway), sans-serif;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  font-size: clamp(1.35rem, 1.8vw, 1.625rem);
   background: var(--color-surface-accent);
   border: none;
   color: var(--color-text-primary);
-  padding: 6px 12px;
+  padding: 8px 10px;
   cursor: pointer;
   white-space: nowrap;
 }
 
-.item:hover {
+.filter-bar__item:hover {
   background: var(--color-surface-muted);
   color: var(--color-text-primary);
 }
 
-.srOnly {
+.filter-bar__item--reset {
+  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+}
+
+.filter-bar__visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -45,33 +47,34 @@
   border: 0;
 }
 
-.dropdown {
+.filter-bar__dropdown {
   position: relative;
 }
 
-.dropdownBtn {
-  padding-right: 28px;
+.filter-bar__dropdown-button {
+  padding-right: 24px;
   background-image:
     linear-gradient(45deg, transparent 50%, #1a1a1a 50%),
     linear-gradient(135deg, #1a1a1a 50%, transparent 50%);
   background-position:
-    calc(100% - 16px) 50%,
-    calc(100% - 10px) 50%;
-  background-size: 6px 6px, 6px 6px;
+    calc(100% - 13px) 52%,
+    calc(100% - 8px) 52%;
+  background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
 }
 
-.menu {
+.filter-bar__menu {
   position: fixed;
   z-index: 9999;
   background: var(--color-surface-muted);
   padding: 10px 12px;
   box-shadow: var(--shadow-dropdown);
-  border: 2px solid var(--color-border-strong);
+  border: 1px solid rgba(17, 17, 17, 0.24);
   min-width: 220px;
+  border-radius: 10px;
 }
 
-.menuList {
+.filter-bar__menu-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -82,64 +85,78 @@
   overflow: auto;
 }
 
-.optionBtn {
+.filter-bar__option-button {
   width: 100%;
   text-align: left;
   border: 0;
   background: transparent;
   cursor: pointer;
-  font-family: var(--font-bebas), sans-serif;
-  font-size: 18px;
-  letter-spacing: 0.04em;
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 1rem;
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.01em;
+  line-height: var(--leading-snug);
   color: var(--color-text-primary);
-  padding: 6px 10px;
+  padding: 7px 10px;
 }
 
-.optionBtn:hover {
+.filter-bar__option-button:hover {
   background: var(--color-surface-accent);
 }
 
-.optionActive {
+.filter-bar__option-button--active {
   background: var(--color-surface-accent);
   outline: 2px solid var(--color-border-strong);
 }
 
-.priceRow {
+.filter-bar__price-row {
   display: flex;
   align-items: center;
   gap: 10px;
   white-space: nowrap;
 }
 
-.priceLabel {
-  font-family: var(--font-bebas), sans-serif;
-  font-size: 20px;
+.filter-bar__price-label,
+.filter-bar__euro {
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 1rem;
+  font-weight: var(--weight-medium);
   color: var(--color-text-primary);
 }
 
-.priceInput {
+.filter-bar__price-input {
   width: 70px;
   border: none;
   outline: none;
   background: transparent;
-  font-family: var(--font-bebas), sans-serif;
-  font-size: 20px;
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 1rem;
+  font-weight: var(--weight-medium);
   color: var(--color-text-primary);
 }
 
-.priceInput::placeholder {
+.filter-bar__price-input::placeholder {
   color: var(--color-text-primary);
   opacity: 0.7;
 }
 
-.euro {
-  font-family: var(--font-bebas), sans-serif;
-  font-size: 20px;
-  color: var(--color-text-primary);
-}
-
-.actions {
+.filter-bar__actions {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .filter-bar__list {
+    gap: 12px;
+    padding-inline: 16px;
+  }
+
+  .filter-bar__item {
+    font-size: 1.15rem;
+  }
+
+  .filter-bar__item--reset {
+    font-size: 1rem;
+  }
 }

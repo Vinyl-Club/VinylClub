@@ -92,6 +92,22 @@ function decodeJwtPayload(token: string) {
   }
 }
 
+export function isTokenExpired(token: string, now = Date.now()) {
+  const payload = decodeJwtPayload(token);
+
+  if (!payload || !('exp' in payload)) {
+    return false;
+  }
+
+  const expiration = readNumber(payload.exp);
+
+  if (expiration === null) {
+    return false;
+  }
+
+  return expiration * 1000 <= now;
+}
+
 export function getTokenUserSnapshot(token: string): AuthSessionUser | null {
   const payload = decodeJwtPayload(token);
 
@@ -107,7 +123,7 @@ export function getTokenUserSnapshot(token: string): AuthSessionUser | null {
 
 export async function getAuthToken() {
   const cookieStore = await cookies();
-  return cookieStore.get('auth')?.value;
+  return cookieStore.get('auth')?.value?.trim();
 }
 
 export async function getStoredAuthUser() {
@@ -115,11 +131,21 @@ export async function getStoredAuthUser() {
   return parseAuthUser(cookieStore.get(AUTH_USER_COOKIE)?.value);
 }
 
+export async function getSessionAuthUser() {
+  const token = await getAuthToken();
+
+  if (!token || isTokenExpired(token)) {
+    return null;
+  }
+
+  return (await getStoredAuthUser()) ?? getTokenUserSnapshot(token);
+}
+
 export async function requireAuth() {
   const cookieStore = await cookies();
-  const token = cookieStore.get('auth')?.value;
+  const token = cookieStore.get('auth')?.value?.trim();
 
-  if (!token) {
+  if (!token || isTokenExpired(token)) {
     redirect('/login');
   }
 
@@ -136,6 +162,17 @@ export async function setAuthCookie(
 
   cookieStore.set('auth', accessToken, cookieOptions);
   cookieStore.set('refresh', refreshToken, cookieOptions);
+
+  if (authUser) {
+    cookieStore.set(AUTH_USER_COOKIE, serializeAuthUser(authUser), cookieOptions);
+  } else {
+    cookieStore.delete(AUTH_USER_COOKIE);
+  }
+}
+
+export async function setStoredAuthUser(user: unknown) {
+  const cookieStore = await cookies();
+  const authUser = normalizeAuthSessionUser(user);
 
   if (authUser) {
     cookieStore.set(AUTH_USER_COOKIE, serializeAuthUser(authUser), cookieOptions);
