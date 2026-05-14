@@ -6,9 +6,9 @@ import { getCurrentUserFavoriteSelection } from '@/features/favorites/api';
 import FavoriteToggleButton from '@/features/favorites/view/FavoriteToggleButton';
 
 const stateLabels: Record<string, string> = {
-  TRES_BON_ETAT: 'Très bon état',
-  BON_ETAT: 'Bon état',
-  MAUVAIS_ETAT: 'Mauvais état',
+  TRES_BON_ETAT: 'TrÃ¨s bon Ã©tat',
+  BON_ETAT: 'Bon Ã©tat',
+  MAUVAIS_ETAT: 'Mauvais Ã©tat',
 };
 
 const formatLabels: Record<string, string> = {
@@ -44,8 +44,8 @@ export default async function ListingDetails({ id }: Props) {
                 <p className={styles['listing-details__seller-name']}>
                   {listing.user.firstName} {listing.user.lastName}
                 </p>
-                <div className={styles.priceBlock}>
-                  {listing.product.price} €
+                <div className={styles['listing-details__price']}>
+                  {listing.product.price} â‚¬
                 </div>
               </div>
 
