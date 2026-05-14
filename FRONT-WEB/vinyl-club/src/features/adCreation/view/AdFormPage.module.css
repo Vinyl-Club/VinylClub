@@ -6,7 +6,6 @@
   padding-bottom: 45px;
 }
 
-
 .ad-form__title {
   color: #9c581e;
   font-size: var(--text-3xl);
@@ -74,7 +73,6 @@
   white-space: nowrap;
   box-shadow: var(--shadow-control);
 }
-
 
 .ad-form__upload-button:focus-visible {
   outline: 3px solid #8aa39f;

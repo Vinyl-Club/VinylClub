@@ -20,14 +20,14 @@ export default function RegisterForm() {
 
   const fe = state?.fieldErrors ?? {};
 
-    const backFrontErrors = {
-        email: clientErrors.email ?? fe.email,
-        password: clientErrors.password ?? fe.password,
-        confirmPassword: clientErrors.confirmPassword ?? fe.confirmPassword,
-        lastName: clientErrors.lastName ?? fe.lastName,
-        firstName: clientErrors.firstName ?? fe.firstName, 
-        city: clientErrors.city ?? fe.city,
-    }
+  const backFrontErrors = {
+    email: clientErrors.email ?? fe.email,
+    password: clientErrors.password ?? fe.password,
+    confirmPassword: clientErrors.confirmPassword ?? fe.confirmPassword,
+    lastName: clientErrors.lastName ?? fe.lastName,
+    firstName: clientErrors.firstName ?? fe.firstName,
+    city: clientErrors.city ?? fe.city,
+  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     const formData = new FormData(e.currentTarget);
@@ -116,11 +116,11 @@ export default function RegisterForm() {
         />
 
         <Input
-          label="PrÃ©nom"
+          label="Prénom"
           id="firstName"
           name="firstName"
           type="text"
-          placeholder="PrÃ©nom"
+          placeholder="Prénom"
           required
           autoComplete="given-name"
           error={backFrontErrors.firstName}
@@ -136,6 +136,7 @@ export default function RegisterForm() {
           autoComplete="city"
           error={backFrontErrors.city}
         />
+
 
         {state?.formError && (
           <p role="alert" className={styles['register-form__error']}>

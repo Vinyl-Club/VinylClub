@@ -5,7 +5,6 @@
   padding-top: 40px;
 }
 
-
 .login-form__title {
   color: #9c581e;
   font-size: var(--text-3xl);
@@ -45,7 +44,6 @@
 .login-form__link:hover {
   text-decoration: underline;
 }
-
 
 .login-form__link:focus-visible {
   outline: 3px solid #8aa39f;

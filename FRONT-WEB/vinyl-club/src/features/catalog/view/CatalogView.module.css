@@ -1,16 +1,11 @@
 .catalog__grid {
   display: grid;
   grid-template-columns: repeat(3, 427px);
-  /* gap: 35px;
-  justify-content: center;
-  align-items: stretch; */
-  /* max-width: 1351px; */
   row-gap: 34px;
   column-gap: 42px;
-  justify-content: center;
+  justify-content: start;
   align-items: stretch;
   max-width: 1365px;
-
 }
 
 .catalog__empty {

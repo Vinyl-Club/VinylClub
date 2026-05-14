@@ -6,16 +6,12 @@ import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.vinylclub.user.entity.User;
 import com.vinylclub.user.entity.UserRole;
-import com.vinylclub.user.entity.Address;
 import com.vinylclub.user.repository.UserRepository;
-import com.vinylclub.user.repository.AddressRepository;
 import com.vinylclub.user.dto.UserDTO;
 import com.vinylclub.user.dto.UserPublicDTO;
-import com.vinylclub.user.dto.CreateUserRequest;
 
 @Service
 public class UserService {
@@ -25,9 +21,6 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
 
     public List<UserDTO> getAllUsers() {
         // Implementation for retrieving all users
@@ -63,15 +56,9 @@ public class UserService {
         );
     }
 
-    // Création d'un user avec sa ville, neccéssaire pour la création d'une annoce, mhétode appeler par auth service 
-    @Transactional
-    public User createUser(CreateUserRequest request) {
-        User user = new User();
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setPhone(request.getPhone());
+    public User createUser(User user) {
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
 
         user.setRole(UserRole.USER);
 
@@ -79,15 +66,8 @@ public class UserService {
         user.setCreatedAt(now);
         user.setUpdatedAt(now);
 
-        User savedUser = userRepository.save(user);
-
-        Address address = new Address();
-        address.setCity(request.getCity());
-        address.setUser(savedUser);
-
-        addressRepository.save(address);
-
-        return savedUser;
+        userRepository.save(user);
+        return user;
     }
 
 

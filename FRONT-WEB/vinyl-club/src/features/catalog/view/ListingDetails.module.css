@@ -6,7 +6,6 @@
   gap: 20px;
 }
 
-
 .listing-details__title {
   color: #9c581e;
   font-size: var(--text-3xl);
@@ -19,7 +18,7 @@
 
 .listing-details__card {
   width: min(1100px, 100%);
-  background-color: var(--color-surface-default);
+  background-color: white;
   padding: 32px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
@@ -68,7 +67,6 @@
   opacity: 1;
   transform: scale(1.05);
 }
-
 
 .listing-details__thumbnail--active {
   border: 3px solid #8aa39f;
@@ -125,7 +123,6 @@
   margin: 0;
 }
 
-
 .listing-details__seller-name {
   font-size: 1.12rem;
   font-weight: var(--weight-semibold);
@@ -141,7 +138,6 @@
   line-height: var(--leading-base);
   color: #444;
 }
-
 
 .listing-details__price {
   font-size: 1.55rem;
@@ -166,7 +162,6 @@
   background-color: #faf7f2;
   border-radius: 12px;
 }
-
 
 .listing-details__description-label {
   font-size: var(--text-base);
