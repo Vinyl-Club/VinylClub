@@ -30,10 +30,12 @@ export function useFavorites({
       return;
     }
 
-    if (!Number.isFinite(productId)) {
+    if (typeof productId !== 'number' || !Number.isFinite(productId)) {
       setError('Favori invalide.');
       return;
     }
+
+    const safeProductId = productId;
 
     const previous = isFavorite;
     const next = !previous;
@@ -43,7 +45,7 @@ export function useFavorites({
     setError(null);
 
     try {
-      const result = await toggleFavoriteAction(productId);
+      const result = await toggleFavoriteAction(safeProductId);
 
       if (!result.ok) {
         setIsFavorite(previous);
