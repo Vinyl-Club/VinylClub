@@ -111,7 +111,7 @@ export default function CatalogView({
               >
                 <Button
                   type="button"
-                  variant="soft"
+                  variant="primary"
                   size="xs"
                   className={styles['catalog-card__detail-button']}
                 >

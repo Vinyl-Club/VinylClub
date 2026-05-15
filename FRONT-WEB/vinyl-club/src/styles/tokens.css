@@ -11,7 +11,7 @@
 
   --color-text-primary: #111111;
   --color-text-secondary: #5d5248;
-  --color-text-placeholder: #b7b6b6;
+  --color-text-placeholder: #7a7a7a;
   --color-text-muted: #777777;
   --color-text-inverse: #ffffff;
   --color-text-accent: #9c581e;
@@ -41,7 +41,7 @@
 
   --text-xs: 0.78rem;
   --text-sm: 0.9rem;
-  --text-base: 0.98rem;
+  --text-base: 1rem;
   --text-lg: 1.08rem;
   --text-xl: 1.2rem;
   --text-2xl: clamp(1.85rem, 3vw, 2.35rem);
