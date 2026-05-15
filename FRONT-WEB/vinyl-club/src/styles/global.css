@@ -64,6 +64,11 @@ input, textarea, select, button {
   padding: 40px 20px;   
 }
 
+.page-main--catalog {
+  max-width: none;
+  padding: 0;
+}
+
 /* 4) S’assurer que header/main/footer s’étirent sur la largeur */
 header, main, footer {
   display: block;

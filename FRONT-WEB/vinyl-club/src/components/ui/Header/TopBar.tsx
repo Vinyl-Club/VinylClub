@@ -25,13 +25,6 @@ export default function TopBar({ currentUser }: TopBarProps) {
   const [showLinks, setShowLinks] = useState(false);
   const pathname = usePathname();
   const userLabel = currentUser ? getUserLabel(currentUser) : null;
-  const greetingLabel =
-    currentUser?.firstName?.trim() || currentUser?.lastName?.trim()
-      ? `Bonjour ${currentUser.firstName?.trim() || currentUser.lastName?.trim() || ''}`
-      : userLabel
-        ? `Bonjour ${userLabel}`
-        : null;
-  const showInlineGreeting = greetingLabel && pathname !== '/catalog';
   const favoritesHref = currentUser ? '/favorite' : '/login';
 
   const hideSearch = pathname === '/login' || pathname === '/register';
@@ -68,9 +61,6 @@ export default function TopBar({ currentUser }: TopBarProps) {
 
       {!hideSearch && (
         <div className={styles['topbar__search-wrap']}>
-          {showInlineGreeting ? (
-            <p className={styles['topbar__greeting']}>{greetingLabel}</p>
-          ) : null}
           <SearchBar />
         </div>
       )}
