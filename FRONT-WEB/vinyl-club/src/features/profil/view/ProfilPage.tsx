@@ -18,6 +18,7 @@ import type {
 } from '../types';
 import styles from './ProfilPage.module.css';
 import Input from '@/components/ui/Input/Input';
+import Button from '@/components/ui/Button/Button';
 
 type ProfilPageProps = {
   activeTab: ProfileTab;
@@ -51,23 +52,29 @@ function ConfirmDeleteAccountButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <Button
       type="submit"
-      className={`${styles.modal__button} ${styles['modal__button--danger']}`}
-      disabled={pending}
+      variant="secondary"
+      size="sm"
+      isLoading={pending}
     >
-      {pending ? 'Suppression...' : 'Oui, supprimer'}
-    </button>
+      Oui, supprimer
+    </Button>
   );
 }
 
 function DeleteAdSubmitButton() {
   const { pending } = useFormStatus();
 
-  return (
-    <button type="submit" className={styles.listingCard__deleteBtn} disabled={pending}>
-      {pending ? 'Suppression...' : 'Supprimer'}
-    </button>
+   return (
+    <Button
+      type="submit"
+      variant="secondary"
+      size="sm"
+      isLoading={pending}
+    >
+      Supprimer
+    </Button>
   );
 }
 
@@ -143,92 +150,92 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
         {activeTab === 'profile' ? (
           <div className={styles.panel}>
             <form id="profile-form" className={styles.form} action={profileFormAction}>
-                <Input
-                  label="Nom"
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  defaultValue={profileData.user.lastName}
-                  placeholder="Nom"
-                  autoComplete="family-name"
-                  error={formState.fieldErrors.lastName}
-                />
+              <Input
+                label="Nom"
+                id="lastName"
+                name="lastName"
+                type="text"
+                defaultValue={profileData.user.lastName}
+                placeholder="Nom"
+                autoComplete="family-name"
+                error={formState.fieldErrors.lastName}
+              />
 
-                <Input
-                  label="Prénom"
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  defaultValue={profileData.user.firstName}
-                  placeholder="Prénom"
-                  autoComplete="given-name"
-                  error={formState.fieldErrors.firstName}
-                />
-          
-                <Input
-                  label="Email"
-                  id="email"
-                  name="email"
-                  type="email"
-                  defaultValue={profileData.user.email}
-                  placeholder="Email"
-                  autoComplete="email"
-                  error={formState.fieldErrors.email}
-                />
+              <Input
+                label="Prénom"
+                id="firstName"
+                name="firstName"
+                type="text"
+                defaultValue={profileData.user.firstName}
+                placeholder="Prénom"
+                autoComplete="given-name"
+                error={formState.fieldErrors.firstName}
+              />
 
-                <Input
-                  label="Mot de passe"
-                  id="password"
-                  name="password"
-                  type="password"
-                  defaultValue=""
-                  placeholder="Mot de passe"
-                  autoComplete="new-password"
-                  error={formState.fieldErrors.password}
-                />
-                <p className={styles.form__hint}>
-                  Laissez vide pour conserver votre mot de passe.
-                </p>
+              <Input
+                label="Email"
+                id="email"
+                name="email"
+                type="email"
+                defaultValue={profileData.user.email}
+                placeholder="Email"
+                autoComplete="email"
+                error={formState.fieldErrors.email}
+              />
 
-                <Input
-                  label="Adresse"
-                  id="street"
-                  name="street"
-                  type="text"
-                  defaultValue={address?.street ?? ''}
-                  placeholder="Adresse"
-                  autoComplete="street-address"
-                />
-        
-                <Input
-                  label="Code postal"
-                  id="zipCode"
-                  name="zipCode"
-                  type="text"
-                  defaultValue={address?.zipCode ?? ''}
-                  placeholder="Code postal"
-                  autoComplete="postal-code"
-                />
+              <Input
+                label="Mot de passe"
+                id="password"
+                name="password"
+                type="password"
+                defaultValue=""
+                placeholder="Mot de passe"
+                autoComplete="new-password"
+                error={formState.fieldErrors.password}
+              />
+              <p className={styles.form__hint}>
+                Laissez vide pour conserver votre mot de passe.
+              </p>
 
-                <Input
-                  label="Ville"
-                  id="city"
-                  name="city"
-                  type="text"
-                  defaultValue={address?.city ?? ''}
-                  placeholder="Ville"
-                  autoComplete="address-level2"
-                />
+              <Input
+                label="Adresse"
+                id="street"
+                name="street"
+                type="text"
+                defaultValue={address?.street ?? ''}
+                placeholder="Adresse"
+                autoComplete="street-address"
+              />
 
-                <Input
-                  label="Pays"
-                  id="country"
-                  name="country"
-                  type="text"
-                  defaultValue={address?.country ?? ''}
-                  placeholder="Pays"
-                  autoComplete="country-name"
-                />
+              <Input
+                label="Code postal"
+                id="zipCode"
+                name="zipCode"
+                type="text"
+                defaultValue={address?.zipCode ?? ''}
+                placeholder="Code postal"
+                autoComplete="postal-code"
+              />
+
+              <Input
+                label="Ville"
+                id="city"
+                name="city"
+                type="text"
+                defaultValue={address?.city ?? ''}
+                placeholder="Ville"
+                autoComplete="address-level2"
+              />
+
+              <Input
+                label="Pays"
+                id="country"
+                name="country"
+                type="text"
+                defaultValue={address?.country ?? ''}
+                placeholder="Pays"
+                autoComplete="country-name"
+              />
             </form>
 
             {(formState.formError || formState.successMessage || deleteAccountState.formError) && (
@@ -251,15 +258,16 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                 action={deleteAccountFormAction}
                 className={styles.deleteAccountForm}
               >
-                <button
+                <Button
                   type="button"
-                  className={`${styles.actionButton} ${styles['actionButton--danger']}`}
+                  variant="secondary"
+                  size="md"
                   aria-haspopup="dialog"
                   aria-expanded={isDeleteAccountModalOpen}
                   onClick={() => setIsDeleteAccountModalOpen(true)}
                 >
                   Supprimer
-                </button>
+                </Button>
 
                 {isDeleteAccountModalOpen ? (
                   <div
@@ -282,13 +290,14 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                       </p>
 
                       <div className={styles.modal__actions}>
-                        <button
+                        <Button
                           type="button"
-                          className={`${styles.modal__button} ${styles['modal__button--ghost']}`}
+                          variant="soft"
+                          size="sm"
                           onClick={() => setIsDeleteAccountModalOpen(false)}
                         >
                           Annuler
-                        </button>
+                        </Button>
                         <ConfirmDeleteAccountButton />
                       </div>
                     </div>
@@ -296,14 +305,15 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                 ) : null}
               </form>
 
-              <button
+              <Button
                 type="submit"
                 form="profile-form"
-                className={`${styles.actionButton} ${styles['actionButton--primary']}`}
-                disabled={isProfilePending}
+                variant="primary"
+                size="md"
+                isLoading={isProfilePending}
               >
-                {isProfilePending ? 'Validation...' : 'Valider'}
-              </button>
+                Valider
+              </Button>
             </div>
           </div>
         ) : (

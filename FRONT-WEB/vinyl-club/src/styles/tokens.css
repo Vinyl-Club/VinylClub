@@ -6,8 +6,8 @@
   --color-surface-brand-hover: #578079;
   --color-surface-accent: #d48541;
   --color-surface-accent-hover: #9c581e;
-  --color-surface-soft: #9fbeba;
-  --color-surface-soft-hover: #8fb0ab;
+  --color-surface-soft: #c9c3ba;
+  --color-surface-soft-hover: #b6b0a7;
 
   --color-text-primary: #111111;
   --color-text-secondary: #5d5248;
@@ -26,6 +26,8 @@
   --color-danger: #c0392b;
   --color-danger-strong: #b42318;
   --color-success: #116329;
+
+  /* #c9c3ba */
 
   --shadow-card: 0 8px 18px rgba(35, 24, 11, 0.12);
   --shadow-control: 0 2px 6px rgba(0, 0, 0, 0.16);
