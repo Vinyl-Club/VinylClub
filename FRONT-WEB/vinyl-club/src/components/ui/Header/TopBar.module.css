@@ -109,9 +109,9 @@
 
 .topbar__links {
   position: absolute;
-  top: 112%;
+  top: 100%;
   right: -24px;
-  margin-top: 8px;
+  margin-top: 25px;
   margin-left: 0;
   padding: 14px;
   list-style: none;
@@ -127,8 +127,8 @@
   opacity: 0;
   pointer-events: none;
   transition: transform 0.2s ease, opacity 0.2s ease;
-  border-radius: 12px;
-  box-shadow: -12px 12px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 0% 0% 0% 8%;;
+  /* box-shadow: -12px 12px 24px rgba(0, 0, 0, 0.12); */
   z-index: 50;
 }
 
@@ -184,7 +184,7 @@
 .topbar__link {
   color: #111;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 1.15rem;
   font-weight: var(--weight-medium);
   line-height: 1.35;
   letter-spacing: -0.01em;
@@ -196,6 +196,10 @@
   text-align: left;
   cursor: pointer;
   display: inline;
+}
+
+.topbar__link:hover {
+  text-decoration: underline;
 }
 
 .topbar__link:focus-visible,

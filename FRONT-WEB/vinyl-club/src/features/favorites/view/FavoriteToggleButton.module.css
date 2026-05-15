@@ -48,7 +48,7 @@
   min-height: 42px;
   padding: 0 18px;
   border-radius: 999px;
-  background: #9fb6b2;
+  background: var(--color-surface-brand);
   color: #121212;
   font-family: var(--font-raleway), sans-serif;
   font-size: 0.95rem;
@@ -62,6 +62,8 @@
 .favorite-toggle__button--action:focus-visible {
   filter: brightness(0.98);
   transform: translateY(-1px);
+  background: var(--color-surface-brand-hover);
+  color: #fffaf2;
 }
 
 .favorite-toggle__button--action.favorite-toggle__button--active {

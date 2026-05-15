@@ -16,9 +16,13 @@
   padding: 10px 14px;
   border: 0;
   min-width: 0;
-  font-size: var(--text-sm);
+  font-size: var(--text-sm); 
   line-height: var(--leading-snug);
   background: transparent;
+}
+
+.search-bar__input::placeholder {
+  font-size: 1.1rem;
 }
 
 .search-bar__button {
