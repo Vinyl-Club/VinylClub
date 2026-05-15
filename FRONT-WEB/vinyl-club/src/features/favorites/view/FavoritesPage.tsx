@@ -66,13 +66,16 @@ export default function FavoritesPage({ pageData }: FavoritesPageProps) {
                       ) : (
                         <div className={styles.card__fallback} aria-hidden="true" />
                       )}
-                      <div className={styles.card__vinyl} aria-hidden="true" />
                     </div>
                   </div>
 
                   <div className={styles.card__content}>
-                    <div className={styles.card__details}>
+                    <div className={styles.card__header}>
                       <h2 className={styles.card__title}>{title}</h2>
+                      <p className={styles.card__price}>{price}</p>
+                    </div>
+
+                    <div className={styles.card__details}>
                       <div className={styles.card__metaGroup}>
                         <p className={styles.card__meta}>{artist}</p>
                         <p className={styles.card__meta}>{category}</p>
@@ -81,8 +84,6 @@ export default function FavoritesPage({ pageData }: FavoritesPageProps) {
                     </div>
 
                     <div className={styles.card__actions}>
-                      <p className={styles.card__price}>{price}</p>
-
                       <div className={styles.card__ctaRow}>
                         {typeof item.productId === 'number' && (
                           <form action={removeFavoriteAction}>

@@ -17,21 +17,30 @@
   height: 24px;
   padding: 0;
   background: transparent;
+  border-radius: var(--radius-pill);
   color: var(--color-text-primary);
-  transition: transform 0.18s ease, color 0.18s ease, opacity 0.18s ease;
+  box-shadow: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.18s ease;
 }
 
 .favorite-toggle__button--icon:hover,
 .favorite-toggle__button--icon:focus-visible,
 .favorite-toggle__button--icon.favorite-toggle__button--active {
+  background: transparent;
   color: var(--color-text-accent);
+  box-shadow: none;
 }
 
 .favorite-toggle__button--icon:hover,
 .favorite-toggle__button--icon:focus-visible,
 .favorite-toggle__button--icon.favorite-toggle__button--active:hover,
 .favorite-toggle__button--icon.favorite-toggle__button--active:focus-visible {
-  transform: scale(1.06);
+  transform: translateY(-1px);
 }
 
 .favorite-toggle__button--action {

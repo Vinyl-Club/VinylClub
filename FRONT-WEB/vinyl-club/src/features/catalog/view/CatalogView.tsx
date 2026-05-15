@@ -65,7 +65,10 @@ export default function CatalogView({
 
         return (
           <article key={item.id} className={styles['catalog-card']}>
-            <h2 className={styles['catalog-card__title']}>{title}</h2>
+            <div className={styles['catalog-card__header']}>
+              <h2 className={styles['catalog-card__title']}>{title}</h2>
+              <div className={styles['catalog-card__price']}>{price}</div>
+            </div>
 
             <div className={styles['catalog-card__body']}>
               <div className={styles['catalog-card__media']}>
@@ -93,8 +96,6 @@ export default function CatalogView({
             </div>
 
             <div className={styles['catalog-card__actions']}>
-              <div className={styles['catalog-card__price']}>{price}</div>
-
               <div className={styles['catalog-card__favorite-shell']}>
                 <FavoriteToggleButton
                   productId={item.productId}

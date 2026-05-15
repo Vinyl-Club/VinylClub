@@ -36,19 +36,29 @@ export default async function Page({ searchParams }: CatalogPageProps) {
     currentUser?.firstName?.trim() ||
     currentUser?.lastName?.trim() ||
     null;
+  const pageClassName = [
+    styles.page,
+    !greetingName ? styles['page--guest'] : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <section className={styles.page}>
-      {greetingName ? (
-        <h1 className={styles.title}>{`Bonjour : ${greetingName} !`}</h1>
-      ) : null}
+    <section className={pageClassName}>
+      <div className={styles.content}>
+        {greetingName ? (
+          <h1 className={styles.title}>{`Bonjour : ${greetingName} !`}</h1>
+        ) : null}
 
-      <CatalogView
-        items={items}
-        error={error}
-        favoriteProductIds={favoriteSelection.productIds}
-        isAuthenticated={favoriteSelection.isAuthenticated}
-      />
+        <div className={styles.catalogWrap}>
+          <CatalogView
+            items={items}
+            error={error}
+            favoriteProductIds={favoriteSelection.productIds}
+            isAuthenticated={favoriteSelection.isAuthenticated}
+          />
+        </div>
+      </div>
     </section>
   );
 }

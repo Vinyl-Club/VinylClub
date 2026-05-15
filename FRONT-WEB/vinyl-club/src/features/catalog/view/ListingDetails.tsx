@@ -6,9 +6,9 @@ import { getCurrentUserFavoriteSelection } from '@/features/favorites/api';
 import FavoriteToggleButton from '@/features/favorites/view/FavoriteToggleButton';
 
 const stateLabels: Record<string, string> = {
-  TRES_BON_ETAT: 'TrÃ¨s bon Ã©tat',
-  BON_ETAT: 'Bon Ã©tat',
-  MAUVAIS_ETAT: 'Mauvais Ã©tat',
+  TRES_BON_ETAT: 'Tres bon etat',
+  BON_ETAT: 'Bon etat',
+  MAUVAIS_ETAT: 'Mauvais etat',
 };
 
 const formatLabels: Record<string, string> = {
@@ -16,6 +16,13 @@ const formatLabels: Record<string, string> = {
   T45: '45 Tours',
   T78: '78 Tours',
 };
+
+const priceFormatter = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
 
 type Props = {
   id: string;
@@ -29,6 +36,10 @@ export default async function ListingDetails({ id }: Props) {
   const city = listing.user.address?.city?.trim() || 'Localisation';
   const productId = listing.product.id;
   const isFavorite = favoriteSelection.productIds.includes(productId);
+  const price =
+    typeof listing.product.price === 'number'
+      ? priceFormatter.format(listing.product.price)
+      : 'Prix EUR';
 
   return (
     <div className={styles['listing-details']}>
@@ -44,9 +55,7 @@ export default async function ListingDetails({ id }: Props) {
                 <p className={styles['listing-details__seller-name']}>
                   {listing.user.firstName} {listing.user.lastName}
                 </p>
-                <div className={styles['listing-details__price']}>
-                  {listing.product.price} â‚¬
-                </div>
+                <div className={styles['listing-details__price']}>{price}</div>
               </div>
 
               <div className={styles['listing-details__row']}>

@@ -1,0 +1,134 @@
+.itemCard {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 18px;
+  min-height: 126px;
+  padding: 16px 20px 16px 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(113, 95, 71, 0.14);
+  border-radius: 6px;
+  box-shadow: var(--shadow-card);
+}
+
+.itemCardMedia {
+  width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.itemCardCoverStack {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.itemCardImage,
+.itemCardFallback {
+  position: relative;
+  z-index: 1;
+  width: 96px;
+  height: 96px;
+}
+
+.itemCardImage {
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.16);
+}
+
+.itemCardFallback {
+  background:
+    linear-gradient(135deg, #93c8c2 0%, #6eb4af 45%, #d8d0c5 45%, #efe7db 100%);
+  box-shadow: inset 0 0 0 1px rgba(33, 33, 33, 0.08);
+}
+
+.itemCardFallback::before,
+.itemCardFallback::after {
+  content: '';
+  position: absolute;
+  inset: auto 12px 14px 12px;
+  height: 12px;
+  background: linear-gradient(90deg, #c48b47 0%, #e8c080 100%);
+  box-shadow: 0 -18px 0 0 #d98d48, 0 -36px 0 0 #7eb1b9;
+}
+
+.itemCardVinyl {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  width: 62px;
+  height: 62px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at center, #8cd7d3 0 9px, #1d1d1d 9px 13px, transparent 13px),
+    repeating-radial-gradient(circle at center, #111111 0 2px, #2b2b2b 2px 4px);
+  box-shadow: 0 10px 16px rgba(0, 0, 0, 0.22);
+}
+
+.itemCardContent {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  align-items: start;
+  gap: 18px;
+}
+
+.itemCardHeader {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+}
+
+.itemCardDetails {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemCardTitle {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.itemCardMetaGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemCardMeta {
+  margin: 0;
+  color: rgba(36, 36, 36, 0.82);
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.itemCardAside {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-end;
+  align-self: stretch;
+}
+
+.itemCardPrice {
+  margin: 0;
+  color: var(--color-text-accent);
+  font-family: var(--font-raleway), sans-serif;
+  align-self: start;
+  font-size: 1.28rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
