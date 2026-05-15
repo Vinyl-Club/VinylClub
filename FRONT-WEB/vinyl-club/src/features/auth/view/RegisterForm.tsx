@@ -26,7 +26,8 @@ export default function RegisterForm() {
     confirmPassword: clientErrors.confirmPassword ?? fe.confirmPassword,
     lastName: clientErrors.lastName ?? fe.lastName,
     firstName: clientErrors.firstName ?? fe.firstName,
-  };
+    city: clientErrors.city ?? fe.city,
+  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     const formData = new FormData(e.currentTarget);
@@ -37,6 +38,7 @@ export default function RegisterForm() {
       confirmPassword: String(formData.get('confirmPassword') ?? ''),
       lastName: String(formData.get('lastName') ?? ''),
       firstName: String(formData.get('firstName') ?? ''),
+      city: String(formData.get('city') ?? ''),
     };
 
     const result = registerSchema.safeParse(values);
@@ -114,15 +116,27 @@ export default function RegisterForm() {
         />
 
         <Input
-          label="PrÃ©nom"
+          label="Prénom"
           id="firstName"
           name="firstName"
           type="text"
-          placeholder="PrÃ©nom"
+          placeholder="Prénom"
           required
           autoComplete="given-name"
           error={backFrontErrors.firstName}
         />
+
+        <Input
+          label="Ville"
+          id="city"
+          name="city"
+          type="text"
+          placeholder="Ville"
+          required
+          autoComplete="city"
+          error={backFrontErrors.city}
+        />
+
 
         {state?.formError && (
           <p role="alert" className={styles['register-form__error']}>

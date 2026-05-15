@@ -39,6 +39,13 @@ const  registerSchema =  z.object({
       .regex(/^[\p{L}]+(?:[\p{L} '\-]*[\p{L}])?$/u,
         "Lettres, espaces, tirets et apostrophes uniquement."
       ),
+    city: z
+      .string()
+      .min(1, "Ville obligatoire.")
+      .max(70, "70 caractères maximum.")
+      .regex(/^[\p{L}]+(?:[\p{L} '\-]*[\p{L}])?$/u,
+        "Lettres, espaces, tirets et apostrophes uniquement."
+      ),
   })
     .refine((data) => data.password === data.confirmPassword, {
         message: 'Les mots de passe sont différents.',

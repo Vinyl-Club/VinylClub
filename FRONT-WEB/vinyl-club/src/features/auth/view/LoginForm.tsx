@@ -96,7 +96,7 @@ export default function LoginForm() {
             S&apos;inscrire
           </Link>
           <Link href="" className={styles['login-form__link']}>
-            Mot de passe oubliÃ©
+            Mot de passe oublié
           </Link>
         </div>
 

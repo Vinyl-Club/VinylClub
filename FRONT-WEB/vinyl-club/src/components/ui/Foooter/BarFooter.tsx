@@ -28,7 +28,7 @@ export default function BarFooter() {
 
         <section aria-labelledby="footer-about" className={styles['footer-bar__section']}>
           <h2 id="footer-about" className={styles['footer-bar__title']}>
-            Ã€ propos de VinylClub
+            À propos de VinylClub
           </h2>
           <ul className={styles['footer-bar__list']}>
             <li className={styles['footer-bar__list-item']}>
@@ -46,17 +46,17 @@ export default function BarFooter() {
           <ul className={styles['footer-bar__list']}>
             <li className={styles['footer-bar__list-item']}>
               <Link href="/faq" className={styles['footer-bar__link']}>
-                Questions / RÃ©ponses
+                Questions / Réponses
               </Link>
             </li>
             <li className={styles['footer-bar__list-item']}>
               <Link href="/cgu" className={styles['footer-bar__link']}>
-                Conditions gÃ©nÃ©rales d&apos;utilisation
+                Conditions générales d&apos;utilisation
               </Link>
             </li>
             <li className={styles['footer-bar__list-item']}>
               <Link href="/cgv" className={styles['footer-bar__link']}>
-                Conditions gÃ©nÃ©rales de vente
+                Conditions générales de vente
               </Link>
             </li>
           </ul>
@@ -66,13 +66,13 @@ export default function BarFooter() {
       <div className={styles['footer-bar__legal']}>
         <div className={styles['footer-bar__copyright']}>
           <small className={styles['footer-bar__copyright-text']}>
-            {new Date().getFullYear()} VINYLCLUB â€” TOUS DROITS RESERVES
+            {new Date().getFullYear()} VINYLCLUB — TOUS DROITS RESERVES
           </small>
         </div>
 
         <nav aria-label="Liens lÃ©gaux" className={styles['footer-bar__legal-links']}>
           <Link href="/mentions-legales" className={styles['footer-bar__link']}>
-            Mentions lÃ©gales
+            Mentions légales
           </Link>
         </nav>
       </div>
