@@ -12,20 +12,21 @@
 }
 
 .profile__title {
-  margin: 26px 0 26px;
+  margin: 26px 0 40px;
   color: var(--color-text-accent);
-  font-size: clamp(2rem, 3vw, 2.55rem);
+  font-size: clamp(2.2rem, 3.4vw, 2.8rem);
   font-weight: 700;
   line-height: 1.08;
   text-align: center;
 }
 
 .tabs {
-  width: min(500px, 100%);
-  margin: 0 auto 34px;
-  padding: 0 10px 8px;
+  width: min(560px, 100%);
+  margin: 0 auto 40px;
+  padding: 0 18px 10px;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
   align-items: end;
   border-bottom: 1px solid rgba(17, 17, 17, 0.16);
 }
@@ -34,7 +35,7 @@
   color: rgba(17, 17, 17, 0.72);
   text-decoration: none;
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.2;
   transition: color 0.2s ease;
 }
@@ -61,7 +62,7 @@
 }
 
 .adsPanel {
-  width: min(720px, 100%);
+  width: min(730px, 100%);
   margin: 0 auto;
 }
 
@@ -303,7 +304,7 @@
 .adsList {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .adsPanel__empty {
@@ -314,127 +315,83 @@
 }
 
 .listingCard {
-  width: min(680px, 100%);
-  margin: 0 auto;
-  padding: 12px 16px;
-  display: grid;
-  grid-template-columns: 114px minmax(0, 1fr);
-  gap: 18px;
-  align-items: center;
-  background: var(--color-surface-default);
-  border: 1px solid rgba(17, 17, 17, 0.06);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
-}
-
-.listingCard__media {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.listingCard__coverStack {
-  position: relative;
-  width: 104px;
-  height: 78px;
-}
-
-.listingCard__image,
-.listingCard__fallback {
-  position: relative;
-  z-index: 1;
-  width: 78px;
-  height: 78px;
-  object-fit: cover;
-  background: linear-gradient(135deg, #c8e2dd 0%, #86bfc5 100%);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
-}
-
-.listingCard__vinyl {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  width: 48px;
-  height: 48px;
-  transform: translateY(-50%);
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at center, #8cd7d3 0 7px, #1d1d1d 7px 10px, transparent 10px),
-    repeating-radial-gradient(circle at center, #111111 0 2px, #2b2b2b 2px 4px);
-  box-shadow: 0 8px 14px rgba(0, 0, 0, 0.2);
-}
-
-.listingCard__content {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 18px;
-  align-items: start;
-}
-
-.listingCard__details {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.listingCard__title,
-.listingCard__meta,
-.listingCard__price {
+  composes: itemCard from '../../shared/ListingCardShared.module.css';
+  width: 100%;
   margin: 0;
 }
 
+.listingCard__media {
+  composes: itemCardMedia from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__coverStack {
+  composes: itemCardCoverStack from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__image {
+  composes: itemCardImage from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__fallback {
+  composes: itemCardFallback from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__vinyl {
+  composes: itemCardVinyl from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__content {
+  composes: itemCardContent from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__header {
+  composes: itemCardHeader from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__details {
+  composes: itemCardDetails from '../../shared/ListingCardShared.module.css';
+}
+
 .listingCard__title {
-  color: var(--color-text-primary);
-  font-size: 0.82rem;
-  font-weight: 700;
-  line-height: 1.4;
+  composes: itemCardTitle from '../../shared/ListingCardShared.module.css';
 }
 
 .listingCard__metaGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  composes: itemCardMetaGroup from '../../shared/ListingCardShared.module.css';
 }
 
 .listingCard__meta {
-  color: rgba(17, 17, 17, 0.75);
-  font-size: 0.74rem;
-  line-height: 1.45;
+  composes: itemCardMeta from '../../shared/ListingCardShared.module.css';
 }
 
 .listingCard__aside {
-  min-width: 92px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 20px;
-  padding-top: 2px;
+  composes: itemCardAside from '../../shared/ListingCardShared.module.css';
 }
 
 .listingCard__price {
-  color: var(--color-text-accent);
-  font-size: 0.8rem;
-  font-weight: 600;
-  white-space: nowrap;
+  composes: itemCardPrice from '../../shared/ListingCardShared.module.css';
 }
 
 .listingCard__deleteForm {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  justify-content: flex-end;
   gap: 8px;
+  width: 100%;
+  margin-top: auto;
 }
 
 .listingCard__deleteBtn {
-  min-width: 92px;
-  min-height: 30px;
-  padding: 6px 14px;
+  min-width: 102px;
+  min-height: 40px;
+  padding: 10px 18px;
   border: none;
   border-radius: var(--radius-pill);
   background: var(--color-surface-accent);
   color: var(--color-text-inverse);
   font-family: var(--font-raleway), sans-serif;
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: var(--weight-semibold);
   line-height: 1;
   cursor: pointer;
@@ -485,7 +442,7 @@
   }
 
   .adsPanel {
-    width: min(680px, 100%);
+    width: min(730px, 100%);
   }
 }
 
@@ -506,27 +463,39 @@
 
   .listingCard {
     grid-template-columns: 1fr;
+    justify-items: center;
     gap: 16px;
-    padding: 16px;
+    padding: 18px 16px;
   }
 
   .listingCard__content {
+    width: 100%;
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 18px;
+  }
+
+  .listingCard__header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 8px;
   }
 
   .listingCard__aside {
-    align-items: flex-start;
-    gap: 12px;
+    align-items: center;
   }
 
   .listingCard__deleteForm {
-    align-items: flex-start;
+    align-items: center;
   }
 
   .listingCard__error {
     max-width: none;
-    text-align: left;
+    text-align: center;
+  }
+
+  .listingCard__details {
+    align-items: center;
+    text-align: center;
   }
 }
 
@@ -543,12 +512,19 @@
 
   .profile__title {
     margin-top: 20px;
-    font-size: clamp(1.8rem, 7vw, 2.15rem);
+    margin-bottom: 30px;
+    font-size: clamp(2rem, 7vw, 2.3rem);
   }
 
   .tabs {
     width: 100%;
-    font-size: 0.95rem;
+    margin-bottom: 30px;
+    padding-inline: 10px;
+    column-gap: 16px;
+  }
+
+  .tabs__link {
+    font-size: 1.05rem;
   }
 
   .panel {

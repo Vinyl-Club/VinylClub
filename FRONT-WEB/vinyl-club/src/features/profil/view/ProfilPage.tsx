@@ -386,13 +386,16 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                           ) : (
                             <div className={styles.listingCard__fallback} aria-hidden="true" />
                           )}
-                          <div className={styles.listingCard__vinyl} aria-hidden="true" />
                         </div>
                       </div>
 
                       <div className={styles.listingCard__content}>
-                        <div className={styles.listingCard__details}>
+                        <div className={styles.listingCard__header}>
                           <h2 className={styles.listingCard__title}>{titleText}</h2>
+                          <p className={styles.listingCard__price}>{price}</p>
+                        </div>
+
+                        <div className={styles.listingCard__details}>
                           <div className={styles.listingCard__metaGroup}>
                             <p className={styles.listingCard__meta}>{artist}</p>
                             <p className={styles.listingCard__meta}>{category}</p>
@@ -401,7 +404,6 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                         </div>
 
                         <div className={styles.listingCard__aside}>
-                          <p className={styles.listingCard__price}>{price}</p>
                           <DeleteAdForm adId={ad.id} title={titleText} />
                         </div>
                       </div>

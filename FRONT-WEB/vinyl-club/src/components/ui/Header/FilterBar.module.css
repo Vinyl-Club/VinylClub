@@ -17,7 +17,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: -0.01em;
   line-height: 1.05;
-  font-size: clamp(1.35rem, 1.8vw, 1.625rem);
+  font-size: clamp(1.15rem, 1.45vw, 1.35rem);
   background: var(--color-surface-accent);
   border: none;
   color: var(--color-text-primary);
@@ -32,7 +32,7 @@
 }
 
 .filter-bar__item--reset {
-  font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+  font-size: clamp(0.98rem, 1.15vw, 1.1rem);
 }
 
 .filter-bar__visually-hidden {
@@ -153,10 +153,10 @@
   }
 
   .filter-bar__item {
-    font-size: 1.15rem;
+    font-size: 1rem;
   }
 
   .filter-bar__item--reset {
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 }
