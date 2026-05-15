@@ -17,6 +17,7 @@ import type {
   ProfileTab,
 } from '../types';
 import styles from './ProfilPage.module.css';
+import Input from '@/components/ui/Input/Input';
 
 type ProfilPageProps = {
   activeTab: ProfileTab;
@@ -88,14 +89,6 @@ function DeleteAdForm({ adId, title }: { adId: number; title: string }) {
   );
 }
 
-function FieldError({ message }: { message?: string }) {
-  if (!message) {
-    return null;
-  }
-
-  return <p className={styles.form__fieldError}>{message}</p>;
-}
-
 export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) {
   const [formState, profileFormAction, isProfilePending] = useActionState(
     updateProfileAction,
@@ -133,17 +126,15 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
         <nav className={styles.tabs} aria-label="Navigation profil">
           <Link
             href="/profile"
-            className={`${styles.tabs__link} ${
-              activeTab === 'profile' ? styles['tabs__link--active'] : ''
-            }`}
+            className={`${styles.tabs__link} ${activeTab === 'profile' ? styles['tabs__link--active'] : ''
+              }`}
           >
             Mon Profil
           </Link>
           <Link
             href="/profile?tab=ads"
-            className={`${styles.tabs__link} ${
-              activeTab === 'ads' ? styles['tabs__link--active'] : ''
-            }`}
+            className={`${styles.tabs__link} ${activeTab === 'ads' ? styles['tabs__link--active'] : ''
+              }`}
           >
             Mes annonces
           </Link>
@@ -152,130 +143,92 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
         {activeTab === 'profile' ? (
           <div className={styles.panel}>
             <form id="profile-form" className={styles.form} action={profileFormAction}>
-              <div className={styles.form__field}>
-                <label htmlFor="lastName" className={styles.srOnly}>
-                  Nom
-                </label>
-                <input
+                <Input
+                  label="Nom"
                   id="lastName"
                   name="lastName"
                   type="text"
                   defaultValue={profileData.user.lastName}
                   placeholder="Nom"
-                  className={styles.form__input}
                   autoComplete="family-name"
+                  error={formState.fieldErrors.lastName}
                 />
-                <FieldError message={formState.fieldErrors.lastName} />
-              </div>
 
-              <div className={styles.form__field}>
-                <label htmlFor="firstName" className={styles.srOnly}>
-                  Prenom
-                </label>
-                <input
+                <Input
+                  label="Prénom"
                   id="firstName"
                   name="firstName"
                   type="text"
                   defaultValue={profileData.user.firstName}
-                  placeholder="Prenom"
-                  className={styles.form__input}
+                  placeholder="Prénom"
                   autoComplete="given-name"
+                  error={formState.fieldErrors.firstName}
                 />
-                <FieldError message={formState.fieldErrors.firstName} />
-              </div>
-
-              <div className={styles.form__field}>
-                <label htmlFor="email" className={styles.srOnly}>
-                  Email
-                </label>
-                <input
+          
+                <Input
+                  label="Email"
                   id="email"
                   name="email"
                   type="email"
                   defaultValue={profileData.user.email}
                   placeholder="Email"
-                  className={styles.form__input}
                   autoComplete="email"
+                  error={formState.fieldErrors.email}
                 />
-                <FieldError message={formState.fieldErrors.email} />
-              </div>
 
-              <div className={styles.form__field}>
-                <label htmlFor="password" className={styles.srOnly}>
-                  Mot de passe
-                </label>
-                <input
+                <Input
+                  label="Mot de passe"
                   id="password"
                   name="password"
                   type="password"
                   defaultValue=""
                   placeholder="Mot de passe"
-                  className={styles.form__input}
                   autoComplete="new-password"
+                  error={formState.fieldErrors.password}
                 />
-                <p className={styles.form__hint}>Laissez vide pour conserver votre mot de passe.</p>
-                <FieldError message={formState.fieldErrors.password} />
-              </div>
+                <p className={styles.form__hint}>
+                  Laissez vide pour conserver votre mot de passe.
+                </p>
 
-              <div className={styles.form__field}>
-                <label htmlFor="street" className={styles.srOnly}>
-                  Adresse
-                </label>
-                <input
+                <Input
+                  label="Adresse"
                   id="street"
                   name="street"
                   type="text"
                   defaultValue={address?.street ?? ''}
                   placeholder="Adresse"
-                  className={styles.form__input}
                   autoComplete="street-address"
                 />
-              </div>
-
-              <div className={styles.form__field}>
-                <label htmlFor="zipCode" className={styles.srOnly}>
-                  Code postal
-                </label>
-                <input
+        
+                <Input
+                  label="Code postal"
                   id="zipCode"
                   name="zipCode"
                   type="text"
                   defaultValue={address?.zipCode ?? ''}
                   placeholder="Code postal"
-                  className={styles.form__input}
                   autoComplete="postal-code"
                 />
-              </div>
 
-              <div className={styles.form__field}>
-                <label htmlFor="city" className={styles.srOnly}>
-                  Ville
-                </label>
-                <input
+                <Input
+                  label="Ville"
                   id="city"
                   name="city"
                   type="text"
                   defaultValue={address?.city ?? ''}
                   placeholder="Ville"
-                  className={styles.form__input}
                   autoComplete="address-level2"
                 />
-              </div>
 
-              <div className={styles.form__field}>
-                <label htmlFor="country" className={styles.srOnly}>
-                  Pays
-                </label>
-                <input
+                <Input
+                  label="Pays"
                   id="country"
                   name="country"
                   type="text"
                   defaultValue={address?.country ?? ''}
                   placeholder="Pays"
-                  className={styles.form__input}
                   autoComplete="country-name"
                 />
-              </div>
             </form>
 
             {(formState.formError || formState.successMessage || deleteAccountState.formError) && (

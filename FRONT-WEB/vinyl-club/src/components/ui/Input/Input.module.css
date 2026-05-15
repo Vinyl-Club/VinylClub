@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  width: clamp(280px, 40vw, 420px);
+  width: 100%;
   padding: 4px;
 }
 
@@ -23,6 +23,7 @@
   color: var(--color-text-primary);
   background: var(--color-surface-default);
   box-shadow: var(--shadow-control);
+  box-sizing: border-box;
 }
 
 .input-field__control::placeholder {
@@ -46,9 +47,6 @@
 }
 
 @media (max-width: 640px) {
-  .input-field {
-    width: min(90vw, 300px);
-  }
 
   .input-field__label {
     font-size: var(--text-sm);

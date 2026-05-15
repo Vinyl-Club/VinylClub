@@ -6,6 +6,7 @@ import { removeFavoriteAction } from '../actions.server';
 import type { FavoritesPageData } from '../types';
 import EmptyState from './EmptyState';
 import styles from './FavoritesPage.module.css';
+import Button from '@/components/ui/Button/Button';
 
 type FavoritesPageProps = {
   pageData: FavoritesPageData;
@@ -99,8 +100,15 @@ export default function FavoritesPage({ pageData }: FavoritesPageProps) {
                           </form>
                         )}
 
-                        <Link href={`/details/${item.id}`} className={styles.card__detailLink}>
-                          Voir le detail
+                        <Link
+                          href={`/details/${item.id}`} >
+                          <Button
+                            type="button"
+                            variant="primary"
+                            size="sm"
+                          >
+                            {'Voir le d\u00e9tail'}
+                          </Button>
                         </Link>
                       </div>
                     </div>
