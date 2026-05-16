@@ -101,3 +101,9 @@
 .button--loading {
   pointer-events: none;
 }
+
+@media (max-width: 768px) {
+  .button--secondary {
+    font-size: var(--text-xs);
+  }
+}

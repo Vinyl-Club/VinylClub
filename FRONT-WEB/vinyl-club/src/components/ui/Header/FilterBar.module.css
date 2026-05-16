@@ -1,6 +1,7 @@
 .filter-bar {
+  position: relative;
   background: var(--color-surface-accent);
-  overflow-x: auto;
+  overflow: visible;
 }
 
 .filter-bar__list {
@@ -10,6 +11,7 @@
   list-style: none;
   margin: 0;
   align-items: center;
+  overflow: visible;
 }
 
 .filter-bar__item {
@@ -64,7 +66,9 @@
 }
 
 .filter-bar__menu {
-  position: fixed;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
   z-index: 9999;
   background: var(--color-surface-muted);
   padding: 10px 12px;
@@ -150,6 +154,7 @@
   .filter-bar__list {
     gap: 12px;
     padding-inline: 16px;
+    flex-wrap: wrap;
   }
 
   .filter-bar__item {
@@ -158,5 +163,42 @@
 
   .filter-bar__item--reset {
     font-size: 0.92rem;
+  }
+
+  .filter-bar__menu {
+    min-width: 210px;
+    max-width: calc(100vw - 32px);
+  }
+
+  .filter-bar__price-row {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 560px) {
+  .filter-bar__list {
+    gap: 8px;
+    padding-inline: 10px;
+  }
+
+  .filter-bar__menu {
+    min-width: 200px;
+    padding: 10px;
+  }
+
+  .filter-bar__price-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-bar__dropdown:nth-child(3) .filter-bar__menu,
+  .filter-bar__dropdown:nth-child(4) .filter-bar__menu {
+    left: auto;
+    right: 0;
+  }
+
+  .filter-bar__dropdown:nth-child(4) .filter-bar__menu {
+    min-width: 190px;
   }
 }

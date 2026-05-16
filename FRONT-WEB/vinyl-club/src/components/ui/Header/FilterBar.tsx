@@ -37,7 +37,7 @@ export default function FilterBar() {
   ];
 
   const [open, setOpen] = useState<OpenMenu>(null);
-  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
+  // const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
 
   const [genre, setGenre] = useState('');
   const [etat, setEtat] = useState('');
@@ -101,27 +101,30 @@ export default function FilterBar() {
     router.push(queryString ? `/catalog?${queryString}` : '/catalog');
   }
 
+  // function toggleMenu(which: Exclude<OpenMenu, null>) {
+  //   const nextOpen = open === which ? null : which;
+
+  //   if (nextOpen) {
+  //     const ref =
+  //       which === 'genre'
+  //         ? genreBtnRef
+  //         : which === 'etat'
+  //           ? etatBtnRef
+  //           : which === 'prix'
+  //             ? prixBtnRef
+  //             : formatBtnRef;
+
+  //     const rect = ref.current?.getBoundingClientRect();
+  //     if (rect) {
+  //       setMenuPos({ top: rect.bottom + 6, left: rect.left });
+  //     }
+  //   }
+  //   setOpen(nextOpen);
+  // }
+
   function toggleMenu(which: Exclude<OpenMenu, null>) {
-    const nextOpen = open === which ? null : which;
-
-    if (nextOpen) {
-      const ref =
-        which === 'genre'
-          ? genreBtnRef
-          : which === 'etat'
-            ? etatBtnRef
-            : which === 'prix'
-              ? prixBtnRef
-              : formatBtnRef;
-
-      const rect = ref.current?.getBoundingClientRect();
-      if (rect) {
-        setMenuPos({ top: rect.bottom + 6, left: rect.left });
-      }
-    }
-
-    setOpen(nextOpen);
-  }
+  setOpen(open === which ? null : which);
+}
 
   useEffect(() => {
     setGenre(searchParams.get('genre') ?? '');
@@ -183,7 +186,7 @@ export default function FilterBar() {
               className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Choisir un genre"
-              style={{ top: menuPos.top, left: menuPos.left }}
+              // style={{ top: menuPos.top, left: menuPos.left }}
             >
               <ul className={styles['filter-bar__menu-list']}>
                 {genres.map((item) => (
@@ -238,7 +241,7 @@ export default function FilterBar() {
               className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Filtrer par prix"
-              style={{ top: menuPos.top, left: menuPos.left }}
+              // style={{ top: menuPos.top, left: menuPos.left }}
             >
               <div className={styles['filter-bar__price-row']}>
                 <span className={styles['filter-bar__price-label']}>De</span>
@@ -299,7 +302,7 @@ export default function FilterBar() {
               className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Choisir un etat"
-              style={{ top: menuPos.top, left: menuPos.left }}
+              // style={{ top: menuPos.top, left: menuPos.left }}
             >
               <ul className={styles['filter-bar__menu-list']}>
                 {etats.map((item) => (
@@ -354,7 +357,7 @@ export default function FilterBar() {
               className={styles['filter-bar__menu']}
               role="dialog"
               aria-label="Choisir un format"
-              style={{ top: menuPos.top, left: menuPos.left }}
+              // style={{ top: menuPos.top, left: menuPos.left }}
             >
               <ul className={styles['filter-bar__menu-list']}>
                 {formats.map((item) => (
