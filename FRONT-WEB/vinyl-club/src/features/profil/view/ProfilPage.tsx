@@ -1,3 +1,383 @@
-export default function Profilpage() {
-    return null
+'use client';
+
+import Image from 'next/image';
+import Link from 'next/link';
+import { useActionState, useEffect, useState, type FormEvent } from 'react';
+import { useFormStatus } from 'react-dom';
+import { API } from '@/lib/env';
+import {
+  deleteAccountAction,
+  deleteProfileAdAction,
+  updateProfileAction,
+} from '../actions.server';
+import type {
+  ProfileDeleteState,
+  ProfileFormState,
+  ProfilePageData,
+  ProfileTab,
+} from '../types';
+import styles from './ProfilPage.module.css';
+import Input from '@/components/ui/Input/Input';
+import Button from '@/components/ui/Button/Button';
+
+type ProfilPageProps = {
+  activeTab: ProfileTab;
+  profileData: ProfilePageData;
+};
+
+const initialFormState: ProfileFormState = {
+  fieldErrors: {},
+  formError: '',
+  successMessage: '',
+};
+
+const initialDeleteState: ProfileDeleteState = {
+  formError: '',
+};
+
+const priceFormatter = new Intl.NumberFormat('fr-FR', {
+  style: 'currency',
+  currency: 'EUR',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
+function resolveCoverUrl(imageUrl: string | null) {
+  if (!imageUrl) return null;
+
+  return imageUrl.startsWith('http') ? imageUrl : `${API.base}${imageUrl}`;
+}
+
+function ConfirmDeleteAccountButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      variant="secondary"
+      size="sm"
+      isLoading={pending}
+    >
+      Oui, supprimer
+    </Button>
+  );
+}
+
+function DeleteAdSubmitButton() {
+  const { pending } = useFormStatus();
+
+   return (
+    <Button
+      type="submit"
+      variant="secondary"
+      size="sm"
+      isLoading={pending}
+    >
+      Supprimer
+    </Button>
+  );
+}
+
+function DeleteAdForm({ adId, title }: { adId: number; title: string }) {
+  const [state, formAction] = useActionState(deleteProfileAdAction, initialDeleteState);
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    if (!window.confirm(`Supprimer l'annonce "${title}" ?`)) {
+      event.preventDefault();
+    }
+  }
+
+  return (
+    <form className={styles.listingCard__deleteForm} action={formAction} onSubmit={handleSubmit}>
+      <input type="hidden" name="adId" value={adId} />
+      <DeleteAdSubmitButton />
+      {state.formError && <p className={styles.listingCard__error}>{state.formError}</p>}
+    </form>
+  );
+}
+
+export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) {
+  const [formState, profileFormAction, isProfilePending] = useActionState(
+    updateProfileAction,
+    initialFormState,
+  );
+  const [deleteAccountState, deleteAccountFormAction] = useActionState(
+    deleteAccountAction,
+    initialDeleteState,
+  );
+  const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] = useState(false);
+
+  const title = activeTab === 'ads' ? 'Mes annonces' : 'Mon profil';
+  const address = profileData.address;
+
+  useEffect(() => {
+    if (!isDeleteAccountModalOpen) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setIsDeleteAccountModalOpen(false);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDeleteAccountModalOpen]);
+
+  return (
+    <section className={styles.profile}>
+      <div className={styles.profile__inner}>
+        <h1 className={styles.profile__title}>{title}</h1>
+
+        <nav className={styles.tabs} aria-label="Navigation profil">
+          <Link
+            href="/profile"
+            className={`${styles.tabs__link} ${activeTab === 'profile' ? styles['tabs__link--active'] : ''
+              }`}
+          >
+            Mon Profil
+          </Link>
+          <Link
+            href="/profile?tab=ads"
+            className={`${styles.tabs__link} ${activeTab === 'ads' ? styles['tabs__link--active'] : ''
+              }`}
+          >
+            Mes annonces
+          </Link>
+        </nav>
+
+        {activeTab === 'profile' ? (
+          <div className={styles.panel}>
+            <form id="profile-form" className={styles.form} action={profileFormAction}>
+              <Input
+                label="Nom"
+                id="lastName"
+                name="lastName"
+                type="text"
+                defaultValue={profileData.user.lastName}
+                placeholder="Nom"
+                autoComplete="family-name"
+                error={formState.fieldErrors.lastName}
+              />
+
+              <Input
+                label="Prénom"
+                id="firstName"
+                name="firstName"
+                type="text"
+                defaultValue={profileData.user.firstName}
+                placeholder="Prénom"
+                autoComplete="given-name"
+                error={formState.fieldErrors.firstName}
+              />
+
+              <Input
+                label="Email"
+                id="email"
+                name="email"
+                type="email"
+                defaultValue={profileData.user.email}
+                placeholder="Email"
+                autoComplete="email"
+                error={formState.fieldErrors.email}
+              />
+
+              <Input
+                label="Mot de passe"
+                id="password"
+                name="password"
+                type="password"
+                defaultValue=""
+                placeholder="Mot de passe"
+                autoComplete="new-password"
+                error={formState.fieldErrors.password}
+              />
+              <p className={styles.form__hint}>
+                Laissez vide pour conserver votre mot de passe.
+              </p>
+
+              <Input
+                label="Adresse"
+                id="street"
+                name="street"
+                type="text"
+                defaultValue={address?.street ?? ''}
+                placeholder="Adresse"
+                autoComplete="street-address"
+              />
+
+              <Input
+                label="Code postal"
+                id="zipCode"
+                name="zipCode"
+                type="text"
+                defaultValue={address?.zipCode ?? ''}
+                placeholder="Code postal"
+                autoComplete="postal-code"
+              />
+
+              <Input
+                label="Ville"
+                id="city"
+                name="city"
+                type="text"
+                defaultValue={address?.city ?? ''}
+                placeholder="Ville"
+                autoComplete="address-level2"
+              />
+
+              <Input
+                label="Pays"
+                id="country"
+                name="country"
+                type="text"
+                defaultValue={address?.country ?? ''}
+                placeholder="Pays"
+                autoComplete="country-name"
+              />
+            </form>
+
+            {(formState.formError || formState.successMessage || deleteAccountState.formError) && (
+              <div className={styles.feedback} aria-live="polite">
+                {formState.formError && (
+                  <p className={styles.feedback__error}>{formState.formError}</p>
+                )}
+                {deleteAccountState.formError && (
+                  <p className={styles.feedback__error}>{deleteAccountState.formError}</p>
+                )}
+                {formState.successMessage && (
+                  <p className={styles.feedback__success}>{formState.successMessage}</p>
+                )}
+              </div>
+            )}
+
+            <div className={styles.actions}>
+              <form
+                id="delete-account-form"
+                action={deleteAccountFormAction}
+                className={styles.deleteAccountForm}
+              >
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="md"
+                  aria-haspopup="dialog"
+                  aria-expanded={isDeleteAccountModalOpen}
+                  onClick={() => setIsDeleteAccountModalOpen(true)}
+                >
+                  Supprimer
+                </Button>
+
+                {isDeleteAccountModalOpen ? (
+                  <div
+                    className={styles.modal}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="delete-account-title"
+                    onClick={() => setIsDeleteAccountModalOpen(false)}
+                  >
+                    <div
+                      className={styles.modal__panel}
+                      onClick={(event) => event.stopPropagation()}
+                    >
+                      <h2 id="delete-account-title" className={styles.modal__title}>
+                        Supprimer mon compte
+                      </h2>
+                      <p className={styles.modal__text}>
+                        Es-tu sure de vouloir supprimer ton compte ? Cette action supprimera
+                        aussi toutes tes annonces et ne pourra pas etre annulee.
+                      </p>
+
+                      <div className={styles.modal__actions}>
+                        <Button
+                          type="button"
+                          variant="soft"
+                          size="sm"
+                          onClick={() => setIsDeleteAccountModalOpen(false)}
+                        >
+                          Annuler
+                        </Button>
+                        <ConfirmDeleteAccountButton />
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </form>
+
+              <Button
+                type="submit"
+                form="profile-form"
+                variant="primary"
+                size="md"
+                isLoading={isProfilePending}
+              >
+                Valider
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.adsPanel}>
+            {profileData.ads.length === 0 ? (
+              <p className={styles.adsPanel__empty}>Vous n&apos;avez aucune annonce pour le moment.</p>
+            ) : (
+              <div className={styles.adsList}>
+                {profileData.ads.map((ad) => {
+                  const coverUrl = resolveCoverUrl(ad.imageUrl);
+                  const titleText = ad.title?.trim() || "Titre de l'annonce";
+                  const artist = ad.artistName?.trim() || "Nom de l'artiste";
+                  const category = ad.categoryName?.trim() || 'Style de musique';
+                  const city = ad.city?.trim() || 'Localisation';
+                  const price =
+                    typeof ad.price === 'number'
+                      ? priceFormatter.format(ad.price)
+                      : 'Prix EUR';
+
+                  return (
+                    <article key={ad.id} className={styles.listingCard}>
+                      <div className={styles.listingCard__media}>
+                        <div className={styles.listingCard__coverStack}>
+                          {coverUrl ? (
+                            <Image
+                              src={coverUrl}
+                              alt={titleText}
+                              width={96}
+                              height={96}
+                              unoptimized
+                              className={styles.listingCard__image}
+                            />
+                          ) : (
+                            <div className={styles.listingCard__fallback} aria-hidden="true" />
+                          )}
+                        </div>
+                      </div>
+
+                      <div className={styles.listingCard__content}>
+                        <div className={styles.listingCard__header}>
+                          <h2 className={styles.listingCard__title}>{titleText}</h2>
+                          <p className={styles.listingCard__price}>{price}</p>
+                        </div>
+
+                        <div className={styles.listingCard__details}>
+                          <div className={styles.listingCard__metaGroup}>
+                            <p className={styles.listingCard__meta}>{artist}</p>
+                            <p className={styles.listingCard__meta}>{category}</p>
+                            <p className={styles.listingCard__meta}>{city}</p>
+                          </div>
+                        </div>
+
+                        <div className={styles.listingCard__aside}>
+                          <DeleteAdForm adId={ad.id} title={titleText} />
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+  );
 }

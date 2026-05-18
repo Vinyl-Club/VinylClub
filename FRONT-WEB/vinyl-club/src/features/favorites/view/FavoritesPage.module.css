@@ -1,0 +1,208 @@
+.favorites {
+  width: 100%;
+  padding: 38px 24px 78px;
+}
+
+.favorites__inner {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 36px;
+}
+
+.favorites__title {
+  margin: 0;
+  color: var(--color-text-accent);
+  font-family: var(--font-raleway), sans-serif;
+  font-size: clamp(2.45rem, 4.4vw, 3.2rem);
+  font-weight: var(--weight-bold);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+  text-align: center;
+}
+
+.favoritesList {
+  width: min(730px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  composes: itemCard from '../../shared/ListingCardShared.module.css';
+}
+
+.card__media {
+  composes: itemCardMedia from '../../shared/ListingCardShared.module.css';
+}
+
+.card__coverStack {
+  composes: itemCardCoverStack from '../../shared/ListingCardShared.module.css';
+}
+
+.card__image {
+  composes: itemCardImage from '../../shared/ListingCardShared.module.css';
+}
+
+.card__fallback {
+  composes: itemCardFallback from '../../shared/ListingCardShared.module.css';
+}
+
+.card__vinyl {
+  composes: itemCardVinyl from '../../shared/ListingCardShared.module.css';
+}
+
+.card__content {
+  composes: itemCardContent from '../../shared/ListingCardShared.module.css';
+}
+
+.card__header {
+  composes: itemCardHeader from '../../shared/ListingCardShared.module.css';
+}
+
+.card__details {
+  composes: itemCardDetails from '../../shared/ListingCardShared.module.css';
+}
+
+.card__title {
+  composes: itemCardTitle from '../../shared/ListingCardShared.module.css';
+}
+
+.card__metaGroup {
+  composes: itemCardMetaGroup from '../../shared/ListingCardShared.module.css';
+}
+
+.card__meta {
+  composes: itemCardMeta from '../../shared/ListingCardShared.module.css';
+}
+
+.card__actions {
+  composes: itemCardAside from '../../shared/ListingCardShared.module.css';
+  gap: 10px;
+}
+
+.card__price {
+  composes: itemCardPrice from '../../shared/ListingCardShared.module.css';
+}
+
+.card__ctaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+}
+
+.card__favoriteButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text-accent);
+  cursor: pointer;
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
+.card__favoriteButton:hover,
+.card__favoriteButton:focus-visible {
+  color: var(--color-text-accent);
+  transform: scale(1.06);
+}
+
+.card__favoriteButton:focus-visible,
+.card__detailLink:focus-visible {
+  outline: 2px solid rgba(156, 88, 30, 0.35);
+  outline-offset: 3px;
+}
+
+
+.card__detailLink:hover,
+.card__detailLink:focus-visible {
+  background: var(--color-surface-soft-hover);
+  box-shadow: var(--shadow-soft-hover);
+}
+
+.emptyState {
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(760px, 100%);
+  margin: 0;
+  color: #111111;
+  font-family: var(--font-raleway), sans-serif;
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+}
+
+.errorBox {
+  width: min(720px, 100%);
+  padding: 22px 24px;
+  background: rgba(255, 247, 232, 0.92);
+  border-left: 6px solid var(--color-text-accent);
+  box-shadow: var(--shadow-card);
+}
+
+.errorBox__title {
+  margin: 0 0 8px;
+  color: var(--color-text-primary);
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.errorBox__message {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-family: var(--font-raleway), sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+@media (max-width: 760px) {
+  .favorites {
+    padding-inline: 16px;
+    padding-bottom: 56px;
+  }
+
+.favorites__inner {
+    gap: 24px;
+  }
+
+  .favoritesList {
+    width: 100%;
+  }
+
+  .card {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 16px;
+    padding: 18px 16px;
+  }
+
+  .card__content {
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .card__header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 8px;
+  }
+
+  .card__details,
+  .card__actions {
+    align-items: center;
+    text-align: center;
+  }
+}

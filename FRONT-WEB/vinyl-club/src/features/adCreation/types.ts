@@ -1,7 +1,7 @@
- 
 export type State = {
-    fieldErrors: Record<string, string>;
-    formError: string;
+  fieldErrors: Record<string, string>;
+  formError: string;
+  successMessage: string;
 };
 
 export type Category = {
@@ -17,4 +17,10 @@ export type Artist = {
 export type Album = {
   id: number;
   name: string;
+};
+
+export type CreatedAd = {
+  id: number;
+  productId: number;
+  userId: number;
 };
