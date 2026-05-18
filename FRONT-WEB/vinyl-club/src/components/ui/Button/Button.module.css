@@ -51,7 +51,7 @@
   height: 28px;
   min-height: 28px;
   padding: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   font-size: 0.72rem;
   font-weight: var(--weight-semibold);
   box-shadow: none;
@@ -66,6 +66,7 @@
 .button--primary:focus-visible:not(:disabled) {
   background: var(--color-surface-brand-hover);
   color: var(--color-text-inverse);
+  transform: translateY(-1px);
 }
 
 .button--secondary {
@@ -77,17 +78,19 @@
 .button--secondary:focus-visible:not(:disabled) {
   background: var(--color-surface-accent-hover);
   color: var(--color-text-inverse);
+  transform: translateY(-1px);
 }
 
 .button--soft {
   background: var(--color-surface-soft);
-  color: var(--color-text-soft);
+  color: var(--color-text-primary);
 }
 
 .button--soft:hover:not(:disabled),
 .button--soft:focus-visible:not(:disabled) {
   background: var(--color-surface-soft-hover);
   box-shadow: var(--shadow-soft-hover);
+  transform: translateY(-1px);
 }
 
 .button--fullWidth {
@@ -97,4 +100,10 @@
 
 .button--loading {
   pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .button--secondary {
+    font-size: var(--text-xs);
+  }
 }

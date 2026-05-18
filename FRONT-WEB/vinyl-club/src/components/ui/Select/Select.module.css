@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  width: clamp(280px, 40vw, 420px);
+  width: 100%;
   padding: 4px;
 }
 
@@ -29,6 +29,7 @@
   box-shadow: var(--shadow-control);
   appearance: none;
   cursor: pointer;
+  box-sizing: border-box;
 }
 
 .select-field__control option {
@@ -70,9 +71,6 @@
 }
 
 @media (max-width: 640px) {
-  .select-field {
-    width: min(90vw, 300px);
-  }
 
   .select-field__label {
     font-size: var(--text-sm);

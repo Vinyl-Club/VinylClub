@@ -114,7 +114,6 @@ export default function CatalogView({
                   type="button"
                   variant="primary"
                   size="xs"
-                  className={styles['catalog-card__detail-button']}
                 >
                   {'Voir le d\u00e9tail'}
                 </Button>

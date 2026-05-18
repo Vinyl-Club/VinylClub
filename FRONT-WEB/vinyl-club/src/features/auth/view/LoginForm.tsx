@@ -68,7 +68,7 @@ export default function LoginForm() {
           id="email"
           name="email"
           type="email"
-          placeholder="Email@.fr"
+          placeholder="Email@"
           required
           autoComplete="email"
           error={backFrontErrors.email}

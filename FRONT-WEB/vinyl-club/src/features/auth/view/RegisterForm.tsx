@@ -76,7 +76,7 @@ export default function RegisterForm() {
           id="email"
           name="email"
           type="email"
-          placeholder="Email@.fr"
+          placeholder="Email@r"
           required
           autoComplete="email"
           error={backFrontErrors.email}

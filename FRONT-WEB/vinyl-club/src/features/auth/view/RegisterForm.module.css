@@ -15,6 +15,7 @@
 }
 
 .register-form__form {
+  width: var(--form-width-default);
   padding-top: 20px;
   display: flex;
   flex-direction: column;

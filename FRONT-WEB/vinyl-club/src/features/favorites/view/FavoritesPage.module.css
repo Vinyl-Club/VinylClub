@@ -121,28 +121,6 @@
   outline-offset: 3px;
 }
 
-.card__detailLink {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  min-width: 128px;
-  padding: 0 18px;
-  border-radius: 12px;
-  background: var(--color-surface-soft);
-  color: var(--color-text-soft);
-  font-family: var(--font-raleway), sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1;
-  text-decoration: none;
-  box-shadow: var(--shadow-button);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-}
 
 .card__detailLink:hover,
 .card__detailLink:focus-visible {

@@ -57,7 +57,8 @@
 }
 
 .panel {
-  width: min(370px, 100%);
+  width: var(--form-width-default);
+  max-width: 100%;
   margin: 0 auto;
 }
 
@@ -72,44 +73,10 @@
   gap: 12px;
 }
 
-.form__field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form__input {
-  width: 100%;
-  min-height: 38px;
-  padding: 9px 14px;
-  border: none;
-  border-radius: 5px;
-  background: var(--color-surface-default);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  color: var(--color-text-primary);
-  font-size: 0.95rem;
-}
-
-.form__input::placeholder {
-  color: rgba(17, 17, 17, 0.6);
-}
-
-.form__input:focus-visible {
-  outline: 3px solid var(--color-focus-ring);
-  outline-offset: 2px;
-}
-
 .form__hint {
   margin: 0;
   color: rgba(17, 17, 17, 0.6);
   font-size: 0.8rem;
-  line-height: 1.35;
-}
-
-.form__fieldError {
-  margin: 0;
-  color: var(--color-danger);
-  font-size: 0.82rem;
   line-height: 1.35;
 }
 
@@ -142,62 +109,6 @@
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
-}
-
-.actionButton {
-  min-width: 108px;
-  min-height: 40px;
-  padding: 10px 24px;
-  border: none;
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-button);
-  font-family: var(--font-raleway), sans-serif;
-  font-size: 1rem;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--color-text-primary);
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.actionButton:hover:not(:disabled),
-.actionButton:focus-visible:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.actionButton:focus-visible {
-  outline: 3px solid var(--color-focus-ring);
-  outline-offset: 3px;
-}
-
-.actionButton:disabled {
-  opacity: 0.7;
-  cursor: wait;
-  transform: none;
-}
-
-.actionButton--danger {
-  background: var(--color-surface-accent);
-}
-
-.actionButton--danger:hover:not(:disabled),
-.actionButton--danger:focus-visible:not(:disabled) {
-  background: var(--color-surface-accent-hover);
-  color: var(--color-text-inverse);
-}
-
-.actionButton--primary {
-  background: var(--color-surface-brand);
-}
-
-.actionButton--primary:hover:not(:disabled),
-.actionButton--primary:focus-visible:not(:disabled) {
-  background: var(--color-surface-brand-hover);
-  color: var(--color-text-inverse);
 }
 
 .deleteAccountForm {
@@ -245,60 +156,6 @@
   justify-content: flex-end;
   gap: 12px;
   flex-wrap: wrap;
-}
-
-.modal__button {
-  min-width: 130px;
-  min-height: 40px;
-  padding: 10px 18px;
-  border: none;
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-button);
-  font-family: var(--font-raleway), sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  line-height: 1;
-  cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.modal__button:hover:not(:disabled),
-.modal__button:focus-visible:not(:disabled) {
-  transform: translateY(-1px);
-}
-
-.modal__button:focus-visible {
-  outline: 3px solid var(--color-focus-ring);
-  outline-offset: 3px;
-}
-
-.modal__button:disabled {
-  opacity: 0.7;
-  cursor: wait;
-  transform: none;
-}
-
-.modal__button--ghost {
-  background: #d8d3cb;
-  color: var(--color-text-primary);
-}
-
-.modal__button--ghost:hover:not(:disabled),
-.modal__button--ghost:focus-visible:not(:disabled) {
-  background: #c9c3ba;
-}
-
-.modal__button--danger {
-  background: var(--color-surface-accent);
-  color: var(--color-text-inverse);
-}
-
-.modal__button--danger:hover:not(:disabled),
-.modal__button--danger:focus-visible:not(:disabled) {
-  background: var(--color-surface-accent-hover);
 }
 
 .adsList {
@@ -382,39 +239,6 @@
   margin-top: auto;
 }
 
-.listingCard__deleteBtn {
-  min-width: 102px;
-  min-height: 40px;
-  padding: 10px 18px;
-  border: none;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface-accent);
-  color: var(--color-text-inverse);
-  font-family: var(--font-raleway), sans-serif;
-  font-size: 1rem;
-  font-weight: var(--weight-semibold);
-  line-height: 1;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.listingCard__deleteBtn:hover:not(:disabled),
-.listingCard__deleteBtn:focus-visible:not(:disabled) {
-  background: var(--color-surface-accent-hover);
-  transform: translateY(-1px);
-}
-
-.listingCard__deleteBtn:focus-visible {
-  outline: 3px solid var(--color-focus-ring);
-  outline-offset: 3px;
-}
-
-.listingCard__deleteBtn:disabled {
-  opacity: 0.7;
-  cursor: wait;
-  transform: none;
-}
-
 .listingCard__error {
   margin: 0;
   max-width: 180px;
@@ -422,18 +246,6 @@
   font-size: 0.72rem;
   text-align: right;
   line-height: 1.35;
-}
-
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
 @media (max-width: 900px) {
@@ -527,21 +339,12 @@
     font-size: 1.05rem;
   }
 
-  .panel {
-    width: min(100%, 370px);
-  }
-
-  .form__input {
-    min-height: 40px;
-  }
-
   .actions {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .actionButton {
-    width: min(220px, 100%);
+    margin: 34px auto 0;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
   }
 
   .modal {

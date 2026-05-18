@@ -17,6 +17,8 @@ import type {
   ProfileTab,
 } from '../types';
 import styles from './ProfilPage.module.css';
+import Input from '@/components/ui/Input/Input';
+import Button from '@/components/ui/Button/Button';
 
 type ProfilPageProps = {
   activeTab: ProfileTab;
@@ -50,23 +52,29 @@ function ConfirmDeleteAccountButton() {
   const { pending } = useFormStatus();
 
   return (
-    <button
+    <Button
       type="submit"
-      className={`${styles.modal__button} ${styles['modal__button--danger']}`}
-      disabled={pending}
+      variant="secondary"
+      size="sm"
+      isLoading={pending}
     >
-      {pending ? 'Suppression...' : 'Oui, supprimer'}
-    </button>
+      Oui, supprimer
+    </Button>
   );
 }
 
 function DeleteAdSubmitButton() {
   const { pending } = useFormStatus();
 
-  return (
-    <button type="submit" className={styles.listingCard__deleteBtn} disabled={pending}>
-      {pending ? 'Suppression...' : 'Supprimer'}
-    </button>
+   return (
+    <Button
+      type="submit"
+      variant="secondary"
+      size="sm"
+      isLoading={pending}
+    >
+      Supprimer
+    </Button>
   );
 }
 
@@ -86,14 +94,6 @@ function DeleteAdForm({ adId, title }: { adId: number; title: string }) {
       {state.formError && <p className={styles.listingCard__error}>{state.formError}</p>}
     </form>
   );
-}
-
-function FieldError({ message }: { message?: string }) {
-  if (!message) {
-    return null;
-  }
-
-  return <p className={styles.form__fieldError}>{message}</p>;
 }
 
 export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) {
@@ -133,17 +133,15 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
         <nav className={styles.tabs} aria-label="Navigation profil">
           <Link
             href="/profile"
-            className={`${styles.tabs__link} ${
-              activeTab === 'profile' ? styles['tabs__link--active'] : ''
-            }`}
+            className={`${styles.tabs__link} ${activeTab === 'profile' ? styles['tabs__link--active'] : ''
+              }`}
           >
             Mon Profil
           </Link>
           <Link
             href="/profile?tab=ads"
-            className={`${styles.tabs__link} ${
-              activeTab === 'ads' ? styles['tabs__link--active'] : ''
-            }`}
+            className={`${styles.tabs__link} ${activeTab === 'ads' ? styles['tabs__link--active'] : ''
+              }`}
           >
             Mes annonces
           </Link>
@@ -152,130 +150,92 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
         {activeTab === 'profile' ? (
           <div className={styles.panel}>
             <form id="profile-form" className={styles.form} action={profileFormAction}>
-              <div className={styles.form__field}>
-                <label htmlFor="lastName" className={styles.srOnly}>
-                  Nom
-                </label>
-                <input
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  defaultValue={profileData.user.lastName}
-                  placeholder="Nom"
-                  className={styles.form__input}
-                  autoComplete="family-name"
-                />
-                <FieldError message={formState.fieldErrors.lastName} />
-              </div>
+              <Input
+                label="Nom"
+                id="lastName"
+                name="lastName"
+                type="text"
+                defaultValue={profileData.user.lastName}
+                placeholder="Nom"
+                autoComplete="family-name"
+                error={formState.fieldErrors.lastName}
+              />
 
-              <div className={styles.form__field}>
-                <label htmlFor="firstName" className={styles.srOnly}>
-                  Prenom
-                </label>
-                <input
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  defaultValue={profileData.user.firstName}
-                  placeholder="Prenom"
-                  className={styles.form__input}
-                  autoComplete="given-name"
-                />
-                <FieldError message={formState.fieldErrors.firstName} />
-              </div>
+              <Input
+                label="Prénom"
+                id="firstName"
+                name="firstName"
+                type="text"
+                defaultValue={profileData.user.firstName}
+                placeholder="Prénom"
+                autoComplete="given-name"
+                error={formState.fieldErrors.firstName}
+              />
 
-              <div className={styles.form__field}>
-                <label htmlFor="email" className={styles.srOnly}>
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  defaultValue={profileData.user.email}
-                  placeholder="Email"
-                  className={styles.form__input}
-                  autoComplete="email"
-                />
-                <FieldError message={formState.fieldErrors.email} />
-              </div>
+              <Input
+                label="Email"
+                id="email"
+                name="email"
+                type="email"
+                defaultValue={profileData.user.email}
+                placeholder="Email"
+                autoComplete="email"
+                error={formState.fieldErrors.email}
+              />
 
-              <div className={styles.form__field}>
-                <label htmlFor="password" className={styles.srOnly}>
-                  Mot de passe
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  defaultValue=""
-                  placeholder="Mot de passe"
-                  className={styles.form__input}
-                  autoComplete="new-password"
-                />
-                <p className={styles.form__hint}>Laissez vide pour conserver votre mot de passe.</p>
-                <FieldError message={formState.fieldErrors.password} />
-              </div>
+              <Input
+                label="Mot de passe"
+                id="password"
+                name="password"
+                type="password"
+                defaultValue=""
+                placeholder="Mot de passe"
+                autoComplete="new-password"
+                error={formState.fieldErrors.password}
+              />
+              <p className={styles.form__hint}>
+                Laissez vide pour conserver votre mot de passe.
+              </p>
 
-              <div className={styles.form__field}>
-                <label htmlFor="street" className={styles.srOnly}>
-                  Adresse
-                </label>
-                <input
-                  id="street"
-                  name="street"
-                  type="text"
-                  defaultValue={address?.street ?? ''}
-                  placeholder="Adresse"
-                  className={styles.form__input}
-                  autoComplete="street-address"
-                />
-              </div>
+              <Input
+                label="Adresse"
+                id="street"
+                name="street"
+                type="text"
+                defaultValue={address?.street ?? ''}
+                placeholder="Adresse"
+                autoComplete="street-address"
+              />
 
-              <div className={styles.form__field}>
-                <label htmlFor="zipCode" className={styles.srOnly}>
-                  Code postal
-                </label>
-                <input
-                  id="zipCode"
-                  name="zipCode"
-                  type="text"
-                  defaultValue={address?.zipCode ?? ''}
-                  placeholder="Code postal"
-                  className={styles.form__input}
-                  autoComplete="postal-code"
-                />
-              </div>
+              <Input
+                label="Code postal"
+                id="zipCode"
+                name="zipCode"
+                type="text"
+                defaultValue={address?.zipCode ?? ''}
+                placeholder="Code postal"
+                autoComplete="postal-code"
+              />
 
-              <div className={styles.form__field}>
-                <label htmlFor="city" className={styles.srOnly}>
-                  Ville
-                </label>
-                <input
-                  id="city"
-                  name="city"
-                  type="text"
-                  defaultValue={address?.city ?? ''}
-                  placeholder="Ville"
-                  className={styles.form__input}
-                  autoComplete="address-level2"
-                />
-              </div>
+              <Input
+                label="Ville"
+                id="city"
+                name="city"
+                type="text"
+                defaultValue={address?.city ?? ''}
+                placeholder="Ville"
+                autoComplete="address-level2"
+              />
 
-              <div className={styles.form__field}>
-                <label htmlFor="country" className={styles.srOnly}>
-                  Pays
-                </label>
-                <input
-                  id="country"
-                  name="country"
-                  type="text"
-                  defaultValue={address?.country ?? ''}
-                  placeholder="Pays"
-                  className={styles.form__input}
-                  autoComplete="country-name"
-                />
-              </div>
+              <Input
+                label="Pays"
+                id="country"
+                name="country"
+                type="text"
+                defaultValue={address?.country ?? ''}
+                placeholder="Pays"
+                autoComplete="country-name"
+              />
             </form>
 
             {(formState.formError || formState.successMessage || deleteAccountState.formError) && (
@@ -298,15 +258,16 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                 action={deleteAccountFormAction}
                 className={styles.deleteAccountForm}
               >
-                <button
+                <Button
                   type="button"
-                  className={`${styles.actionButton} ${styles['actionButton--danger']}`}
+                  variant="secondary"
+                  size="md"
                   aria-haspopup="dialog"
                   aria-expanded={isDeleteAccountModalOpen}
                   onClick={() => setIsDeleteAccountModalOpen(true)}
                 >
                   Supprimer
-                </button>
+                </Button>
 
                 {isDeleteAccountModalOpen ? (
                   <div
@@ -329,13 +290,14 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                       </p>
 
                       <div className={styles.modal__actions}>
-                        <button
+                        <Button
                           type="button"
-                          className={`${styles.modal__button} ${styles['modal__button--ghost']}`}
+                          variant="soft"
+                          size="sm"
                           onClick={() => setIsDeleteAccountModalOpen(false)}
                         >
                           Annuler
-                        </button>
+                        </Button>
                         <ConfirmDeleteAccountButton />
                       </div>
                     </div>
@@ -343,14 +305,15 @@ export default function ProfilPage({ activeTab, profileData }: ProfilPageProps) 
                 ) : null}
               </form>
 
-              <button
+              <Button
                 type="submit"
                 form="profile-form"
-                className={`${styles.actionButton} ${styles['actionButton--primary']}`}
-                disabled={isProfilePending}
+                variant="primary"
+                size="md"
+                isLoading={isProfilePending}
               >
-                {isProfilePending ? 'Validation...' : 'Valider'}
-              </button>
+                Valider
+              </Button>
             </div>
           </div>
         ) : (

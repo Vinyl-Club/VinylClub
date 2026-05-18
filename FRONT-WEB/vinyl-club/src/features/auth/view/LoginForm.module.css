@@ -19,6 +19,7 @@
 }
 
 .login-form__form {
+  width: var(--form-width-default);
   padding-top: 30px;
   display: flex;
   flex-direction: column;

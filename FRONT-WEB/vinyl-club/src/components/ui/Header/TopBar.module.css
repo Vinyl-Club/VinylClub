@@ -12,7 +12,7 @@
 }
 
 .topbar__logo-box {
-  height: 52px;
+  height: 66px;
   aspect-ratio: 826 / 571;
   position: relative;
   overflow: hidden;
@@ -111,7 +111,7 @@
   position: absolute;
   top: 100%;
   right: -24px;
-  margin-top: 25px;
+  margin-top: 24px;
   margin-left: 0;
   padding: 14px;
   list-style: none;
@@ -216,7 +216,7 @@
   }
 
   .topbar__logo-box {
-    height: 46px;
+    height: 58px;
   }
 
   .topbar__greeting {
