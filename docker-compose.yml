@@ -18,15 +18,14 @@ services:
       - "8083"
     environment:
       - JWT_SECRET=${JWT_SECRET}
-      - INTERNAL_SERVICE_SECRET=${vinyl-internal-secret-CHANGE-ME}
+      - INTERNAL_SERVICE_SECRET=${INTERNAL_SERVICE_SECRET}
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
       - EUREKA_INSTANCE_HOSTNAME=${AUTH_EUREKA_INSTANCE_HOSTMANE}
     depends_on:
       - vinyl-discovery-service
-      - vinyl-user-service
-      - postgres-db
+  
     networks:
       - vinyl-network
 
