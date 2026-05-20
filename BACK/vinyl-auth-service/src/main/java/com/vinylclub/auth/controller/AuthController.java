@@ -165,4 +165,13 @@ public class AuthController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    /**
+     * HEALTH CHECK - Pour Render
+     * GET /auth/health
+     */
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok("UP");
+    }
 }
