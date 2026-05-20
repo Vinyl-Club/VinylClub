@@ -17,12 +17,12 @@ services:
     expose:
       - "8083"
     environment:
-      - JWT_SECRET=myVinylClubSecretKeyThatShouldBeLongEnoughForSecurity123456789
-      - INTERNAL_SERVICE_SECRET=vinyl-internal-secret-CHANGE-ME
+      - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_SERVICE_SECRET=${vinyl-internal-secret-CHANGE-ME}
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
-      - EUREKA_INSTANCE_HOSTNAME=vinyl-auth-service
+      - EUREKA_INSTANCE_HOSTNAME=${AUTH_EUREKA_INSTANCE_HOSTMANE}
     depends_on:
       - vinyl-discovery-service
       - vinyl-user-service
@@ -82,9 +82,13 @@ services:
       - "8087"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://discovery-service:8761/eureka/
+      - SPRING_DATASOURCE_URL=${AD_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${AD_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${AD_DATASOURCE_PASSWORD}
+      - DB_SCHEMA=${AD_DB_SCHEMA}
+      - EUREKA_SERVER_URL=${EUREKA_SERVER_URL}
       - EUREKA_INSTANCE_PREFER_IP_ADDRESS=true
-      - EUREKA_INSTANCE_HOSTNAME=vinyl-ad-service
+      - EUREKA_INSTANCE_HOSTNAME=${AD_EUREKA_INSTANCE_HOSTNAME}
     depends_on:
       - vinyl-discovery-service
       - postgres-db
