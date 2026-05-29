@@ -1,16 +1,15 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
+import Button from '@/components/ui/Button/Button';
 import styles from './FilterBar.module.css';
 
 type OpenMenu = null | 'genre' | 'etat' | 'prix' | 'format';
 
 export default function FilterBar() {
-  const genres = ['Classique', 'Rock', 'Jazz', 'Rap', 'Électro', 'Pop'];
-  const etats = ['Neuf', 'Très bon état', 'Bon état', 'Satisfaisant', 'Mauvais état'];
-  const formats = [
-    '33 RPM',
-    '45 RPM',
-  ];
+  const genres = ['Classique', 'Rock', 'Jazz', 'Rap', 'Electro', 'Pop'];
+  const etats = ['Neuf', 'Tres bon etat', 'Bon etat', 'Satisfaisant', 'Mauvais etat'];
+  const formats = ['33 RPM', '45 RPM'];
 
   const [open, setOpen] = useState<OpenMenu>(null);
   const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
@@ -22,7 +21,6 @@ export default function FilterBar() {
   const [maxPrice, setMaxPrice] = useState('');
 
   const menuRef = useRef<HTMLDivElement | null>(null);
-
   const genreBtnRef = useRef<HTMLButtonElement | null>(null);
   const etatBtnRef = useRef<HTMLButtonElement | null>(null);
   const prixBtnRef = useRef<HTMLButtonElement | null>(null);
@@ -33,31 +31,37 @@ export default function FilterBar() {
 
     if (nextOpen) {
       const ref =
-        which === 'genre' ? genreBtnRef :
-        which === 'etat' ? etatBtnRef :
-        which === 'prix' ? prixBtnRef :
-        formatBtnRef;
+        which === 'genre'
+          ? genreBtnRef
+          : which === 'etat'
+            ? etatBtnRef
+            : which === 'prix'
+              ? prixBtnRef
+              : formatBtnRef;
 
-      const r = ref.current?.getBoundingClientRect();
-      if (r) setMenuPos({ top: r.bottom + 6, left: r.left });
+      const rect = ref.current?.getBoundingClientRect();
+      if (rect) {
+        setMenuPos({ top: rect.bottom + 6, left: rect.left });
+      }
     }
 
     setOpen(nextOpen);
   }
 
-  // Fermer si clic en dehors (menu + boutons)
   useEffect(() => {
-    function onPointerDown(e: MouseEvent) {
-      const t = e.target as Node;
+    function onPointerDown(event: MouseEvent) {
+      const target = event.target as Node;
 
-      const clickedMenu = !!menuRef.current && menuRef.current.contains(t);
+      const clickedMenu = !!menuRef.current && menuRef.current.contains(target);
       const clickedButton =
-        !!genreBtnRef.current?.contains(t) ||
-        !!etatBtnRef.current?.contains(t) ||
-        !!prixBtnRef.current?.contains(t) ||
-        !!formatBtnRef.current?.contains(t);
+        !!genreBtnRef.current?.contains(target) ||
+        !!etatBtnRef.current?.contains(target) ||
+        !!prixBtnRef.current?.contains(target) ||
+        !!formatBtnRef.current?.contains(target);
 
-      if (!clickedMenu && !clickedButton) setOpen(null);
+      if (!clickedMenu && !clickedButton) {
+        setOpen(null);
+      }
     }
 
     document.addEventListener('pointerdown', onPointerDown);
@@ -67,9 +71,10 @@ export default function FilterBar() {
   return (
     <nav className={styles.nav} aria-label="Filtres">
       <ul className={styles.list}>
-        {/* GENRE */}
         <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="genre-btn">Genre</label>
+          <label className={styles.srOnly} htmlFor="genre-btn">
+            Genre
+          </label>
           <button
             id="genre-btn"
             ref={genreBtnRef}
@@ -91,31 +96,32 @@ export default function FilterBar() {
               style={{ top: menuPos.top, left: menuPos.left }}
             >
               <ul className={styles.menuList}>
-                {genres.map((g) => (
-                  <li key={g}>
+                {genres.map((item) => (
+                  <li key={item}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${genre === g ? styles.optionActive : ''}`}
-                      onClick={() => setGenre(g)}
+                      className={`${styles.optionBtn} ${genre === item ? styles.optionActive : ''}`}
+                      onClick={() => setGenre(item)}
                     >
-                      {g}
+                      {item}
                     </button>
                   </li>
                 ))}
               </ul>
 
               <div className={styles.actions}>
-                <button type="button" className={styles.applyBtn} onClick={() => setOpen(null)}>
-                  Afficher les résultats
-                </button>
+                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                  Afficher les resultats
+                </Button>
               </div>
             </div>
           )}
         </li>
 
-        {/* ÉTAT */}
         <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="etat-btn">État</label>
+          <label className={styles.srOnly} htmlFor="etat-btn">
+            Etat
+          </label>
           <button
             id="etat-btn"
             ref={etatBtnRef}
@@ -125,7 +131,7 @@ export default function FilterBar() {
             aria-expanded={open === 'etat'}
             onClick={() => toggleMenu('etat')}
           >
-            {etat || 'État'}
+            {etat || 'Etat'}
           </button>
 
           {open === 'etat' && (
@@ -133,35 +139,36 @@ export default function FilterBar() {
               ref={menuRef}
               className={styles.menu}
               role="dialog"
-              aria-label="Choisir un état"
+              aria-label="Choisir un etat"
               style={{ top: menuPos.top, left: menuPos.left }}
             >
               <ul className={styles.menuList}>
-                {etats.map((e) => (
-                  <li key={e}>
+                {etats.map((item) => (
+                  <li key={item}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${etat === e ? styles.optionActive : ''}`}
-                      onClick={() => setEtat(e)}
+                      className={`${styles.optionBtn} ${etat === item ? styles.optionActive : ''}`}
+                      onClick={() => setEtat(item)}
                     >
-                      {e}
+                      {item}
                     </button>
                   </li>
                 ))}
               </ul>
 
               <div className={styles.actions}>
-                <button type="button" className={styles.applyBtn} onClick={() => setOpen(null)}>
-                  Afficher les résultats
-                </button>
+                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                  Afficher les resultats
+                </Button>
               </div>
             </div>
           )}
         </li>
 
-        {/* PRIX */}
         <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="prix-btn">Prix</label>
+          <label className={styles.srOnly} htmlFor="prix-btn">
+            Prix
+          </label>
           <button
             id="prix-btn"
             ref={prixBtnRef}
@@ -191,35 +198,35 @@ export default function FilterBar() {
                   step="0.01"
                   placeholder="0,00"
                   value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
+                  onChange={(event) => setMinPrice(event.target.value)}
                 />
-                <span className={styles.euro}>€</span>
+                <span className={styles.euro}>EUR</span>
 
-                <span className={styles.priceLabel}>À</span>
+                <span className={styles.priceLabel}>A</span>
                 <input
                   className={styles.priceInput}
                   type="number"
                   min="0"
                   step="0.01"
-                  placeholder=""
                   value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
+                  onChange={(event) => setMaxPrice(event.target.value)}
                 />
-                <span className={styles.euro}>€</span>
+                <span className={styles.euro}>EUR</span>
               </div>
 
               <div className={styles.actions}>
-                <button type="button" className={styles.applyBtn} onClick={() => setOpen(null)}>
-                  Afficher les résultats
-                </button>
+                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                  Afficher les resultats
+                </Button>
               </div>
             </div>
           )}
         </li>
 
-        {/* FORMAT */}
         <li className={styles.dropdown}>
-          <label className={styles.srOnly} htmlFor="format-btn">Format</label>
+          <label className={styles.srOnly} htmlFor="format-btn">
+            Format
+          </label>
           <button
             id="format-btn"
             ref={formatBtnRef}
@@ -241,23 +248,23 @@ export default function FilterBar() {
               style={{ top: menuPos.top, left: menuPos.left }}
             >
               <ul className={styles.menuList}>
-                {formats.map((f) => (
-                  <li key={f}>
+                {formats.map((item) => (
+                  <li key={item}>
                     <button
                       type="button"
-                      className={`${styles.optionBtn} ${format === f ? styles.optionActive : ''}`}
-                      onClick={() => setFormat(f)}
+                      className={`${styles.optionBtn} ${format === item ? styles.optionActive : ''}`}
+                      onClick={() => setFormat(item)}
                     >
-                      {f}
+                      {item}
                     </button>
                   </li>
                 ))}
               </ul>
 
               <div className={styles.actions}>
-                <button type="button" className={styles.applyBtn} onClick={() => setOpen(null)}>
-                  Afficher les résultats
-                </button>
+                <Button type="button" variant="secondary" size="sm" onClick={() => setOpen(null)}>
+                  Afficher les resultats
+                </Button>
               </div>
             </div>
           )}

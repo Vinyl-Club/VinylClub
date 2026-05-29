@@ -1,5 +1,8 @@
 package com.vinylclub.ad.controller;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -48,17 +51,51 @@ public class AdController {
     @GetMapping
     public ResponseEntity<Page<AdListDTO>> getAds(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) String genre,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String format) {
 
-        Page<AdListDTO> ads = adService.getAllAds(page, size);
+        Page<AdListDTO> ads = adService.getAds(
+                page,
+                size,
+                q,
+                genre,
+                minPrice,
+                maxPrice,
+                state,
+                format);
         return ResponseEntity.ok(ads);
+    }
+
+    /**
+     * Authenticated user's ads.
+     * GET /api/ad/mine
+     */
+    @GetMapping("/mine")
+    public ResponseEntity<List<AdListDTO>> getCurrentUserAds(
+            @RequestHeader("X-User-Id") Long userId) {
+        return ResponseEntity.ok(adService.getAdsByUserId(userId));
+    }
+
+    /**
+     * Public list of ads matched by product ids.
+     * GET /api/ad/products?productIds=1&productIds=2
+     */
+    @GetMapping("/products")
+    public ResponseEntity<List<AdListDTO>> getAdsByProductIds(
+            @RequestParam List<Long> productIds) {
+        return ResponseEntity.ok(adService.getAdsByProductIds(productIds));
     }
 
     /**
      * Details of an announcement.
      * GET /api/ad/{id}
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<AdDetailsDTO> getAdById(@PathVariable Long id) {
         AdDetailsDTO adDetails = adService.getAdById(id);
         return ResponseEntity.ok(adDetails);
@@ -83,7 +120,7 @@ public class AdController {
      * Updated product linked to an ad (authenticated user + owner).
      * PUT /api/ad/{id}
      */
-    @PutMapping("/{id}")
+    @PutMapping("/{id:\\d+}")
     public ResponseEntity<AdDetailsDTO> updateAd(
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long id,
@@ -97,7 +134,7 @@ public class AdController {
      * Deletion of an ad (authenticated user + owner).
      * DELETE /api/ad/{id}
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ResponseEntity<Void> deleteAdById(
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable Long id) {

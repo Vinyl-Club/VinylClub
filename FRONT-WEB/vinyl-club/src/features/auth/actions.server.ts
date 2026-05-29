@@ -15,12 +15,19 @@ export async function loginAction(prevState: State, formData: FormData): Promise
     const email = String(formData.get('email') ?? '');
     const password = String(formData.get('password') ?? '');
 
-    const response = await fetch(API.auth, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        cache: 'no-store',
-    });
+    let response: Response;
+
+    try {
+        response = await fetch(API.auth, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+            cache: 'no-store',
+        });
+    } catch (error) {
+        console.error('Login request failed:', error);
+        return { fieldErrors: {}, formError: 'Connexion impossible : backend indisponible.' };
+    }
 
     if (!response.ok) {
         const raw = await response.text();
@@ -45,7 +52,8 @@ export async function loginAction(prevState: State, formData: FormData): Promise
         return {fieldErrors:{}, formError: 'Réponse backend invalide (token manquant)' };
     }
 
-    await setAuthCookie(accessToken, refreshToken);
+
+    await setAuthCookie(accessToken, refreshToken, data.user);
 
     redirect('/catalog');
 }
@@ -56,6 +64,7 @@ export async function registerAction(prevState: State, formData: FormData): Prom
     const confirmPassword = String(formData.get('confirmPassword') ?? ``);
     const lastName = String(formData.get('lastName') ?? ``);
     const firstName = String(formData.get('firstName') ?? ``);
+    const city = String(formData.get('city') ?? ``);
     
     if(password !== confirmPassword) {
         return {
@@ -64,12 +73,19 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         }
     }
 
-    const response = await fetch(API.register, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email, password, lastName, firstName }),
-        cache: 'no-store',
-    });
+    let response: Response;
+
+    try {
+        response = await fetch(API.register, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({email, password, lastName, firstName, city}),
+            cache: 'no-store',
+        });
+    } catch (error) {
+        console.error('Register request failed:', error);
+        return { fieldErrors: {}, formError: 'Inscription impossible : backend indisponible.' };
+    }
 
     if (!response.ok) {
         const raw = await response.text();
@@ -95,7 +111,7 @@ export async function registerAction(prevState: State, formData: FormData): Prom
         return {fieldErrors: {}, formError: 'Token manquant'}
     }
 
-    await setAuthCookie(accessToken, refreshToken);
+    await setAuthCookie(accessToken, refreshToken, data.user);
 
     redirect('/catalog');
 }

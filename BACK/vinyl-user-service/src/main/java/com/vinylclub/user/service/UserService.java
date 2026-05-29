@@ -81,6 +81,9 @@ public class UserService {
         existingUser.setLastName(userDetails.getLastName());
         existingUser.setEmail(userDetails.getEmail());
         existingUser.setPhone(userDetails.getPhone());
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(userDetails.getPassword()));
+        }
         existingUser.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         
         return userRepository.save(existingUser);

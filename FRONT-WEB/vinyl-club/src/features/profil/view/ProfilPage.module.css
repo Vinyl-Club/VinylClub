@@ -1,0 +1,365 @@
+.profile {
+  width: 100vw;
+  margin: -40px 0 -40px calc(50% - 50vw);
+  padding: 18px 0 76px;
+  background: #f6ebdd;
+  font-family: var(--font-raleway), sans-serif;
+}
+
+.profile__inner {
+  width: min(1180px, calc(100vw - 72px));
+  margin: 0 auto;
+}
+
+.profile__title {
+  margin: 26px 0 40px;
+  color: var(--color-text-accent);
+  font-size: clamp(2.2rem, 3.4vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.08;
+  text-align: center;
+}
+
+.tabs {
+  width: min(560px, 100%);
+  margin: 0 auto 40px;
+  padding: 0 18px 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+  align-items: end;
+  border-bottom: 1px solid rgba(17, 17, 17, 0.16);
+}
+
+.tabs__link {
+  color: rgba(17, 17, 17, 0.72);
+  text-decoration: none;
+  text-align: center;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  transition: color 0.2s ease;
+}
+
+.tabs__link:hover,
+.tabs__link:focus-visible {
+  color: var(--color-text-primary);
+}
+
+.tabs__link:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.tabs__link--active {
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+.panel {
+  width: var(--form-width-default);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.adsPanel {
+  width: min(730px, 100%);
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form__hint {
+  margin: 0;
+  color: rgba(17, 17, 17, 0.6);
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.feedback {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feedback__error,
+.feedback__success {
+  margin: 0;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.feedback__error {
+  color: #b13232;
+}
+
+.feedback__success {
+  color: #35645f;
+}
+
+.actions {
+  margin: 34px auto 0;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.deleteAccountForm {
+  position: relative;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(18, 18, 18, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.modal__panel {
+  width: min(420px, 100%);
+  padding: 28px 24px 22px;
+  background: #fff9f1;
+  border: 1px solid rgba(156, 88, 30, 0.18);
+  box-shadow: 0 18px 40px rgba(32, 21, 10, 0.26);
+}
+
+.modal__title {
+  margin: 0 0 12px;
+  color: var(--color-text-accent);
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.modal__text {
+  margin: 0;
+  color: rgba(17, 17, 17, 0.84);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.modal__actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.adsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.adsPanel__empty {
+  margin: 18px 0 0;
+  color: rgba(17, 17, 17, 0.72);
+  text-align: center;
+  font-size: 1rem;
+}
+
+.listingCard {
+  composes: itemCard from '../../shared/ListingCardShared.module.css';
+  width: 100%;
+  margin: 0;
+}
+
+.listingCard__media {
+  composes: itemCardMedia from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__coverStack {
+  composes: itemCardCoverStack from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__image {
+  composes: itemCardImage from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__fallback {
+  composes: itemCardFallback from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__vinyl {
+  composes: itemCardVinyl from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__content {
+  composes: itemCardContent from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__header {
+  composes: itemCardHeader from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__details {
+  composes: itemCardDetails from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__title {
+  composes: itemCardTitle from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__metaGroup {
+  composes: itemCardMetaGroup from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__meta {
+  composes: itemCardMeta from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__aside {
+  composes: itemCardAside from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__price {
+  composes: itemCardPrice from '../../shared/ListingCardShared.module.css';
+}
+
+.listingCard__deleteForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+  margin-top: auto;
+}
+
+.listingCard__error {
+  margin: 0;
+  max-width: 180px;
+  color: #b13232;
+  font-size: 0.72rem;
+  text-align: right;
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .profile__inner {
+    width: calc(100vw - 36px);
+  }
+
+  .adsPanel {
+    width: min(730px, 100%);
+  }
+}
+
+@media (max-width: 720px) {
+  .profile {
+    padding: 10px 0 56px;
+  }
+
+  .profile__inner {
+    width: calc(100vw - 28px);
+  }
+
+  .tabs {
+    width: min(440px, 100%);
+    margin-bottom: 22px;
+    padding-inline: 0;
+  }
+
+  .listingCard {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 16px;
+    padding: 18px 16px;
+  }
+
+  .listingCard__content {
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .listingCard__header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 8px;
+  }
+
+  .listingCard__aside {
+    align-items: center;
+  }
+
+  .listingCard__deleteForm {
+    align-items: center;
+  }
+
+  .listingCard__error {
+    max-width: none;
+    text-align: center;
+  }
+
+  .listingCard__details {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 560px) {
+  .profile {
+    margin-top: -24px;
+    margin-bottom: -24px;
+    padding: 0 0 42px;
+  }
+
+  .profile__inner {
+    width: calc(100vw - 22px);
+  }
+
+  .profile__title {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    font-size: clamp(2rem, 7vw, 2.3rem);
+  }
+
+  .tabs {
+    width: 100%;
+    margin-bottom: 30px;
+    padding-inline: 10px;
+    column-gap: 16px;
+  }
+
+  .tabs__link {
+    font-size: 1.05rem;
+  }
+
+  .actions {
+    margin: 34px auto 0;
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .modal {
+    padding: 18px;
+  }
+
+  .modal__panel {
+    padding: 24px 18px 18px;
+  }
+
+  .modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .modal__button {
+    width: 100%;
+  }
+}

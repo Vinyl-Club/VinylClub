@@ -1,0 +1,232 @@
+.listing-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 20px 50px;
+  gap: 20px;
+}
+
+.listing-details__title {
+  color: #9c581e;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  text-align: center;
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tight);
+  margin-top: 0;
+}
+
+.listing-details__card {
+  width: min(1100px, 100%);
+  background-color: white;
+  padding: 32px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.listing-details__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.listing-details__gallery {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.listing-details__main-image {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.listing-details__thumbnail-list {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.listing-details__thumbnail {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.listing-details__thumbnail:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.listing-details__thumbnail--active {
+  border: 3px solid #8aa39f;
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.listing-details__image-placeholder {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 1 / 1;
+  background: #ececec;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777;
+}
+
+.listing-details__info {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.listing-details__summary,
+.listing-details__details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.listing-details__details {
+  padding-top: 16px;
+  border-top: 1px solid #d48541;
+}
+
+.listing-details__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.listing-details__seller-name,
+.listing-details__city,
+.listing-details__state,
+.listing-details__date,
+.listing-details__artist-album,
+.listing-details__category,
+.listing-details__format,
+.listing-details__description-label,
+.listing-details__description-text {
+  margin: 0;
+}
+
+.listing-details__seller-name {
+  font-size: 1.12rem;
+  font-weight: var(--weight-semibold);
+  color: #111;
+}
+
+.listing-details__city,
+.listing-details__state,
+.listing-details__date,
+.listing-details__category,
+.listing-details__format {
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  color: #444;
+}
+
+.listing-details__price {
+  font-size: 1.55rem;
+  font-weight: var(--weight-bold);
+  color: #9c581e;
+  line-height: 1;
+}
+
+.listing-details__artist-album {
+  font-size: 1.14rem;
+  font-weight: var(--weight-semibold);
+  color: #111;
+}
+
+.listing-details__description {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 14px;
+  background-color: #faf7f2;
+  border-radius: 12px;
+}
+
+.listing-details__description-label {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: #9c581e;
+}
+
+.listing-details__description-text {
+  font-size: var(--text-base);
+  line-height: var(--leading-relaxed);
+  color: #444;
+}
+
+.listing-details__actions {
+  width: min(1100px, 100%);
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.listing-details__favorite-button {
+  min-width: 244px;
+}
+
+@media (max-width: 900px) {
+  .listing-details__content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .listing-details__card {
+    padding: 24px;
+  }
+
+  .listing-details__title {
+    font-size: var(--text-2xl);
+  }
+}
+
+@media (max-width: 640px) {
+  .listing-details {
+    padding: 20px 14px 40px;
+  }
+
+  .listing-details__card {
+    padding: 18px;
+  }
+
+  .listing-details__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .listing-details__price {
+    font-size: 1.35rem;
+  }
+
+  .listing-details__actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .listing-details__favorite-button {
+    width: min(320px, 100%);
+  }
+}

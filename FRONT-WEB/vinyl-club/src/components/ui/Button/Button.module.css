@@ -1,59 +1,109 @@
-.button{
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
   border: none;
   cursor: pointer;
-
-  /* look "pilule" */
-  border-radius: 999px;
-
-  /* taille proche de ta maquette */
-  padding: 12px 34px;
-  min-width: 180px;
-
-  font-size: 1.05rem;
-  font-weight: 500;
-  line-height: 1;
-
-  box-shadow: 0 6px 12px rgba(0,0,0,0.18);
-  transition: box-shadow .2s ease, filter .2s ease;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-raleway), sans-serif;
+  font-weight: var(--weight-semibold);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  text-align: center;
+  box-shadow: var(--shadow-button);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
-.button:focus-visible{
-  outline: 3px solid #111;
+.button:focus-visible {
+  outline: 3px solid var(--color-focus-ring);
   outline-offset: 3px;
 }
 
-.button:disabled{
+.button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   box-shadow: none;
+  transform: none;
 }
 
-/* Variants */
-.primary{
-  background: #8AA39F;
-  color: #111;
+.button--md {
+  min-width: 168px;
+  min-height: 44px;
+  padding: 11px 30px;
+  font-size: var(--text-base);
 }
 
-.primary:hover{
-  background-color: #578079;
-  color: white;
+.button--sm {
+  min-width: 124px;
+  min-height: 38px;
+  padding: 9px 16px;
+  font-size: var(--text-sm);
 }
 
-.secondary{
-  background: #D48541;
-  color: #111;
+.button--xs {
+  width: 92px;
+  min-width: 92px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  border-radius: var(--radius-pill);
+  font-size: 0.72rem;
+  font-weight: var(--weight-semibold);
+  box-shadow: none;
 }
 
-.secondary:hover{
-  background-color: #9C581E;
-  color: white;
+.button--primary {
+  background: var(--color-surface-brand);
+  color: var(--color-text-primary);
 }
 
-.fullWidth{
+.button--primary:hover:not(:disabled),
+.button--primary:focus-visible:not(:disabled) {
+  background: var(--color-surface-brand-hover);
+  color: var(--color-text-inverse);
+  transform: translateY(-1px);
+}
+
+.button--secondary {
+  background: var(--color-surface-accent);
+  color: var(--color-text-primary);
+}
+
+.button--secondary:hover:not(:disabled),
+.button--secondary:focus-visible:not(:disabled) {
+  background: var(--color-surface-accent-hover);
+  color: var(--color-text-inverse);
+  transform: translateY(-1px);
+}
+
+.button--soft {
+  background: var(--color-surface-soft);
+  color: var(--color-text-primary);
+}
+
+.button--soft:hover:not(:disabled),
+.button--soft:focus-visible:not(:disabled) {
+  background: var(--color-surface-soft-hover);
+  box-shadow: var(--shadow-soft-hover);
+  transform: translateY(-1px);
+}
+
+.button--fullWidth {
   width: 100%;
-  min-width: 0; 
+  min-width: 0;
 }
 
-.loading{
+.button--loading {
   pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .button--secondary {
+    font-size: var(--text-xs);
+  }
 }

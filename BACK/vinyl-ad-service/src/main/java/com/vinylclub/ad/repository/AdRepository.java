@@ -1,5 +1,6 @@
 package com.vinylclub.ad.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -18,4 +19,8 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
 
     // search for a product by its id
     Optional<Ad> findAdById(@Param("id") Long id);
+
+    List<Ad> findAllByUseridOrderByIdDesc(Long userid);
+
+    List<Ad> findAllByProductidIn(List<Long> productIds);
 }

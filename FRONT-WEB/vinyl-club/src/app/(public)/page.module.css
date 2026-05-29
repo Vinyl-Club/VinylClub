@@ -1,0 +1,28 @@
+.page {
+  width: min(1351px, calc(100vw - 90px));
+  margin-left: calc(50% - 50vw + 45px);
+  padding: 38px 0 12px;
+  font-family: var(--font-raleway), sans-serif;
+}
+
+.title {
+  margin: 0 0 71px;
+  color: #9c581e;
+  font-size: var(--text-3xl);
+  font-weight: var(--weight-bold);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-tight);
+}
+
+@media (max-width: 900px) {
+  .page {
+    width: calc(100vw - 32px);
+    margin-left: calc(50% - 50vw + 16px);
+    padding-top: 12px;
+  }
+
+  .title {
+    margin-bottom: 36px;
+    font-size: var(--text-2xl);
+  }
+}

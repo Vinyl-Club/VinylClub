@@ -1,10 +1,17 @@
 package com.vinylclub.ad.service;
 
 import java.math.BigDecimal;
+import java.text.Normalizer;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -55,6 +62,43 @@ public class AdService {
      * @param size
      * @return
      */
+    public Page<AdListDTO> getAds(
+            int page,
+            int size,
+            String query,
+            String genre,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            String state,
+            String format
+    ) {
+        if (!hasFilters(query, genre, minPrice, maxPrice, state, format)) {
+            return getAllAds(page, size);
+        }
+
+        Pageable pageable = PageRequest.of(page, size);
+        List<AdListDTO> filteredAds = adRepository.findAll().stream()
+                .map(this::toFilterableAd)
+                .filter(filterable -> matchesFilters(
+                        filterable,
+                        query,
+                        genre,
+                        minPrice,
+                        maxPrice,
+                        state,
+                        format))
+                .map(FilterableAd::item)
+                .toList();
+
+        int start = Math.min((int) pageable.getOffset(), filteredAds.size());
+        int end = Math.min(start + pageable.getPageSize(), filteredAds.size());
+
+        return new PageImpl<>(
+                filteredAds.subList(start, end),
+                pageable,
+                filteredAds.size());
+    }
+
     public Page<AdListDTO> getAllAds(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Ad> adsPage = adRepository.findAll(pageable);
@@ -63,38 +107,153 @@ public class AdService {
             return Page.empty(pageable);
         }
 
-        return adsPage.map(ad -> {
-
-            // Home = tolerant
-            ProductSummaryDTO product = external.callExternalOrNull(
-                    () -> productClient.getProductById(ad.getProductId()));
-
-            UserSummaryDTO user = external.callExternalOrNull(
-                    () -> userClient.getUserById(ad.getUserId()));
-
-            String title = (product != null) ? product.getTitle() : "[Produit indisponible]";
-            String artistName = (product != null && product.getArtist() != null) ? product.getArtist().getName() : null;
-            String categoryName = (product != null && product.getCategory() != null) ? product.getCategory().getName() : null;
-            BigDecimal price = (product != null) ? product.getPrice() : null;
-
-            String city = external.callExternalOrNull(() -> userClient.getMainCityByUserId(ad.getUserId()));
-
-            String imageUrl = null;
-            if (product != null && product.getImages() != null && !product.getImages().isEmpty()) {
-                imageUrl = product.getImages().get(0).getImageUrl();
-            }
-
-            return new AdListDTO(
-                    ad.getId(),
-                    title,
-                    artistName,
-                    categoryName,
-                    price,
-                    city,
-                    imageUrl
-            );
-        });
+        return adsPage.map(ad -> toFilterableAd(ad).item());
     }
+
+    public List<AdListDTO> getAdsByUserId(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("Il manque l'id utilisateur");
+        }
+
+        return adRepository.findAllByUseridOrderByIdDesc(userId).stream()
+                .map(ad -> toFilterableAd(ad).item())
+                .toList();
+    }
+
+    public List<AdListDTO> getAdsByProductIds(List<Long> productIds) {
+        if (productIds == null || productIds.isEmpty()) {
+            return List.of();
+        }
+
+        Map<Long, Integer> orderByProductId = IntStream.range(0, productIds.size())
+                .boxed()
+                .collect(Collectors.toMap(productIds::get, index -> index, (first, ignored) -> first));
+
+        return adRepository.findAllByProductidIn(productIds).stream()
+                .map(ad -> toFilterableAd(ad).item())
+                .sorted(Comparator.comparingInt(item ->
+                        orderByProductId.getOrDefault(item.getProductId(), Integer.MAX_VALUE)))
+                .toList();
+    }
+
+    private FilterableAd toFilterableAd(Ad ad) {
+        // Home/search = tolerant: an external service issue should not break the whole listing.
+        ProductSummaryDTO product = external.callExternalOrNull(
+                () -> productClient.getProductById(ad.getProductId()));
+
+        String title = (product != null) ? product.getTitle() : "[Produit indisponible]";
+        String artistName = (product != null && product.getArtist() != null) ? product.getArtist().getName() : null;
+        String categoryName = (product != null && product.getCategory() != null) ? product.getCategory().getName() : null;
+        BigDecimal price = (product != null) ? product.getPrice() : null;
+
+        String city = external.callExternalOrNull(() -> userClient.getMainCityByUserId(ad.getUserId()));
+
+        String imageUrl = null;
+        if (product != null && product.getImages() != null && !product.getImages().isEmpty()) {
+            imageUrl = product.getImages().get(0).getImageUrl();
+        }
+
+        AdListDTO item = new AdListDTO(
+                ad.getId(),
+                ad.getProductId(),
+                title,
+                artistName,
+                categoryName,
+                price,
+                city,
+                imageUrl
+        );
+
+        return new FilterableAd(item, product);
+    }
+
+    private boolean hasFilters(
+            String query,
+            String genre,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            String state,
+            String format
+    ) {
+        return hasText(query)
+                || hasText(genre)
+                || minPrice != null
+                || maxPrice != null
+                || hasText(state)
+                || hasText(format);
+    }
+
+    private boolean matchesFilters(
+            FilterableAd filterable,
+            String query,
+            String genre,
+            BigDecimal minPrice,
+            BigDecimal maxPrice,
+            String state,
+            String format
+    ) {
+        AdListDTO item = filterable.item();
+        ProductSummaryDTO product = filterable.product();
+
+        if (hasText(query) && !matchesSearch(item, query)) {
+            return false;
+        }
+
+        if (hasText(genre) && !equalsNormalized(item.getCategoryName(), genre)) {
+            return false;
+        }
+
+        if (minPrice != null && (item.getPrice() == null || item.getPrice().compareTo(minPrice) < 0)) {
+            return false;
+        }
+
+        if (maxPrice != null && (item.getPrice() == null || item.getPrice().compareTo(maxPrice) > 0)) {
+            return false;
+        }
+
+        if (hasText(state) && (product == null || !matchesState(product.getState(), state))) {
+            return false;
+        }
+
+        return !hasText(format) || (product != null && equalsNormalized(product.getFormat(), format));
+    }
+
+    private boolean matchesSearch(AdListDTO item, String query) {
+        return containsIgnoreCase(item.getTitle(), query)
+                || containsIgnoreCase(item.getArtistName(), query)
+                || containsIgnoreCase(item.getCategoryName(), query)
+                || containsIgnoreCase(item.getCity(), query);
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
+    }
+
+    private boolean equalsNormalized(String value, String expected) {
+        return value != null && expected != null && normalizeText(value).equals(normalizeText(expected));
+    }
+
+    private boolean containsIgnoreCase(String value, String query) {
+        return value != null
+                && query != null
+                && normalizeText(value).contains(normalizeText(query));
+    }
+
+    private boolean matchesState(String productState, String expectedState) {
+        return normalizeState(productState).equals(normalizeState(expectedState));
+    }
+
+    private String normalizeState(String value) {
+        return normalizeText(value).replace("mauvaise_etat", "mauvais_etat");
+    }
+
+    private String normalizeText(String value) {
+        String withoutAccents = Normalizer.normalize(value.trim(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+        return withoutAccents.toLowerCase(Locale.ROOT);
+    }
+
+    private record FilterableAd(AdListDTO item, ProductSummaryDTO product) {}
 
     /**
      * Retrieve an ad by its id (details)

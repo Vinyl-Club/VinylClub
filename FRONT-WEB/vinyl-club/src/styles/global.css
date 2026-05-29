@@ -1,3 +1,11 @@
+@import './tokens.css';
+
+:root {
+  --font-bebas: "Impact", "Arial Narrow Bold", "Franklin Gothic Medium", sans-serif;
+  --font-anton: "Arial Black", "Impact", "Franklin Gothic Heavy", sans-serif;
+  --font-raleway: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
 /* 0) Base safe */
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -6,7 +14,37 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #F6EBDD; /* ton beige */
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
+}
+
+body {
+  font-family: var(--font-raleway), sans-serif;
+  font-size: var(--text-base);
+  line-height: var(--leading-base);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: var(--font-raleway), sans-serif;
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+}
+
+p, li, input, textarea, select, button {
+  font: inherit;
+}
+
+input, textarea, select, button {
+  font-family: inherit;
+}
+
+::placeholder {
+  color: var(--color-text-placeholder);
 }
 
 /* 2) Wrapper principal = colonne qui remplit l’écran */
@@ -24,6 +62,11 @@ html, body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 40px 20px;   
+}
+
+.page-main--catalog {
+  max-width: none;
+  padding: 0;
 }
 
 /* 4) S’assurer que header/main/footer s’étirent sur la largeur */
