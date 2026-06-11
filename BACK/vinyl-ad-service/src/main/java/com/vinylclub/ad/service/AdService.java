@@ -57,10 +57,9 @@ public class AdService {
     }
 
     /**
-     * Retrieve all ads with pagination
-     * @param page
-     * @param size
-     * @return
+     * Récupère la liste paginée des annonces du catalogue.
+     * Permet également d'appliquer les filtres de recherche
+     * (texte, genre, prix, état et format).
      */
     public Page<AdListDTO> getAds(
             int page,
@@ -99,6 +98,11 @@ public class AdService {
                 filteredAds.size());
     }
 
+    /**
+     * Récupère l'ensemble des annonces sans filtre.
+     * Utilisé pour l'affichage du catalogue lorsque
+     * aucun critère de recherche n'est renseigné.
+     */
     public Page<AdListDTO> getAllAds(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Ad> adsPage = adRepository.findAll(pageable);
@@ -110,6 +114,10 @@ public class AdService {
         return adsPage.map(ad -> toFilterableAd(ad).item());
     }
 
+    /**
+     * Récupère toutes les annonces publiées par un utilisateur.
+     * Utilisé pour l'affichage de l'espace "Mes annonces".
+     */
     public List<AdListDTO> getAdsByUserId(Long userId) {
         if (userId == null) {
             throw new IllegalArgumentException("Il manque l'id utilisateur");
@@ -120,6 +128,11 @@ public class AdService {
                 .toList();
     }
 
+    /**
+     * Récupère une liste d'annonces à partir d'une liste
+     * d'identifiants produits.
+     * Utilisé notamment pour l'affichage des favoris.
+     */
     public List<AdListDTO> getAdsByProductIds(List<Long> productIds) {
         if (productIds == null || productIds.isEmpty()) {
             return List.of();
@@ -136,6 +149,12 @@ public class AdService {
                 .toList();
     }
 
+    /**
+     * Construit un DTO d'affichage d'annonce à partir
+     * d'une entité Ad en enrichissant les données
+     * avec les informations provenant des services
+     * Catalog et User.
+     */
     private FilterableAd toFilterableAd(Ad ad) {
         // Home/search = tolerant: an external service issue should not break the whole listing.
         ProductSummaryDTO product = external.callExternalOrNull(
@@ -167,6 +186,10 @@ public class AdService {
         return new FilterableAd(item, product);
     }
 
+    /**
+     * Vérifie si au moins un filtre de recherche
+     * a été renseigné par l'utilisateur.
+     */
     private boolean hasFilters(
             String query,
             String genre,
@@ -183,6 +206,10 @@ public class AdService {
                 || hasText(format);
     }
 
+   /**
+     * Vérifie qu'une annonce correspond aux critères
+     * de recherche sélectionnés.
+     */
     private boolean matchesFilters(
             FilterableAd filterable,
             String query,
@@ -218,6 +245,11 @@ public class AdService {
         return !hasText(format) || (product != null && equalsNormalized(product.getFormat(), format));
     }
 
+    /**
+     * Recherche un texte dans les informations
+     * affichées d'une annonce (titre, artiste,
+     * catégorie ou ville).
+     */
     private boolean matchesSearch(AdListDTO item, String query) {
         return containsIgnoreCase(item.getTitle(), query)
                 || containsIgnoreCase(item.getArtistName(), query)
@@ -255,10 +287,11 @@ public class AdService {
 
     private record FilterableAd(AdListDTO item, ProductSummaryDTO product) {}
 
-    /**
-     * Retrieve an ad by its id (details)
-     * @param id
-     * @return
+   /**
+     * Récupère le détail complet d'une annonce.
+     * Les informations sont enrichies via les services
+     * Catalog et User afin d'obtenir les données
+     * du produit et du vendeur.
      */
     public AdDetailsDTO getAdById(Long id) {
         Ad ad = adRepository.findAdById(id)
@@ -288,10 +321,10 @@ public class AdService {
     }
 
     /**
-     * Create ad (for an authenticated user)
-     * @param userId
-     * @param request
-     * @return
+     * Crée une nouvelle annonce pour l'utilisateur connecté.
+     * Le produit est d'abord créé dans Catalog puis
+     * l'association utilisateur/produit est enregistrée
+     * dans le service Ads.
      */
     public AdDTO createdAd(Long userId, CreateAdRequestDTO request) {
         if (request == null)
@@ -320,11 +353,10 @@ public class AdService {
     }
 
     /**
-     * Update ad (for an authenticated user)
-     * @param userId
-     * @param adId
-     * @param productUpdate
-     * @return
+     * Modifie une annonce existante.
+     * Vérifie que l'utilisateur est propriétaire
+     * de l'annonce avant de transmettre la mise à jour
+     * au service Catalog.
      */
     public AdDetailsDTO updateAdProduct(Long userId, Long adId, CreateProductRequestDTO productUpdate) {
 
@@ -362,10 +394,11 @@ public class AdService {
         return dto;
     }
 
-    /**
-     * Delete an ad by its id (for an authenticated user)
-     * @param userId
-     * @param id
+   /**
+     * Supprime une annonce.
+     * Vérifie les droits du propriétaire puis
+     * supprime le produit associé dans Catalog
+     * avant de supprimer l'annonce.
      */
     public void deleteAdById(Long userId, Long id) {
         if (userId == null)

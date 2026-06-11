@@ -11,7 +11,7 @@ import jakarta.validation.constraints.NotNull;
  */
 public class CreateAdRequestDTO {
 
-    //DTO reçu par la front (CreateAdRequestDTO body envoyer du front)
+    //DTO received by the front (CreateAdRequestDTO body send from the front)
     @NotNull(message = "Le produit est obligatoire")
     @Valid
     private CreateProductRequestDTO product;
