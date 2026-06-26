@@ -39,6 +39,10 @@ jobs:
         working-directory: FRONT-WEB/vinyl-club
         run: echo "NEXT_PUBLIC_API_BASE=http://localhost:8090" > .env.local
 
+      - name: Lint
+        working-directory: FRONT-WEB/vinyl-club
+        run: npm run lint
+
       - name: Test
         working-directory: FRONT-WEB/vinyl-club
         run: npm test
