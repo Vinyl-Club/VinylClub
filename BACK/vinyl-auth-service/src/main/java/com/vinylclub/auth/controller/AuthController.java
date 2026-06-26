@@ -38,17 +38,14 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         System.out.println("========================================");
-        System.out.println("🚀 LOGIN REQUEST RECEIVED!");
-        System.out.println("📧 Email: " + (loginRequest != null ? loginRequest.getEmail() : "NULL REQUEST"));
-        System.out.println("🔑 Password: " + (loginRequest != null && loginRequest.getPassword() != null ? "***PROVIDED***" : "NULL"));
+        System.out.println("LOGIN REQUEST RECEIVED!");
         System.out.println("========================================");
         
         try {
             LoginResponse response = authService.login(loginRequest);
-            System.out.println("✅ Login successful for: " + loginRequest.getEmail());
             return ResponseEntity.ok(response);
         } catch (RuntimeException e) {
-            System.out.println("❌ Login failed: " + e.getMessage());
+            System.out.println(" Login failed: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }

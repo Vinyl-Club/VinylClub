@@ -21,9 +21,6 @@ public class CloudinaryConfig {
     @Bean
     public Cloudinary cloudinary() {
          System.out.println("CLOUDIDANRY !!!!!!!!!!!!!!");
-        System.out.println(cloudName);
-        System.out.println(apiKey);
-        System.out.println(apiSecret);
         return new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", cloudName,
                 "api_key", apiKey,

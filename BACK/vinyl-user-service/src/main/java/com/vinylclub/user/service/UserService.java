@@ -127,8 +127,8 @@ public class UserService {
     public void deleteUser(Long id) {
         // Implement the logic to delete a user by ID
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-        userRepository.delete(user); // Delete the user from the database
-        System.out.println("User deleted successfully"); // Log a success message
+        userRepository.delete(user); 
+        System.out.println("User deleted successfully"); 
     }
 
 

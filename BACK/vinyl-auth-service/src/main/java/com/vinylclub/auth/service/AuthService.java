@@ -139,7 +139,7 @@ public class AuthService {
             System.out.println("1: " + url);
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Internal-Call", internalSecret); // <-- IMPORTANT
+            headers.set("X-Internal-Call", internalSecret); 
 
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
@@ -151,7 +151,7 @@ public class AuthService {
             );
             return response.getBody();
         } catch (Exception e) {
-            System.out.println("❌ Error fetching user by ID: " + e.getMessage());
+            System.out.println(" Error fetching user by ID: " + e.getMessage());
             return null;
         }
     }
@@ -176,7 +176,7 @@ public class AuthService {
         user.setFirstName(created.getFirstName());
         user.setLastName(created.getLastName());
         user.setRole(created.getRole());
-        user.setCreatedAt(created.getCreatedAt()); // si tu l’as
+        user.setCreatedAt(created.getCreatedAt());
 
         return new LoginResponse(
             accessToken,
@@ -188,7 +188,7 @@ public class AuthService {
 
     private UserCreatedResponse createUserInUserService(RegisterRequest req) {
         try {
-            String url = userServiceBaseUrl; // "http://vinyl-user-service/api/users"
+            String url = userServiceBaseUrl; 
 
             // Le user-service attend un User (entité). On lui envoie le minimum.
             CreateUserBody body = new CreateUserBody();
@@ -274,7 +274,7 @@ public class AuthService {
             
             return Boolean.TRUE.equals(response.getBody());
         } catch (Exception e) {
-            System.out.println("❌ Error validating password: " + e.getMessage());
+            System.out.println(" Error validating password: " + e.getMessage());
             return false;
         }
     }
