@@ -1,9 +1,10 @@
 @import './tokens.css';
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
   --font-bebas: "Impact", "Arial Narrow Bold", "Franklin Gothic Medium", sans-serif;
   --font-anton: "Arial Black", "Impact", "Franklin Gothic Heavy", sans-serif;
-  --font-raleway: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-raleway:"Raleway" ,"Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 }
 
 /* 0) Base safe */
