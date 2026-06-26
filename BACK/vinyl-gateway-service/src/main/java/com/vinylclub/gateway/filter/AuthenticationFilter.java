@@ -50,7 +50,7 @@ public class AuthenticationFilter implements GlobalFilter, Ordered {
         String path = exchange.getRequest().getURI().getPath();
         HttpMethod method = exchange.getRequest().getMethod();
 
-        // 1️⃣ Public routes bypass JWT validation
+        // 1️ Public routes bypass JWT validation
         if (securityRules.match(path, method) == SecurityRules.Access.PUBLIC) {
             return chain.filter(exchange);
         }

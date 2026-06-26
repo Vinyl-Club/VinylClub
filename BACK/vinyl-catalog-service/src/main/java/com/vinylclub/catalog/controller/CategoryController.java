@@ -35,18 +35,6 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
     
-    // @Value("${admin.token}")
-    // private String adminToken;
-    
-    /**
-     *Protects routes from user inserts
-     */
-    // private void checkAdminToken(String token) {
-    // if (token == null || !token.equals(adminToken)) {
-    //     throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Forbidden");
-    //     }
-    // }
-
     /**
      *Recover all categories
      *Get /API /Categories
