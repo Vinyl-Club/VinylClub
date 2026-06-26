@@ -111,8 +111,6 @@ public class AdController {
         @RequestHeader(value = "X-User-Role", required = false) String role,
         @Valid @RequestBody CreateAdRequestDTO request
     ) {
-        System.out.println("🔐 [AD] X-User-Id = " + userId);
-        System.out.println("🔐 [AD] X-User-Role = " + role);
         return ResponseEntity.ok(adService.createdAd(userId, request));
     }
 

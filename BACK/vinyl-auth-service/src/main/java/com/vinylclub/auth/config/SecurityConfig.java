@@ -29,12 +29,6 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        System.out.println("🔧 SECURITY CONFIG LOADED!"); // ← Log de debug
-        System.out.println("🔒 Configuring security filter chain...");
-        System.out.println("🔐 Password Encoder: " + passwordEncoder().getClass().getSimpleName());
-        System.out.println("🌐 RestTemplate bean created: " + restTemplate().getClass().getSimpleName());
-        System.out.println("🚀 Security filter chain configured successfully!");
-
         // HTTP security configuration(pas de cookie de session, auth que en bearer, reponse JSON uniquement)
         http
             .csrf(csrf -> csrf.disable())
